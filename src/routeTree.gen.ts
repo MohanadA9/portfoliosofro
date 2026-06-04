@@ -9,7 +9,11 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as PublicRouteImport } from './routes/_public'
+import { Route as AdminRouteImport } from './routes/_admin'
 import { Route as PublicIndexRouteImport } from './routes/_public.index'
 import { Route as PublicPositionsRouteImport } from './routes/_public.positions'
 import { Route as PublicExperiencesRouteImport } from './routes/_public.experiences'
@@ -19,13 +23,44 @@ import { Route as PublicResearchesIndexRouteImport } from './routes/_public.rese
 import { Route as PublicCoursesIndexRouteImport } from './routes/_public.courses.index'
 import { Route as PublicBlogIndexRouteImport } from './routes/_public.blog.index'
 import { Route as PublicAchievementsIndexRouteImport } from './routes/_public.achievements.index'
+import { Route as AdminAdminIndexRouteImport } from './routes/_admin.admin.index'
 import { Route as PublicResearchesIdRouteImport } from './routes/_public.researches.$id'
 import { Route as PublicCoursesIdRouteImport } from './routes/_public.courses.$id'
 import { Route as PublicBlogIdRouteImport } from './routes/_public.blog.$id'
 import { Route as PublicAchievementsIdRouteImport } from './routes/_public.achievements.$id'
+import { Route as AdminAdminSettingsRouteImport } from './routes/_admin.admin.settings'
+import { Route as AdminAdminResearchesRouteImport } from './routes/_admin.admin.researches'
+import { Route as AdminAdminProfileRouteImport } from './routes/_admin.admin.profile'
+import { Route as AdminAdminPositionsRouteImport } from './routes/_admin.admin.positions'
+import { Route as AdminAdminMessagesRouteImport } from './routes/_admin.admin.messages'
+import { Route as AdminAdminMediaRouteImport } from './routes/_admin.admin.media'
+import { Route as AdminAdminLecturesRouteImport } from './routes/_admin.admin.lectures'
+import { Route as AdminAdminExperiencesRouteImport } from './routes/_admin.admin.experiences'
+import { Route as AdminAdminCoursesRouteImport } from './routes/_admin.admin.courses'
+import { Route as AdminAdminBlogsRouteImport } from './routes/_admin.admin.blogs'
+import { Route as AdminAdminAchievementsRouteImport } from './routes/_admin.admin.achievements'
 
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ForgotPasswordRoute = ForgotPasswordRouteImport.update({
+  id: '/forgot-password',
+  path: '/forgot-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PublicRoute = PublicRouteImport.update({
   id: '/_public',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/_admin',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PublicIndexRoute = PublicIndexRouteImport.update({
@@ -73,6 +108,11 @@ const PublicAchievementsIndexRoute = PublicAchievementsIndexRouteImport.update({
   path: '/achievements/',
   getParentRoute: () => PublicRoute,
 } as any)
+const AdminAdminIndexRoute = AdminAdminIndexRouteImport.update({
+  id: '/admin/',
+  path: '/admin/',
+  getParentRoute: () => AdminRoute,
+} as any)
 const PublicResearchesIdRoute = PublicResearchesIdRouteImport.update({
   id: '/researches/$id',
   path: '/researches/$id',
@@ -93,32 +133,117 @@ const PublicAchievementsIdRoute = PublicAchievementsIdRouteImport.update({
   path: '/achievements/$id',
   getParentRoute: () => PublicRoute,
 } as any)
+const AdminAdminSettingsRoute = AdminAdminSettingsRouteImport.update({
+  id: '/admin/settings',
+  path: '/admin/settings',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAdminResearchesRoute = AdminAdminResearchesRouteImport.update({
+  id: '/admin/researches',
+  path: '/admin/researches',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAdminProfileRoute = AdminAdminProfileRouteImport.update({
+  id: '/admin/profile',
+  path: '/admin/profile',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAdminPositionsRoute = AdminAdminPositionsRouteImport.update({
+  id: '/admin/positions',
+  path: '/admin/positions',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAdminMessagesRoute = AdminAdminMessagesRouteImport.update({
+  id: '/admin/messages',
+  path: '/admin/messages',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAdminMediaRoute = AdminAdminMediaRouteImport.update({
+  id: '/admin/media',
+  path: '/admin/media',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAdminLecturesRoute = AdminAdminLecturesRouteImport.update({
+  id: '/admin/lectures',
+  path: '/admin/lectures',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAdminExperiencesRoute = AdminAdminExperiencesRouteImport.update({
+  id: '/admin/experiences',
+  path: '/admin/experiences',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAdminCoursesRoute = AdminAdminCoursesRouteImport.update({
+  id: '/admin/courses',
+  path: '/admin/courses',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAdminBlogsRoute = AdminAdminBlogsRouteImport.update({
+  id: '/admin/blogs',
+  path: '/admin/blogs',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAdminAchievementsRoute = AdminAdminAchievementsRouteImport.update({
+  id: '/admin/achievements',
+  path: '/admin/achievements',
+  getParentRoute: () => AdminRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof PublicIndexRoute
+  '/forgot-password': typeof ForgotPasswordRoute
+  '/login': typeof LoginRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/about': typeof PublicAboutRoute
   '/contact': typeof PublicContactRoute
   '/experiences': typeof PublicExperiencesRoute
   '/positions': typeof PublicPositionsRoute
+  '/admin/achievements': typeof AdminAdminAchievementsRoute
+  '/admin/blogs': typeof AdminAdminBlogsRoute
+  '/admin/courses': typeof AdminAdminCoursesRoute
+  '/admin/experiences': typeof AdminAdminExperiencesRoute
+  '/admin/lectures': typeof AdminAdminLecturesRoute
+  '/admin/media': typeof AdminAdminMediaRoute
+  '/admin/messages': typeof AdminAdminMessagesRoute
+  '/admin/positions': typeof AdminAdminPositionsRoute
+  '/admin/profile': typeof AdminAdminProfileRoute
+  '/admin/researches': typeof AdminAdminResearchesRoute
+  '/admin/settings': typeof AdminAdminSettingsRoute
   '/achievements/$id': typeof PublicAchievementsIdRoute
   '/blog/$id': typeof PublicBlogIdRoute
   '/courses/$id': typeof PublicCoursesIdRoute
   '/researches/$id': typeof PublicResearchesIdRoute
+  '/admin/': typeof AdminAdminIndexRoute
   '/achievements/': typeof PublicAchievementsIndexRoute
   '/blog/': typeof PublicBlogIndexRoute
   '/courses/': typeof PublicCoursesIndexRoute
   '/researches/': typeof PublicResearchesIndexRoute
 }
 export interface FileRoutesByTo {
+  '/': typeof PublicIndexRoute
+  '/forgot-password': typeof ForgotPasswordRoute
+  '/login': typeof LoginRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/about': typeof PublicAboutRoute
   '/contact': typeof PublicContactRoute
   '/experiences': typeof PublicExperiencesRoute
   '/positions': typeof PublicPositionsRoute
-  '/': typeof PublicIndexRoute
+  '/admin/achievements': typeof AdminAdminAchievementsRoute
+  '/admin/blogs': typeof AdminAdminBlogsRoute
+  '/admin/courses': typeof AdminAdminCoursesRoute
+  '/admin/experiences': typeof AdminAdminExperiencesRoute
+  '/admin/lectures': typeof AdminAdminLecturesRoute
+  '/admin/media': typeof AdminAdminMediaRoute
+  '/admin/messages': typeof AdminAdminMessagesRoute
+  '/admin/positions': typeof AdminAdminPositionsRoute
+  '/admin/profile': typeof AdminAdminProfileRoute
+  '/admin/researches': typeof AdminAdminResearchesRoute
+  '/admin/settings': typeof AdminAdminSettingsRoute
   '/achievements/$id': typeof PublicAchievementsIdRoute
   '/blog/$id': typeof PublicBlogIdRoute
   '/courses/$id': typeof PublicCoursesIdRoute
   '/researches/$id': typeof PublicResearchesIdRoute
+  '/admin': typeof AdminAdminIndexRoute
   '/achievements': typeof PublicAchievementsIndexRoute
   '/blog': typeof PublicBlogIndexRoute
   '/courses': typeof PublicCoursesIndexRoute
@@ -126,16 +251,32 @@ export interface FileRoutesByTo {
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
+  '/_admin': typeof AdminRouteWithChildren
   '/_public': typeof PublicRouteWithChildren
+  '/forgot-password': typeof ForgotPasswordRoute
+  '/login': typeof LoginRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/_public/about': typeof PublicAboutRoute
   '/_public/contact': typeof PublicContactRoute
   '/_public/experiences': typeof PublicExperiencesRoute
   '/_public/positions': typeof PublicPositionsRoute
   '/_public/': typeof PublicIndexRoute
+  '/_admin/admin/achievements': typeof AdminAdminAchievementsRoute
+  '/_admin/admin/blogs': typeof AdminAdminBlogsRoute
+  '/_admin/admin/courses': typeof AdminAdminCoursesRoute
+  '/_admin/admin/experiences': typeof AdminAdminExperiencesRoute
+  '/_admin/admin/lectures': typeof AdminAdminLecturesRoute
+  '/_admin/admin/media': typeof AdminAdminMediaRoute
+  '/_admin/admin/messages': typeof AdminAdminMessagesRoute
+  '/_admin/admin/positions': typeof AdminAdminPositionsRoute
+  '/_admin/admin/profile': typeof AdminAdminProfileRoute
+  '/_admin/admin/researches': typeof AdminAdminResearchesRoute
+  '/_admin/admin/settings': typeof AdminAdminSettingsRoute
   '/_public/achievements/$id': typeof PublicAchievementsIdRoute
   '/_public/blog/$id': typeof PublicBlogIdRoute
   '/_public/courses/$id': typeof PublicCoursesIdRoute
   '/_public/researches/$id': typeof PublicResearchesIdRoute
+  '/_admin/admin/': typeof AdminAdminIndexRoute
   '/_public/achievements/': typeof PublicAchievementsIndexRoute
   '/_public/blog/': typeof PublicBlogIndexRoute
   '/_public/courses/': typeof PublicCoursesIndexRoute
@@ -145,45 +286,91 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/forgot-password'
+    | '/login'
+    | '/reset-password'
     | '/about'
     | '/contact'
     | '/experiences'
     | '/positions'
+    | '/admin/achievements'
+    | '/admin/blogs'
+    | '/admin/courses'
+    | '/admin/experiences'
+    | '/admin/lectures'
+    | '/admin/media'
+    | '/admin/messages'
+    | '/admin/positions'
+    | '/admin/profile'
+    | '/admin/researches'
+    | '/admin/settings'
     | '/achievements/$id'
     | '/blog/$id'
     | '/courses/$id'
     | '/researches/$id'
+    | '/admin/'
     | '/achievements/'
     | '/blog/'
     | '/courses/'
     | '/researches/'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/'
+    | '/forgot-password'
+    | '/login'
+    | '/reset-password'
     | '/about'
     | '/contact'
     | '/experiences'
     | '/positions'
-    | '/'
+    | '/admin/achievements'
+    | '/admin/blogs'
+    | '/admin/courses'
+    | '/admin/experiences'
+    | '/admin/lectures'
+    | '/admin/media'
+    | '/admin/messages'
+    | '/admin/positions'
+    | '/admin/profile'
+    | '/admin/researches'
+    | '/admin/settings'
     | '/achievements/$id'
     | '/blog/$id'
     | '/courses/$id'
     | '/researches/$id'
+    | '/admin'
     | '/achievements'
     | '/blog'
     | '/courses'
     | '/researches'
   id:
     | '__root__'
+    | '/_admin'
     | '/_public'
+    | '/forgot-password'
+    | '/login'
+    | '/reset-password'
     | '/_public/about'
     | '/_public/contact'
     | '/_public/experiences'
     | '/_public/positions'
     | '/_public/'
+    | '/_admin/admin/achievements'
+    | '/_admin/admin/blogs'
+    | '/_admin/admin/courses'
+    | '/_admin/admin/experiences'
+    | '/_admin/admin/lectures'
+    | '/_admin/admin/media'
+    | '/_admin/admin/messages'
+    | '/_admin/admin/positions'
+    | '/_admin/admin/profile'
+    | '/_admin/admin/researches'
+    | '/_admin/admin/settings'
     | '/_public/achievements/$id'
     | '/_public/blog/$id'
     | '/_public/courses/$id'
     | '/_public/researches/$id'
+    | '/_admin/admin/'
     | '/_public/achievements/'
     | '/_public/blog/'
     | '/_public/courses/'
@@ -191,16 +378,48 @@ export interface FileRouteTypes {
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
+  AdminRoute: typeof AdminRouteWithChildren
   PublicRoute: typeof PublicRouteWithChildren
+  ForgotPasswordRoute: typeof ForgotPasswordRoute
+  LoginRoute: typeof LoginRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/forgot-password': {
+      id: '/forgot-password'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof ForgotPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_public': {
       id: '/_public'
       path: ''
       fullPath: '/'
       preLoaderRoute: typeof PublicRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_admin': {
+      id: '/_admin'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AdminRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_public/': {
@@ -266,6 +485,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicAchievementsIndexRouteImport
       parentRoute: typeof PublicRoute
     }
+    '/_admin/admin/': {
+      id: '/_admin/admin/'
+      path: '/admin'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminAdminIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/_public/researches/$id': {
       id: '/_public/researches/$id'
       path: '/researches/$id'
@@ -294,8 +520,117 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicAchievementsIdRouteImport
       parentRoute: typeof PublicRoute
     }
+    '/_admin/admin/settings': {
+      id: '/_admin/admin/settings'
+      path: '/admin/settings'
+      fullPath: '/admin/settings'
+      preLoaderRoute: typeof AdminAdminSettingsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/_admin/admin/researches': {
+      id: '/_admin/admin/researches'
+      path: '/admin/researches'
+      fullPath: '/admin/researches'
+      preLoaderRoute: typeof AdminAdminResearchesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/_admin/admin/profile': {
+      id: '/_admin/admin/profile'
+      path: '/admin/profile'
+      fullPath: '/admin/profile'
+      preLoaderRoute: typeof AdminAdminProfileRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/_admin/admin/positions': {
+      id: '/_admin/admin/positions'
+      path: '/admin/positions'
+      fullPath: '/admin/positions'
+      preLoaderRoute: typeof AdminAdminPositionsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/_admin/admin/messages': {
+      id: '/_admin/admin/messages'
+      path: '/admin/messages'
+      fullPath: '/admin/messages'
+      preLoaderRoute: typeof AdminAdminMessagesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/_admin/admin/media': {
+      id: '/_admin/admin/media'
+      path: '/admin/media'
+      fullPath: '/admin/media'
+      preLoaderRoute: typeof AdminAdminMediaRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/_admin/admin/lectures': {
+      id: '/_admin/admin/lectures'
+      path: '/admin/lectures'
+      fullPath: '/admin/lectures'
+      preLoaderRoute: typeof AdminAdminLecturesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/_admin/admin/experiences': {
+      id: '/_admin/admin/experiences'
+      path: '/admin/experiences'
+      fullPath: '/admin/experiences'
+      preLoaderRoute: typeof AdminAdminExperiencesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/_admin/admin/courses': {
+      id: '/_admin/admin/courses'
+      path: '/admin/courses'
+      fullPath: '/admin/courses'
+      preLoaderRoute: typeof AdminAdminCoursesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/_admin/admin/blogs': {
+      id: '/_admin/admin/blogs'
+      path: '/admin/blogs'
+      fullPath: '/admin/blogs'
+      preLoaderRoute: typeof AdminAdminBlogsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/_admin/admin/achievements': {
+      id: '/_admin/admin/achievements'
+      path: '/admin/achievements'
+      fullPath: '/admin/achievements'
+      preLoaderRoute: typeof AdminAdminAchievementsRouteImport
+      parentRoute: typeof AdminRoute
+    }
   }
 }
+
+interface AdminRouteChildren {
+  AdminAdminAchievementsRoute: typeof AdminAdminAchievementsRoute
+  AdminAdminBlogsRoute: typeof AdminAdminBlogsRoute
+  AdminAdminCoursesRoute: typeof AdminAdminCoursesRoute
+  AdminAdminExperiencesRoute: typeof AdminAdminExperiencesRoute
+  AdminAdminLecturesRoute: typeof AdminAdminLecturesRoute
+  AdminAdminMediaRoute: typeof AdminAdminMediaRoute
+  AdminAdminMessagesRoute: typeof AdminAdminMessagesRoute
+  AdminAdminPositionsRoute: typeof AdminAdminPositionsRoute
+  AdminAdminProfileRoute: typeof AdminAdminProfileRoute
+  AdminAdminResearchesRoute: typeof AdminAdminResearchesRoute
+  AdminAdminSettingsRoute: typeof AdminAdminSettingsRoute
+  AdminAdminIndexRoute: typeof AdminAdminIndexRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminAdminAchievementsRoute: AdminAdminAchievementsRoute,
+  AdminAdminBlogsRoute: AdminAdminBlogsRoute,
+  AdminAdminCoursesRoute: AdminAdminCoursesRoute,
+  AdminAdminExperiencesRoute: AdminAdminExperiencesRoute,
+  AdminAdminLecturesRoute: AdminAdminLecturesRoute,
+  AdminAdminMediaRoute: AdminAdminMediaRoute,
+  AdminAdminMessagesRoute: AdminAdminMessagesRoute,
+  AdminAdminPositionsRoute: AdminAdminPositionsRoute,
+  AdminAdminProfileRoute: AdminAdminProfileRoute,
+  AdminAdminResearchesRoute: AdminAdminResearchesRoute,
+  AdminAdminSettingsRoute: AdminAdminSettingsRoute,
+  AdminAdminIndexRoute: AdminAdminIndexRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 interface PublicRouteChildren {
   PublicAboutRoute: typeof PublicAboutRoute
@@ -333,7 +668,11 @@ const PublicRouteWithChildren =
   PublicRoute._addFileChildren(PublicRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
+  AdminRoute: AdminRouteWithChildren,
   PublicRoute: PublicRouteWithChildren,
+  ForgotPasswordRoute: ForgotPasswordRoute,
+  LoginRoute: LoginRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
