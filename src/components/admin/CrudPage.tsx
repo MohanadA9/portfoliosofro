@@ -3,11 +3,15 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Plus, Pencil, Trash2, X } from "lucide-react";
 import { SearchInput, Pagination, Spinner, Empty } from "@/components/common/Primitives";
+import { Dropzone } from "@/components/common/Dropzone";
+import { confirmDelete } from "@/lib/confirm";
 
 export type Column<T> = { key: keyof T | string; label: string; render?: (row: T) => ReactNode; className?: string };
 
 export type FieldDef = {
-  name: string; label: string; type?: "text" | "textarea" | "number" | "date" | "url";
+  name: string;
+  label: string;
+  type?: "text" | "textarea" | "number" | "date" | "url" | "image";
   placeholder?: string;
 };
 
@@ -46,14 +50,19 @@ export function CrudPage<T extends { id: string }>({
       if ((payload as any).id) return api.update((payload as any).id, payload);
       return api.create(payload);
     },
-    onSuccess: () => { toast.success("Saved"); setEditing(null); refresh(); },
+    onSuccess: () => { toast.success("Saved successfully"); setEditing(null); refresh(); },
     onError: () => toast.error("Save failed"),
   });
 
   const remove = useMutation({
     mutationFn: (id: string) => api.remove(id),
-    onSuccess: () => { toast.success("Deleted"); refresh(); },
+    onSuccess: () => { toast.success("Item deleted"); refresh(); },
+    onError: () => toast.error("Delete failed"),
   });
+
+  const handleDelete = async (id: string) => {
+    if (await confirmDelete()) remove.mutate(id);
+  };
 
   return (
     <div className="space-y-6">
@@ -93,7 +102,7 @@ export function CrudPage<T extends { id: string }>({
                     <td className="px-4 py-3 text-right">
                       <div className="inline-flex items-center gap-1">
                         <button onClick={() => setEditing(row)} className="grid size-8 place-items-center rounded-md border border-border hover:border-electric/60"><Pencil className="size-3.5" /></button>
-                        <button onClick={() => { if (confirm("Delete this item?")) remove.mutate(row.id); }} className="grid size-8 place-items-center rounded-md border border-border hover:border-destructive/60 hover:text-destructive"><Trash2 className="size-3.5" /></button>
+                        <button onClick={() => handleDelete(row.id)} className="grid size-8 place-items-center rounded-md border border-border hover:border-destructive/60 hover:text-destructive"><Trash2 className="size-3.5" /></button>
                       </div>
                     </td>
                   </tr>
@@ -113,11 +122,19 @@ export function CrudPage<T extends { id: string }>({
               <h2 className="font-display text-lg font-semibold">{(editing as any).id ? "Edit" : "Create"} {title.replace(/s$/, "")}</h2>
               <button onClick={() => setEditing(null)} className="grid size-8 place-items-center rounded-md hover:bg-muted"><X className="size-4" /></button>
             </div>
-            <form onSubmit={(e) => { e.preventDefault(); save.mutate(editing); }} className="space-y-3 max-h-[60vh] overflow-y-auto pr-1">
+            <form onSubmit={(e) => { e.preventDefault(); save.mutate(editing); }} className="space-y-3 max-h-[70vh] overflow-y-auto pr-1">
               {fields.map((f) => {
                 const val = (editing as any)[f.name] ?? "";
                 const set = (v: any) => setEditing({ ...editing, [f.name]: v });
                 const cls = "w-full rounded-md border border-input bg-background px-3 py-2 text-sm";
+                if (f.type === "image") {
+                  return (
+                    <div key={f.name}>
+                      <span className="text-xs font-mono uppercase tracking-widest text-muted-foreground">{f.label}</span>
+                      <Dropzone value={val || undefined} onChange={(d) => set(d ?? "")} className="mt-1" />
+                    </div>
+                  );
+                }
                 return (
                   <label key={f.name} className="block">
                     <span className="text-xs font-mono uppercase tracking-widest text-muted-foreground">{f.label}</span>
@@ -127,7 +144,7 @@ export function CrudPage<T extends { id: string }>({
                   </label>
                 );
               })}
-              <div className="flex justify-end gap-2 pt-2">
+              <div className="flex justify-end gap-2 pt-2 sticky bottom-0 bg-card">
                 <button type="button" onClick={() => setEditing(null)} className="rounded-md border border-border px-4 py-2 text-sm">Cancel</button>
                 <button disabled={save.isPending} className="rounded-md bg-electric px-4 py-2 text-sm font-medium text-electric-foreground hover:opacity-90 disabled:opacity-60">
                   {save.isPending ? "Saving…" : "Save"}
