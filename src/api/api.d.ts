@@ -7,7 +7,7 @@ declare module "@/api/request" {
   export function apiFetch(endpoint: string, method?: string, body?: any): Promise<any>;
   export function apiGet(endpoint: string): Promise<any>;
   export function apiPost(endpoint: string, body?: any): Promise<any>;
-  export function apiPut(endpoint: string, body?: any): Promise<any>;
+  export function apiPut(endpoint: string, body?: any): Promise<any>; 
   export function apiPatch(endpoint: string, body?: any): Promise<any>;
   export function apiDelete(endpoint: string): Promise<any>;
 }
