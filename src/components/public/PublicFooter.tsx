@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import { Link } from "react-router-dom";
 import { Linkedin, Github, Twitter, Mail, Radio } from "lucide-react";
 import { professor } from "@/data/mockData";
 

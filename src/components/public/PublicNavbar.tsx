@@ -1,4 +1,4 @@
-import { Link, useRouterState } from "@tanstack/react-router";
+import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
 import { Menu, X, Moon, Sun, Radio } from "lucide-react";
 import { useTheme } from "@/context/ThemeContext";
@@ -19,7 +19,7 @@ const links = [
 export function PublicNavbar() {
   const { theme, toggle } = useTheme();
   const [open, setOpen] = useState(false);
-  const path = useRouterState({ select: (s) => s.location.pathname });
+  const path = useLocation().pathname;
 
   return (
     <header className="sticky top-0 z-50 border-b border-border/60 backdrop-blur-xl bg-background/70">

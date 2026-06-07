@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import type { ReactNode } from "react";
-import { Link } from "@tanstack/react-router";
+import { Link } from "react-router-dom";
 
 export function Card({ children, className = "", hover = true }: { children: ReactNode; className?: string; hover?: boolean }) {
   return (

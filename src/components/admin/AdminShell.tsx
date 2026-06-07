@@ -1,4 +1,4 @@
-import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import {
   LayoutDashboard, Award, Briefcase, FileText, Crown, BookOpen, Video, Edit3,
   MessageSquare, Image, User, Settings, LogOut, Radio, Moon, Sun, Bell, GraduationCap,
@@ -28,9 +28,9 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
   const { logout, user } = useAuth();
   const { theme, toggle } = useTheme();
   const nav = useNavigate();
-  const path = useRouterState({ select: (s) => s.location.pathname });
+  const path = useLocation().pathname;
 
-  const onLogout = () => { logout(); toast.success("Signed out"); nav({ to: "/login" }); };
+  const onLogout = () => { logout(); toast.success("Signed out"); nav("/login"); };
 
   return (
     <div className="flex min-h-screen w-full bg-background">
