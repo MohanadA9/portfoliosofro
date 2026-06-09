@@ -14,6 +14,7 @@ const MediaContext = createContext(null);
 const SettingsContext = createContext(null);
 const StatsContext = createContext(null);
 const PositionsContext = createContext(null);
+const MessagesContext = createContext(null);
 
 // Custom hooks for accessing data
 export const useProfessor = () => useContext(ProfessorContext);
@@ -24,6 +25,7 @@ export const useResearches = () => useContext(ResearchesContext);
 export const useAchievements = () => useContext(AchievementsContext);
 export const useBlogs = () => useContext(BlogsContext);
 export const useMedia = () => useContext(MediaContext);
+export const useMessages = () => useContext(MessagesContext);
 export const useSettings = () => useContext(SettingsContext);
 export const useStats = () => useContext(StatsContext);
 export const usePositions = () => useContext(PositionsContext);
@@ -53,6 +55,7 @@ export const DataProvider = ({ children }) => {
   const [settings, setSettings] = useState(null);
   const [stats, setStats] = useState(null);
   const [positions, setPositions] = useState([]);
+  const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -73,7 +76,8 @@ export const DataProvider = ({ children }) => {
           { key: 'media', url: authed ? DASHBOARD_ENDPOINTS.media.list : PORTFOLIO_ENDPOINTS.media.list },
           { key: 'settings', url: authed ? DASHBOARD_ENDPOINTS.settings.get : PORTFOLIO_ENDPOINTS.settings.get },
           { key: 'stats', url: DASHBOARD_ENDPOINTS.dashboard.stats },
-          { key: 'positions', url: authed ? DASHBOARD_ENDPOINTS.positions.list : PORTFOLIO_ENDPOINTS.positions.list }
+          { key: 'positions', url: authed ? DASHBOARD_ENDPOINTS.positions.list : PORTFOLIO_ENDPOINTS.positions.list },
+          { key: 'messages', url: authed ? DASHBOARD_ENDPOINTS.messages.list : null }
         ];
 
         const results = {};
@@ -97,6 +101,7 @@ export const DataProvider = ({ children }) => {
         setSettings(results.settings?.data || results.settings || null);
         setStats(results.stats?.data || results.stats || null);
         setPositions(normalizeList(results.positions));
+        setMessages(normalizeList(results.messages));
 
       } catch (err) {
         setError(err.message);
@@ -122,7 +127,9 @@ export const DataProvider = ({ children }) => {
                     <SettingsContext.Provider value={settings}>
                       <StatsContext.Provider value={stats}>
                         <PositionsContext.Provider value={positions}>
-                          {children}
+                          <MessagesContext.Provider value={messages}>
+                            {children}
+                          </MessagesContext.Provider>
                         </PositionsContext.Provider>
                       </StatsContext.Provider>
                     </SettingsContext.Provider>
