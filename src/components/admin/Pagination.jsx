@@ -5,7 +5,9 @@ export const PAGE_SIZE = 10;
 
 export function usePagination(filtered, search) {
   const [page, setPage] = useState(1);
-  useEffect(() => { setPage(1); }, [search]);
+  useEffect(() => {
+    setPage(1);
+  }, [search]);
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
   const safePage = Math.min(page, totalPages);
   const paginated = filtered.slice((safePage - 1) * PAGE_SIZE, safePage * PAGE_SIZE);
@@ -34,7 +36,7 @@ export function Pagination({ page, totalPages, total, setPage }) {
       </p>
       <div className="flex items-center gap-1">
         <button
-          onClick={() => setPage(p => Math.max(1, p - 1))}
+          onClick={() => setPage((p) => Math.max(1, p - 1))}
           disabled={page === 1}
           className={`${btn} border border-border text-muted-foreground hover:border-electric/60 hover:text-foreground disabled:opacity-30 disabled:cursor-not-allowed`}
         >
@@ -43,7 +45,12 @@ export function Pagination({ page, totalPages, total, setPage }) {
 
         {pages.map((p, i) =>
           p === "..." ? (
-            <span key={`d${i}`} className="grid size-8 place-items-center text-xs text-muted-foreground">…</span>
+            <span
+              key={`d${i}`}
+              className="grid size-8 place-items-center text-xs text-muted-foreground"
+            >
+              …
+            </span>
           ) : (
             <button
               key={p}
@@ -52,11 +59,11 @@ export function Pagination({ page, totalPages, total, setPage }) {
             >
               {p}
             </button>
-          )
+          ),
         )}
 
         <button
-          onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+          onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
           disabled={page === totalPages}
           className={`${btn} border border-border text-muted-foreground hover:border-electric/60 hover:text-foreground disabled:opacity-30 disabled:cursor-not-allowed`}
         >

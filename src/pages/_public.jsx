@@ -7,15 +7,18 @@ function PublicLayout() {
   const [bootDone, setBootDone] = useState(false);
   useEffect(() => {
     const seen = sessionStorage.getItem("booted");
-    if (seen) setBootDone(true);else sessionStorage.setItem("booted", "1");
+    if (seen) setBootDone(true);
+    else sessionStorage.setItem("booted", "1");
   }, []);
-  return <div className="relative min-h-screen flex flex-col">
+  return (
+    <div className="relative min-h-screen flex flex-col">
       {!bootDone && <LoadingScreen onDone={() => setBootDone(true)} />}
       <PublicNavbar />
       <main className="flex-1">
         <Outlet />
       </main>
       <PublicFooter />
-    </div>;
+    </div>
+  );
 }
 export default PublicLayout;

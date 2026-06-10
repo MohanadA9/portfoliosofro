@@ -52,8 +52,7 @@ const mockDataMap = {
   "/dashboard/charts": dashboardCharts,
 };
 
-const simulateDelay = () =>
-  new Promise((r) => setTimeout(r, Math.random() * 400 + 250));
+const simulateDelay = () => new Promise((r) => setTimeout(r, Math.random() * 400 + 250));
 
 // ============================================================
 // AUTH HELPERS
@@ -96,7 +95,11 @@ export const apiFetch = async (endpoint, method = "GET", body = null) => {
       if (body?.email && body?.password && body.password.length >= 4) {
         const token = "mock_jwt_" + Date.now();
         setAuthToken(token);
-        return { success: true, token, user: { id: 1, name: "Admin", email: body.email, role: "admin" } };
+        return {
+          success: true,
+          token,
+          user: { id: 1, name: "Admin", email: body.email, role: "admin" },
+        };
       }
       throw new Error("Invalid credentials");
     }
@@ -149,17 +152,20 @@ export const apiFetch = async (endpoint, method = "GET", body = null) => {
   if (res.status === 401) {
     if (!endpoint.includes("/auth/login")) removeAuthToken();
     const err = new Error(data?.message || "Unauthorized");
-    err.status = 401; throw err;
+    err.status = 401;
+    throw err;
   }
   if (!res.ok) {
     const err = new Error(data?.message || "Request failed");
-    err.status = res.status; err.data = data; throw err;
+    err.status = res.status;
+    err.data = data;
+    throw err;
   }
   return data;
 };
 
-export const apiGet    = (e)    => apiFetch(e, "GET");
-export const apiPost   = (e, b) => apiFetch(e, "POST", b);
-export const apiPut    = (e, b) => apiFetch(e, "PUT", b);
-export const apiPatch  = (e, b) => apiFetch(e, "PATCH", b);
-export const apiDelete = (e)    => apiFetch(e, "DELETE");
+export const apiGet = (e) => apiFetch(e, "GET");
+export const apiPost = (e, b) => apiFetch(e, "POST", b);
+export const apiPut = (e, b) => apiFetch(e, "PUT", b);
+export const apiPatch = (e, b) => apiFetch(e, "PATCH", b);
+export const apiDelete = (e) => apiFetch(e, "DELETE");

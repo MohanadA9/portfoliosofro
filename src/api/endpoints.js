@@ -19,12 +19,12 @@ export const PORTFOLIO_ENDPOINTS = {
   profile: { get: `${BASE_URL}/user/data` },
   settings: { get: `${BASE_URL}/setting` },
   achievements: { list: `${BASE_URL}/achievement`, show: (id) => `${BASE_URL}/achievement/${id}` },
-  researches:   { list: `${BASE_URL}/research`,    show: (id) => `${BASE_URL}/research/${id}` },
-  courses:      { list: `${BASE_URL}/course`,      show: (id) => `${BASE_URL}/course/${id}` },
-  experiences:  { list: `${BASE_URL}/experience` },
-  positions:    { list: `${BASE_URL}/position` },
-  blogs:        { list: `${BASE_URL}/blog`,        show: (id) => `${BASE_URL}/blog/${id}` },
-  education:    { list: `${BASE_URL}/education` },
+  researches: { list: `${BASE_URL}/research`, show: (id) => `${BASE_URL}/research/${id}` },
+  courses: { list: `${BASE_URL}/course`, show: (id) => `${BASE_URL}/course/${id}` },
+  experiences: { list: `${BASE_URL}/experience` },
+  positions: { list: `${BASE_URL}/position` },
+  blogs: { list: `${BASE_URL}/blog`, show: (id) => `${BASE_URL}/blog/${id}` },
+  education: { list: `${BASE_URL}/education` },
 };
 
 // ==========================================
@@ -32,43 +32,43 @@ export const PORTFOLIO_ENDPOINTS = {
 // ==========================================
 export const DASHBOARD_ENDPOINTS = {
   auth: {
-    login:          `${BASE_URL}/auth/login`,
-    logout:         `${BASE_URL}/admin/auth/logout`,
+    login: `${BASE_URL}/auth/login`,
+    logout: `${BASE_URL}/admin/auth/logout`,
     forgotPassword: `${BASE_URL}/auth/forgot-password`,
-    verifyOtp:      `${BASE_URL}/auth/verify-otp`,
-    resetPassword:  `${BASE_URL}/auth/reset-password`,
+    verifyOtp: `${BASE_URL}/auth/verify-otp`,
+    resetPassword: `${BASE_URL}/auth/reset-password`,
   },
   user: { get: `${BASE_URL}/admin/user`, update: `${BASE_URL}/admin/user/update` },
   settings: {
-    get:    `${BASE_URL}/admin/setting`,
+    get: `${BASE_URL}/admin/setting`,
     update: `${BASE_URL}/admin/setting/update`,
   },
   dashboard: {
-    stats:    `${BASE_URL}/admin/dashboard/stats`,
-    charts:   `${BASE_URL}/admin/dashboard/charts`,
+    stats: `${BASE_URL}/admin/dashboard/stats`,
+    charts: `${BASE_URL}/admin/dashboard/charts`,
     activity: `${BASE_URL}/admin/dashboard/activity`,
   },
   achievements: crud("achievement"),
-  researches:   crud("research"),
-  experiences:  crud("experience"),
-  positions:    crud("position"),
-  courses:      crud("course"),
-  lectures:     crud("lecture"),
-  blogs:        crud("blog"),
-  education:    crud("education"),
-  media:        crud("media"),
+  researches: crud("research"),
+  experiences: crud("experience"),
+  positions: crud("position"),
+  courses: crud("course"),
+  lectures: crud("lecture"),
+  blogs: crud("blog"),
+  education: crud("education"),
+  media: crud("media"),
   messages: {
-    list:    `${BASE_URL}/admin/contact-us`,
-    read:    (id) => `${BASE_URL}/admin/contact-us/read/${id}`,
-    delete:  (id) => `${BASE_URL}/admin/contact-us/delete/${id}`,
+    list: `${BASE_URL}/admin/contact-us`,
+    read: (id) => `${BASE_URL}/admin/contact-us/read/${id}`,
+    delete: (id) => `${BASE_URL}/admin/contact-us/delete/${id}`,
   },
 };
 
 function crud(resource) {
   return {
-    list:   `${BASE_URL}/admin/${resource}`,
-    show:   (id) => `${BASE_URL}/admin/${resource}/show/${id}`,
-    store:  `${BASE_URL}/admin/${resource}/store`,
+    list: `${BASE_URL}/admin/${resource}`,
+    show: (id) => `${BASE_URL}/admin/${resource}/show/${id}`,
+    store: `${BASE_URL}/admin/${resource}/store`,
     update: (id) => `${BASE_URL}/admin/${resource}/update/${id}`,
     delete: (id) => `${BASE_URL}/admin/${resource}/delete/${id}`,
   };

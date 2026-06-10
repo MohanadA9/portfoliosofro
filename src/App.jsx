@@ -47,12 +47,17 @@ function NotFound() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
-        <p className="font-mono text-xs uppercase tracking-[0.3em] text-electric">404 • Signal lost</p>
+        <p className="font-mono text-xs uppercase tracking-[0.3em] text-electric">
+          404 • Signal lost
+        </p>
         <h1 className="mt-2 font-display text-5xl font-bold">Page not found</h1>
         <p className="mt-3 text-sm text-muted-foreground">
           The frequency you tuned into doesn't exist or has been retired.
         </p>
-        <Link to="/" className="mt-6 inline-flex items-center justify-center rounded-md bg-electric px-4 py-2 text-sm font-medium text-electric-foreground hover:opacity-90">
+        <Link
+          to="/"
+          className="mt-6 inline-flex items-center justify-center rounded-md bg-electric px-4 py-2 text-sm font-medium text-electric-foreground hover:opacity-90"
+        >
           Back to homepage
         </Link>
       </div>

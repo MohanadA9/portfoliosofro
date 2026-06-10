@@ -16,8 +16,8 @@ export async function confirmDelete(message = "This action cannot be undone.") {
     confirmButtonColor: "#0ea5e9",
     cancelButtonColor: isDark ? "#334155" : "#cbd5e1",
     customClass: {
-      popup: "rounded-2xl"
-    }
+      popup: "rounded-2xl",
+    },
   });
   return res.isConfirmed;
 }
@@ -32,7 +32,7 @@ export async function successAlert(title = "Done", text) {
     background: isDark ? "#0b1424" : "#ffffff",
     color: isDark ? "#e2e8f0" : "#0f172a",
     customClass: {
-      popup: "rounded-2xl"
-    }
+      popup: "rounded-2xl",
+    },
   });
 }

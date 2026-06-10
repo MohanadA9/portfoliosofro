@@ -1,23 +1,43 @@
 import { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { LayoutDashboard, Award, Briefcase, FileText, Crown, BookOpen, Video, Edit3, MessageSquare, User, Settings, LogOut, Radio, Moon, Sun, Bell, GraduationCap, Menu, X } from "lucide-react";
+import {
+  LayoutDashboard,
+  Award,
+  Briefcase,
+  FileText,
+  Crown,
+  BookOpen,
+  Video,
+  Edit3,
+  MessageSquare,
+  User,
+  Settings,
+  LogOut,
+  Radio,
+  Moon,
+  Sun,
+  Bell,
+  GraduationCap,
+  Menu,
+  X,
+} from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { useTheme } from "@/context/ThemeContext";
 import { toast } from "sonner";
 
 const items = [
-  { to: "/admin",               label: "Dashboard",    icon: LayoutDashboard, exact: true },
-  { to: "/admin/achievements",  label: "Achievements", icon: Award },
-  { to: "/admin/experiences",   label: "Experiences",  icon: Briefcase },
-  { to: "/admin/education",     label: "Education",    icon: GraduationCap },
-  { to: "/admin/researches",    label: "Researches",   icon: FileText },
-  { to: "/admin/positions",     label: "Positions",    icon: Crown },
-  { to: "/admin/courses",       label: "Courses",      icon: BookOpen },
-  { to: "/admin/lectures",      label: "Lectures",     icon: Video },
-  { to: "/admin/blogs",         label: "Blogs",        icon: Edit3 },
-  { to: "/admin/messages",      label: "Messages",     icon: MessageSquare },
-  { to: "/admin/profile",       label: "Profile",      icon: User },
-  { to: "/admin/settings",      label: "Settings",     icon: Settings },
+  { to: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
+  { to: "/admin/achievements", label: "Achievements", icon: Award },
+  { to: "/admin/experiences", label: "Experiences", icon: Briefcase },
+  { to: "/admin/education", label: "Education", icon: GraduationCap },
+  { to: "/admin/researches", label: "Researches", icon: FileText },
+  { to: "/admin/positions", label: "Positions", icon: Crown },
+  { to: "/admin/courses", label: "Courses", icon: BookOpen },
+  { to: "/admin/lectures", label: "Lectures", icon: Video },
+  { to: "/admin/blogs", label: "Blogs", icon: Edit3 },
+  { to: "/admin/messages", label: "Messages", icon: MessageSquare },
+  { to: "/admin/profile", label: "Profile", icon: User },
+  { to: "/admin/settings", label: "Settings", icon: Settings },
 ];
 
 function SidebarContent({ path, onNavigate, onLogout }) {
@@ -83,7 +103,6 @@ export function AdminShell({ children }) {
 
   return (
     <div className="flex h-screen overflow-hidden w-full bg-background">
-
       {/* Desktop sidebar */}
       <aside className="hidden md:flex w-64 shrink-0 flex-col border-r border-sidebar-border bg-sidebar text-sidebar-foreground h-screen">
         <SidebarContent path={path} onNavigate={() => {}} onLogout={onLogout} />
@@ -109,11 +128,7 @@ export function AdminShell({ children }) {
         >
           <X className="size-4" />
         </button>
-        <SidebarContent
-          path={path}
-          onNavigate={() => setMobileOpen(false)}
-          onLogout={onLogout}
-        />
+        <SidebarContent path={path} onNavigate={() => setMobileOpen(false)} onLogout={onLogout} />
       </aside>
 
       {/* Main content */}
@@ -128,7 +143,8 @@ export function AdminShell({ children }) {
           </button>
 
           <p className="text-sm text-muted-foreground">
-            Welcome back, <span className="text-foreground font-medium">{user?.name ?? "Professor"}</span>
+            Welcome back,{" "}
+            <span className="text-foreground font-medium">{user?.name ?? "Professor"}</span>
           </p>
 
           <div className="ml-auto flex items-center gap-2">
@@ -136,18 +152,22 @@ export function AdminShell({ children }) {
               <Bell className="size-4" />
               <span className="absolute top-1 right-1 size-1.5 rounded-full bg-electric" />
             </button>
-            <button onClick={toggle} className="grid size-9 place-items-center rounded-md border border-border hover:border-electric/60">
+            <button
+              onClick={toggle}
+              className="grid size-9 place-items-center rounded-md border border-border hover:border-electric/60"
+            >
               {theme === "dark" ? <Sun className="size-4" /> : <Moon className="size-4" />}
             </button>
-            <Link to="/" className="hidden sm:inline-flex h-9 items-center rounded-md border border-border px-3 text-xs hover:border-electric/60">
+            <Link
+              to="/"
+              className="hidden sm:inline-flex h-9 items-center rounded-md border border-border px-3 text-xs hover:border-electric/60"
+            >
               View site
             </Link>
           </div>
         </header>
 
-        <main className="flex-1 overflow-y-auto p-5 md:p-8">
-          {children}
-        </main>
+        <main className="flex-1 overflow-y-auto p-5 md:p-8">{children}</main>
       </div>
     </div>
   );

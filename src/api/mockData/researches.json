@@ -4,15 +4,8 @@
     "title": "Intelligent Reflecting Surfaces for 6G: A Survey",
     "year": 2026,
     "abstract": "We present a novel framework that addresses a fundamental challenge in modern wireless systems. Through extensive simulation and an over-the-air testbed campaign, our approach demonstrates measurable improvements in spectral and energy efficiency over established baselines, while remaining tractable for real-time implementation on commodity hardware.",
-    "authors": [
-      "K. A. Mansour",
-      "S. El-Hag"
-    ],
-    "keywords": [
-      "MIMO",
-      "6G",
-      "Beamforming"
-    ],
+    "authors": ["K. A. Mansour", "S. El-Hag"],
+    "keywords": ["MIMO", "6G", "Beamforming"],
     "journal": "IEEE Trans. Wireless Comms",
     "conference": "IEEE ICC",
     "doi": "10.1109/TWC.2026.1000",
@@ -25,17 +18,8 @@
     "title": "Deep-Learning Channel Estimation for Massive MIMO",
     "year": 2025,
     "abstract": "We present a novel framework that addresses a fundamental challenge in modern wireless systems. Through extensive simulation and an over-the-air testbed campaign, our approach demonstrates measurable improvements in spectral and energy efficiency over established baselines, while remaining tractable for real-time implementation on commodity hardware.",
-    "authors": [
-      "K. A. Mansour",
-      "S. El-Hag",
-      "M. Rashed"
-    ],
-    "keywords": [
-      "MIMO",
-      "6G",
-      "Beamforming",
-      "Deep Learning"
-    ],
+    "authors": ["K. A. Mansour", "S. El-Hag", "M. Rashed"],
+    "keywords": ["MIMO", "6G", "Beamforming", "Deep Learning"],
     "journal": "IEEE JSAC",
     "conference": null,
     "doi": "10.1109/TWC.2026.1001",
@@ -48,19 +32,8 @@
     "title": "Energy-Efficient Beamforming in mmWave Cells",
     "year": 2024,
     "abstract": "We present a novel framework that addresses a fundamental challenge in modern wireless systems. Through extensive simulation and an over-the-air testbed campaign, our approach demonstrates measurable improvements in spectral and energy efficiency over established baselines, while remaining tractable for real-time implementation on commodity hardware.",
-    "authors": [
-      "K. A. Mansour",
-      "S. El-Hag",
-      "M. Rashed",
-      "N. Farouk"
-    ],
-    "keywords": [
-      "MIMO",
-      "6G",
-      "Beamforming",
-      "Deep Learning",
-      "OFDM"
-    ],
+    "authors": ["K. A. Mansour", "S. El-Hag", "M. Rashed", "N. Farouk"],
+    "keywords": ["MIMO", "6G", "Beamforming", "Deep Learning", "OFDM"],
     "journal": "IEEE Trans. Comms",
     "conference": "IEEE WCNC",
     "doi": "10.1109/TWC.2026.1002",
@@ -73,15 +46,8 @@
     "title": "Federated Learning over Wireless Edge Networks",
     "year": 2023,
     "abstract": "We present a novel framework that addresses a fundamental challenge in modern wireless systems. Through extensive simulation and an over-the-air testbed campaign, our approach demonstrates measurable improvements in spectral and energy efficiency over established baselines, while remaining tractable for real-time implementation on commodity hardware.",
-    "authors": [
-      "K. A. Mansour",
-      "S. El-Hag"
-    ],
-    "keywords": [
-      "MIMO",
-      "6G",
-      "Beamforming"
-    ],
+    "authors": ["K. A. Mansour", "S. El-Hag"],
+    "keywords": ["MIMO", "6G", "Beamforming"],
     "journal": "IEEE Network",
     "conference": null,
     "doi": "10.1109/TWC.2026.1003",
@@ -94,17 +60,8 @@
     "title": "Terahertz Propagation in Urban Microcells",
     "year": 2022,
     "abstract": "We present a novel framework that addresses a fundamental challenge in modern wireless systems. Through extensive simulation and an over-the-air testbed campaign, our approach demonstrates measurable improvements in spectral and energy efficiency over established baselines, while remaining tractable for real-time implementation on commodity hardware.",
-    "authors": [
-      "K. A. Mansour",
-      "S. El-Hag",
-      "M. Rashed"
-    ],
-    "keywords": [
-      "MIMO",
-      "6G",
-      "Beamforming",
-      "Deep Learning"
-    ],
+    "authors": ["K. A. Mansour", "S. El-Hag", "M. Rashed"],
+    "keywords": ["MIMO", "6G", "Beamforming", "Deep Learning"],
     "journal": "IEEE Trans. Wireless Comms",
     "conference": "IEEE GlobeCom",
     "doi": "10.1109/TWC.2026.1004",
@@ -117,19 +74,8 @@
     "title": "Hybrid NOMA-OMA for Dense IoT Networks",
     "year": 2021,
     "abstract": "We present a novel framework that addresses a fundamental challenge in modern wireless systems. Through extensive simulation and an over-the-air testbed campaign, our approach demonstrates measurable improvements in spectral and energy efficiency over established baselines, while remaining tractable for real-time implementation on commodity hardware.",
-    "authors": [
-      "K. A. Mansour",
-      "S. El-Hag",
-      "M. Rashed",
-      "N. Farouk"
-    ],
-    "keywords": [
-      "MIMO",
-      "6G",
-      "Beamforming",
-      "Deep Learning",
-      "OFDM"
-    ],
+    "authors": ["K. A. Mansour", "S. El-Hag", "M. Rashed", "N. Farouk"],
+    "keywords": ["MIMO", "6G", "Beamforming", "Deep Learning", "OFDM"],
     "journal": "IEEE JSAC",
     "conference": null,
     "doi": "10.1109/TWC.2026.1005",
@@ -142,15 +88,8 @@
     "title": "Joint Sensing & Communication in 6G Air Interface",
     "year": 2026,
     "abstract": "We present a novel framework that addresses a fundamental challenge in modern wireless systems. Through extensive simulation and an over-the-air testbed campaign, our approach demonstrates measurable improvements in spectral and energy efficiency over established baselines, while remaining tractable for real-time implementation on commodity hardware.",
-    "authors": [
-      "K. A. Mansour",
-      "S. El-Hag"
-    ],
-    "keywords": [
-      "MIMO",
-      "6G",
-      "Beamforming"
-    ],
+    "authors": ["K. A. Mansour", "S. El-Hag"],
+    "keywords": ["MIMO", "6G", "Beamforming"],
     "journal": "IEEE Trans. Comms",
     "conference": "IEEE ICC",
     "doi": "10.1109/TWC.2026.1006",
@@ -163,17 +102,8 @@
     "title": "Low-PAPR Waveforms for Satellite-IoT Convergence",
     "year": 2025,
     "abstract": "We present a novel framework that addresses a fundamental challenge in modern wireless systems. Through extensive simulation and an over-the-air testbed campaign, our approach demonstrates measurable improvements in spectral and energy efficiency over established baselines, while remaining tractable for real-time implementation on commodity hardware.",
-    "authors": [
-      "K. A. Mansour",
-      "S. El-Hag",
-      "M. Rashed"
-    ],
-    "keywords": [
-      "MIMO",
-      "6G",
-      "Beamforming",
-      "Deep Learning"
-    ],
+    "authors": ["K. A. Mansour", "S. El-Hag", "M. Rashed"],
+    "keywords": ["MIMO", "6G", "Beamforming", "Deep Learning"],
     "journal": "IEEE Network",
     "conference": null,
     "doi": "10.1109/TWC.2026.1007",
@@ -186,19 +116,8 @@
     "title": "Reinforcement-Learning Power Control for D2D",
     "year": 2024,
     "abstract": "We present a novel framework that addresses a fundamental challenge in modern wireless systems. Through extensive simulation and an over-the-air testbed campaign, our approach demonstrates measurable improvements in spectral and energy efficiency over established baselines, while remaining tractable for real-time implementation on commodity hardware.",
-    "authors": [
-      "K. A. Mansour",
-      "S. El-Hag",
-      "M. Rashed",
-      "N. Farouk"
-    ],
-    "keywords": [
-      "MIMO",
-      "6G",
-      "Beamforming",
-      "Deep Learning",
-      "OFDM"
-    ],
+    "authors": ["K. A. Mansour", "S. El-Hag", "M. Rashed", "N. Farouk"],
+    "keywords": ["MIMO", "6G", "Beamforming", "Deep Learning", "OFDM"],
     "journal": "IEEE Trans. Wireless Comms",
     "conference": "IEEE WCNC",
     "doi": "10.1109/TWC.2026.1008",
@@ -211,15 +130,8 @@
     "title": "Reconfigurable Antennas for Vehicular Networks",
     "year": 2023,
     "abstract": "We present a novel framework that addresses a fundamental challenge in modern wireless systems. Through extensive simulation and an over-the-air testbed campaign, our approach demonstrates measurable improvements in spectral and energy efficiency over established baselines, while remaining tractable for real-time implementation on commodity hardware.",
-    "authors": [
-      "K. A. Mansour",
-      "S. El-Hag"
-    ],
-    "keywords": [
-      "MIMO",
-      "6G",
-      "Beamforming"
-    ],
+    "authors": ["K. A. Mansour", "S. El-Hag"],
+    "keywords": ["MIMO", "6G", "Beamforming"],
     "journal": "IEEE JSAC",
     "conference": null,
     "doi": "10.1109/TWC.2026.1009",
@@ -232,17 +144,8 @@
     "title": "Privacy-Preserving Aggregation in 5G Slicing",
     "year": 2022,
     "abstract": "We present a novel framework that addresses a fundamental challenge in modern wireless systems. Through extensive simulation and an over-the-air testbed campaign, our approach demonstrates measurable improvements in spectral and energy efficiency over established baselines, while remaining tractable for real-time implementation on commodity hardware.",
-    "authors": [
-      "K. A. Mansour",
-      "S. El-Hag",
-      "M. Rashed"
-    ],
-    "keywords": [
-      "MIMO",
-      "6G",
-      "Beamforming",
-      "Deep Learning"
-    ],
+    "authors": ["K. A. Mansour", "S. El-Hag", "M. Rashed"],
+    "keywords": ["MIMO", "6G", "Beamforming", "Deep Learning"],
     "journal": "IEEE Trans. Comms",
     "conference": "IEEE GlobeCom",
     "doi": "10.1109/TWC.2026.1010",
@@ -255,19 +158,8 @@
     "title": "Quantum Key Distribution over Free-Space Optics",
     "year": 2021,
     "abstract": "We present a novel framework that addresses a fundamental challenge in modern wireless systems. Through extensive simulation and an over-the-air testbed campaign, our approach demonstrates measurable improvements in spectral and energy efficiency over established baselines, while remaining tractable for real-time implementation on commodity hardware.",
-    "authors": [
-      "K. A. Mansour",
-      "S. El-Hag",
-      "M. Rashed",
-      "N. Farouk"
-    ],
-    "keywords": [
-      "MIMO",
-      "6G",
-      "Beamforming",
-      "Deep Learning",
-      "OFDM"
-    ],
+    "authors": ["K. A. Mansour", "S. El-Hag", "M. Rashed", "N. Farouk"],
+    "keywords": ["MIMO", "6G", "Beamforming", "Deep Learning", "OFDM"],
     "journal": "IEEE Network",
     "conference": null,
     "doi": "10.1109/TWC.2026.1011",
@@ -280,15 +172,8 @@
     "title": "Cell-Free Massive MIMO with User-Centric Clustering",
     "year": 2026,
     "abstract": "We present a novel framework that addresses a fundamental challenge in modern wireless systems. Through extensive simulation and an over-the-air testbed campaign, our approach demonstrates measurable improvements in spectral and energy efficiency over established baselines, while remaining tractable for real-time implementation on commodity hardware.",
-    "authors": [
-      "K. A. Mansour",
-      "S. El-Hag"
-    ],
-    "keywords": [
-      "MIMO",
-      "6G",
-      "Beamforming"
-    ],
+    "authors": ["K. A. Mansour", "S. El-Hag"],
+    "keywords": ["MIMO", "6G", "Beamforming"],
     "journal": "IEEE Trans. Wireless Comms",
     "conference": "IEEE ICC",
     "doi": "10.1109/TWC.2026.1012",
@@ -301,17 +186,8 @@
     "title": "AI-Native Air Interfaces: Opportunities & Pitfalls",
     "year": 2025,
     "abstract": "We present a novel framework that addresses a fundamental challenge in modern wireless systems. Through extensive simulation and an over-the-air testbed campaign, our approach demonstrates measurable improvements in spectral and energy efficiency over established baselines, while remaining tractable for real-time implementation on commodity hardware.",
-    "authors": [
-      "K. A. Mansour",
-      "S. El-Hag",
-      "M. Rashed"
-    ],
-    "keywords": [
-      "MIMO",
-      "6G",
-      "Beamforming",
-      "Deep Learning"
-    ],
+    "authors": ["K. A. Mansour", "S. El-Hag", "M. Rashed"],
+    "keywords": ["MIMO", "6G", "Beamforming", "Deep Learning"],
     "journal": "IEEE JSAC",
     "conference": null,
     "doi": "10.1109/TWC.2026.1013",
@@ -324,19 +200,8 @@
     "title": "Hybrid Beamforming with One-Bit ADCs",
     "year": 2024,
     "abstract": "We present a novel framework that addresses a fundamental challenge in modern wireless systems. Through extensive simulation and an over-the-air testbed campaign, our approach demonstrates measurable improvements in spectral and energy efficiency over established baselines, while remaining tractable for real-time implementation on commodity hardware.",
-    "authors": [
-      "K. A. Mansour",
-      "S. El-Hag",
-      "M. Rashed",
-      "N. Farouk"
-    ],
-    "keywords": [
-      "MIMO",
-      "6G",
-      "Beamforming",
-      "Deep Learning",
-      "OFDM"
-    ],
+    "authors": ["K. A. Mansour", "S. El-Hag", "M. Rashed", "N. Farouk"],
+    "keywords": ["MIMO", "6G", "Beamforming", "Deep Learning", "OFDM"],
     "journal": "IEEE Trans. Comms",
     "conference": "IEEE WCNC",
     "doi": "10.1109/TWC.2026.1014",
@@ -349,15 +214,8 @@
     "title": "Energy Harvesting in Backscatter Communications",
     "year": 2023,
     "abstract": "We present a novel framework that addresses a fundamental challenge in modern wireless systems. Through extensive simulation and an over-the-air testbed campaign, our approach demonstrates measurable improvements in spectral and energy efficiency over established baselines, while remaining tractable for real-time implementation on commodity hardware.",
-    "authors": [
-      "K. A. Mansour",
-      "S. El-Hag"
-    ],
-    "keywords": [
-      "MIMO",
-      "6G",
-      "Beamforming"
-    ],
+    "authors": ["K. A. Mansour", "S. El-Hag"],
+    "keywords": ["MIMO", "6G", "Beamforming"],
     "journal": "IEEE Network",
     "conference": null,
     "doi": "10.1109/TWC.2026.1015",
@@ -370,17 +228,8 @@
     "title": "URLLC Scheduling under Bursty Traffic",
     "year": 2022,
     "abstract": "We present a novel framework that addresses a fundamental challenge in modern wireless systems. Through extensive simulation and an over-the-air testbed campaign, our approach demonstrates measurable improvements in spectral and energy efficiency over established baselines, while remaining tractable for real-time implementation on commodity hardware.",
-    "authors": [
-      "K. A. Mansour",
-      "S. El-Hag",
-      "M. Rashed"
-    ],
-    "keywords": [
-      "MIMO",
-      "6G",
-      "Beamforming",
-      "Deep Learning"
-    ],
+    "authors": ["K. A. Mansour", "S. El-Hag", "M. Rashed"],
+    "keywords": ["MIMO", "6G", "Beamforming", "Deep Learning"],
     "journal": "IEEE Trans. Wireless Comms",
     "conference": "IEEE GlobeCom",
     "doi": "10.1109/TWC.2026.1016",
@@ -393,19 +242,8 @@
     "title": "Network Coding for LEO Satellite Mesh",
     "year": 2021,
     "abstract": "We present a novel framework that addresses a fundamental challenge in modern wireless systems. Through extensive simulation and an over-the-air testbed campaign, our approach demonstrates measurable improvements in spectral and energy efficiency over established baselines, while remaining tractable for real-time implementation on commodity hardware.",
-    "authors": [
-      "K. A. Mansour",
-      "S. El-Hag",
-      "M. Rashed",
-      "N. Farouk"
-    ],
-    "keywords": [
-      "MIMO",
-      "6G",
-      "Beamforming",
-      "Deep Learning",
-      "OFDM"
-    ],
+    "authors": ["K. A. Mansour", "S. El-Hag", "M. Rashed", "N. Farouk"],
+    "keywords": ["MIMO", "6G", "Beamforming", "Deep Learning", "OFDM"],
     "journal": "IEEE JSAC",
     "conference": null,
     "doi": "10.1109/TWC.2026.1017",
@@ -418,15 +256,8 @@
     "title": "Acoustic-OFDM for Underwater IoT",
     "year": 2026,
     "abstract": "We present a novel framework that addresses a fundamental challenge in modern wireless systems. Through extensive simulation and an over-the-air testbed campaign, our approach demonstrates measurable improvements in spectral and energy efficiency over established baselines, while remaining tractable for real-time implementation on commodity hardware.",
-    "authors": [
-      "K. A. Mansour",
-      "S. El-Hag"
-    ],
-    "keywords": [
-      "MIMO",
-      "6G",
-      "Beamforming"
-    ],
+    "authors": ["K. A. Mansour", "S. El-Hag"],
+    "keywords": ["MIMO", "6G", "Beamforming"],
     "journal": "IEEE Trans. Comms",
     "conference": "IEEE ICC",
     "doi": "10.1109/TWC.2026.1018",
@@ -439,17 +270,8 @@
     "title": "Spectrum Sharing via Cognitive Radio in 6G",
     "year": 2025,
     "abstract": "We present a novel framework that addresses a fundamental challenge in modern wireless systems. Through extensive simulation and an over-the-air testbed campaign, our approach demonstrates measurable improvements in spectral and energy efficiency over established baselines, while remaining tractable for real-time implementation on commodity hardware.",
-    "authors": [
-      "K. A. Mansour",
-      "S. El-Hag",
-      "M. Rashed"
-    ],
-    "keywords": [
-      "MIMO",
-      "6G",
-      "Beamforming",
-      "Deep Learning"
-    ],
+    "authors": ["K. A. Mansour", "S. El-Hag", "M. Rashed"],
+    "keywords": ["MIMO", "6G", "Beamforming", "Deep Learning"],
     "journal": "IEEE Network",
     "conference": null,
     "doi": "10.1109/TWC.2026.1019",

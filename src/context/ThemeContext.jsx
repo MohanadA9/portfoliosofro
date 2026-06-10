@@ -1,11 +1,9 @@
 import { createContext, useContext, useEffect, useState } from "react";
 const ThemeContext = createContext(null);
-export function ThemeProvider({
-  children
-}) {
+export function ThemeProvider({ children }) {
   const [theme, setThemeState] = useState("dark");
   useEffect(() => {
-    const stored = typeof window !== "undefined" && localStorage.getItem("theme") || "dark";
+    const stored = (typeof window !== "undefined" && localStorage.getItem("theme")) || "dark";
     setThemeState(stored);
   }, []);
   useEffect(() => {
@@ -16,13 +14,17 @@ export function ThemeProvider({
       localStorage.setItem("theme", theme);
     } catch {}
   }, [theme]);
-  return <ThemeContext.Provider value={{
-    theme,
-    toggle: () => setThemeState(t => t === "dark" ? "light" : "dark"),
-    setTheme: setThemeState
-  }}>
+  return (
+    <ThemeContext.Provider
+      value={{
+        theme,
+        toggle: () => setThemeState((t) => (t === "dark" ? "light" : "dark")),
+        setTheme: setThemeState,
+      }}
+    >
       {children}
-    </ThemeContext.Provider>;
+    </ThemeContext.Provider>
+  );
 }
 export const useTheme = () => {
   const ctx = useContext(ThemeContext);

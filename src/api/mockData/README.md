@@ -6,7 +6,7 @@ This folder is the **mock backend** the app talks to when
 Editable resources:
 
 - `settings.json` — site title, hero copy, typewriter phrases, CTAs, footer.
-- 
+-
 
 The bulkier auto-generated datasets (achievements, researches, courses, blogs,
 experiences, positions, messages, media, education, profile) live in

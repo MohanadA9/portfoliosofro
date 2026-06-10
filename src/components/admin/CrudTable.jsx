@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 /**
  * Reusable CRUD Table Component
@@ -8,13 +8,7 @@ import React, { useState } from 'react';
  * @param {Function} onDelete - Callback for delete action
  * @param {boolean} loading - Loading state
  */
-export const CrudTable = ({ 
-  data = [], 
-  columns = [], 
-  onEdit, 
-  onDelete, 
-  loading = false 
-}) => {
+export const CrudTable = ({ data = [], columns = [], onEdit, onDelete, loading = false }) => {
   const [selectedRows, setSelectedRows] = useState([]);
 
   const handleSelectAll = (e) => {
@@ -26,10 +20,8 @@ export const CrudTable = ({
   };
 
   const handleSelectRow = (idx) => {
-    setSelectedRows(prev => 
-      prev.includes(idx) 
-        ? prev.filter(i => i !== idx)
-        : [...prev, idx]
+    setSelectedRows((prev) =>
+      prev.includes(idx) ? prev.filter((i) => i !== idx) : [...prev, idx],
     );
   };
 
@@ -47,13 +39,13 @@ export const CrudTable = ({
         <thead className="bg-muted border-b">
           <tr>
             <th className="px-4 py-2 text-left">
-              <input 
-                type="checkbox" 
+              <input
+                type="checkbox"
                 onChange={handleSelectAll}
                 checked={selectedRows.length === data.length && data.length > 0}
               />
             </th>
-            {columns.map(col => (
+            {columns.map((col) => (
               <th key={col.key} className="px-4 py-2 text-left font-semibold">
                 {col.label}
               </th>
@@ -65,20 +57,20 @@ export const CrudTable = ({
           {data.map((row, idx) => (
             <tr key={idx} className="border-b hover:bg-muted/50">
               <td className="px-4 py-2">
-                <input 
-                  type="checkbox" 
+                <input
+                  type="checkbox"
                   checked={selectedRows.includes(idx)}
                   onChange={() => handleSelectRow(idx)}
                 />
               </td>
-              {columns.map(col => (
+              {columns.map((col) => (
                 <td key={col.key} className="px-4 py-2">
                   {col.render ? col.render(row[col.key], row) : row[col.key]}
                 </td>
               ))}
               <td className="px-4 py-2 space-x-2">
                 {onEdit && (
-                  <button 
+                  <button
                     onClick={() => onEdit(row)}
                     className="px-2 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 text-xs"
                   >
@@ -86,7 +78,7 @@ export const CrudTable = ({
                   </button>
                 )}
                 {onDelete && (
-                  <button 
+                  <button
                     onClick={() => onDelete(row.id)}
                     className="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600 text-xs"
                   >

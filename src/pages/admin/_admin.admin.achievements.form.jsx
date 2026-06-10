@@ -4,21 +4,31 @@ import { ArrowLeft, UploadCloud, X, ImageIcon, GripVertical } from "lucide-react
 import { useAdminAchievements } from "@/context/AdminDataContext";
 import { api } from "@/api/client";
 
-const INPUT = "w-full rounded-lg border border-border bg-muted/30 px-3 py-2 text-sm focus:outline-none focus:border-electric/60 focus:ring-1 focus:ring-electric/30";
+const INPUT =
+  "w-full rounded-lg border border-border bg-muted/30 px-3 py-2 text-sm focus:outline-none focus:border-electric/60 focus:ring-1 focus:ring-electric/30";
 const TEXTAREA = `${INPUT} resize-none`;
 
 function Label({ children }) {
-  return <label className="text-[11px] font-mono uppercase tracking-widest text-muted-foreground">{children}</label>;
+  return (
+    <label className="text-[11px] font-mono uppercase tracking-widest text-muted-foreground">
+      {children}
+    </label>
+  );
 }
 function Field({ label, children }) {
-  return <div className="space-y-1.5"><Label>{label}</Label>{children}</div>;
+  return (
+    <div className="space-y-1.5">
+      <Label>{label}</Label>
+      {children}
+    </div>
+  );
 }
 
 function ImageGrid({ images, onRemove, onAdd }) {
   const inputRef = useRef(null);
 
   const handleFiles = (files) => {
-    Array.from(files).forEach(file => {
+    Array.from(files).forEach((file) => {
       const r = new FileReader();
       r.onload = () => onAdd(r.result);
       r.readAsDataURL(file);
@@ -29,7 +39,10 @@ function ImageGrid({ images, onRemove, onAdd }) {
     <div className="space-y-3">
       <div className="grid grid-cols-3 gap-3">
         {images.map((src, idx) => (
-          <div key={idx} className="relative group aspect-video rounded-lg overflow-hidden border border-border">
+          <div
+            key={idx}
+            className="relative group aspect-video rounded-lg overflow-hidden border border-border"
+          >
             <img src={src} alt="" className="size-full object-cover" />
             {idx === 0 && (
               <span className="absolute top-1.5 left-1.5 text-[10px] font-mono uppercase tracking-wider bg-electric text-electric-foreground px-1.5 py-0.5 rounded">
@@ -63,7 +76,10 @@ function ImageGrid({ images, onRemove, onAdd }) {
         accept="image/*"
         multiple
         hidden
-        onChange={e => { handleFiles(e.target.files); e.target.value = ""; }}
+        onChange={(e) => {
+          handleFiles(e.target.files);
+          e.target.value = "";
+        }}
       />
 
       {images.length > 0 && (
@@ -76,8 +92,12 @@ function ImageGrid({ images, onRemove, onAdd }) {
 }
 
 const EMPTY = {
-  title: "", description: "", fullDescription: "",
-  date: "", category: "", liveLink: "",
+  title: "",
+  description: "",
+  fullDescription: "",
+  date: "",
+  category: "",
+  liveLink: "",
   images: [],
 };
 
@@ -92,12 +112,13 @@ export default function AchievementForm() {
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    if (!isEdit) { setLoaded(true); return; }
-    const item = allItems.find(a => a.id === id);
+    if (!isEdit) {
+      setLoaded(true);
+      return;
+    }
+    const item = allItems.find((a) => a.id === id);
     if (item) {
-      const images = item.gallery?.length
-        ? item.gallery
-        : item.cover ? [item.cover] : [];
+      const images = item.gallery?.length ? item.gallery : item.cover ? [item.cover] : [];
       setForm({
         title: item.title ?? "",
         description: item.description ?? item.shortDescription ?? "",
@@ -111,10 +132,11 @@ export default function AchievementForm() {
     }
   }, [allItems, id, isEdit]);
 
-  const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
+  const set = (k, v) => setForm((f) => ({ ...f, [k]: v }));
 
-  const addImage = (src) => setForm(f => ({ ...f, images: [...f.images, src] }));
-  const removeImage = (idx) => setForm(f => ({ ...f, images: f.images.filter((_, i) => i !== idx) }));
+  const addImage = (src) => setForm((f) => ({ ...f, images: [...f.images, src] }));
+  const removeImage = (idx) =>
+    setForm((f) => ({ ...f, images: f.images.filter((_, i) => i !== idx) }));
 
   const submit = async (e) => {
     e.preventDefault();
@@ -134,7 +156,10 @@ export default function AchievementForm() {
     }
   };
 
-  if (!loaded) return <div className="flex items-center justify-center py-32 text-muted-foreground">Loading…</div>;
+  if (!loaded)
+    return (
+      <div className="flex items-center justify-center py-32 text-muted-foreground">Loading…</div>
+    );
 
   return (
     <form onSubmit={submit} className="space-y-6 max-w-3xl">
@@ -148,7 +173,9 @@ export default function AchievementForm() {
           <ArrowLeft className="size-4" />
         </button>
         <div className="flex-1">
-          <h1 className="text-3xl font-bold font-display">{isEdit ? "Edit Achievement" : "New Achievement"}</h1>
+          <h1 className="text-3xl font-bold font-display">
+            {isEdit ? "Edit Achievement" : "New Achievement"}
+          </h1>
           <p className="text-sm text-muted-foreground mt-0.5">Fill in the details below</p>
         </div>
         <button
@@ -175,32 +202,65 @@ export default function AchievementForm() {
       {/* Details */}
       <div className="bg-card border border-border rounded-xl overflow-hidden">
         <div className="px-6 py-3.5 border-b border-border">
-          <p className="text-[11px] font-mono uppercase tracking-widest text-muted-foreground">Details</p>
+          <p className="text-[11px] font-mono uppercase tracking-widest text-muted-foreground">
+            Details
+          </p>
         </div>
         <div className="px-6 py-5 space-y-4">
           <Field label="Title">
-            <input required value={form.title} onChange={e => set("title", e.target.value)} className={INPUT} />
+            <input
+              required
+              value={form.title}
+              onChange={(e) => set("title", e.target.value)}
+              className={INPUT}
+            />
           </Field>
 
           <div className="grid grid-cols-2 gap-4">
             <Field label="Category">
-              <input value={form.category} onChange={e => set("category", e.target.value)} placeholder="Award, Grant, Patent…" className={INPUT} />
+              <input
+                value={form.category}
+                onChange={(e) => set("category", e.target.value)}
+                placeholder="Award, Grant, Patent…"
+                className={INPUT}
+              />
             </Field>
             <Field label="Date">
-              <input type="date" value={form.date} onChange={e => set("date", e.target.value)} className={INPUT} />
+              <input
+                type="date"
+                value={form.date}
+                onChange={(e) => set("date", e.target.value)}
+                className={INPUT}
+              />
             </Field>
           </div>
 
           <Field label="Short Description">
-            <textarea rows={3} value={form.description} onChange={e => set("description", e.target.value)} className={TEXTAREA} />
+            <textarea
+              rows={3}
+              value={form.description}
+              onChange={(e) => set("description", e.target.value)}
+              className={TEXTAREA}
+            />
           </Field>
 
           <Field label="Full Description">
-            <textarea rows={5} value={form.fullDescription} onChange={e => set("fullDescription", e.target.value)} className={TEXTAREA} />
+            <textarea
+              rows={5}
+              value={form.fullDescription}
+              onChange={(e) => set("fullDescription", e.target.value)}
+              className={TEXTAREA}
+            />
           </Field>
 
           <Field label="Live Link (optional)">
-            <input type="url" value={form.liveLink} onChange={e => set("liveLink", e.target.value)} placeholder="https://…" className={INPUT} />
+            <input
+              type="url"
+              value={form.liveLink}
+              onChange={(e) => set("liveLink", e.target.value)}
+              placeholder="https://…"
+              className={INPUT}
+            />
           </Field>
         </div>
       </div>
