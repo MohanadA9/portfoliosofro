@@ -7,7 +7,7 @@
 import {
   achievements as seedAchievements,
   experiences as seedExperiences,
-  researches as seedResearches,
+  researches as seedResearches, 
   positions as seedPositions,
   courses as seedCourses,
   blogs as seedBlogs,
