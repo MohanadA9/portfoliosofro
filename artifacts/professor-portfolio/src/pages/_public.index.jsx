@@ -8,7 +8,7 @@ import { CircuitBackground } from "@/components/effects/CircuitBackground";
 import { SectionHeader } from "@/components/common/Headers";
 import { CoverCard } from "@/components/common/Cards";
 import { Stat } from "@/components/common/Primitives";
-import { useProfessor, useCourses, useResearches, useAchievements, useBlogs, useStats } from "@/context/DataContext";
+import { useProfessor, useCourses, useResearches, useAchievements, useBlogs, useStats, useExperience } from "@/context/DataContext";
 
 function Typewriter({ titles }) {
   const [i, setI] = useState(0);
@@ -44,12 +44,13 @@ function HomePage() {
   const achievements = useAchievements();
   const blogs = useBlogs();
   const stats = useStats();
+  const experience = useExperience();
 
   if (!professor || !stats) {
     return <div className="flex min-h-screen items-center justify-center">Loading…</div>;
   }
 
-  const typewriterTitles = professor.skills?.map(s => s.name) ?? [];
+  const typewriterTitles = experience?.map(e => e.position) ?? [];
   const heroSubtitle = professor.title ?? `${professor.department} · ${professor.university}`;
 
   const nameParts = professor.name?.split(" ") ?? [];
