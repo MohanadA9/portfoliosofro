@@ -99,9 +99,6 @@ export function PublicNavbar() {
               <span className="absolute inset-0 rounded-lg ring-1 ring-electric/40 group-hover:ring-electric transition" />
             </span>
             <div className="leading-tight">
-              <p className="font-display text-sm font-bold">
-                {settings?.doctorName ?? "Prof. K. Mansour"}
-              </p>
               <p className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">
                 ECE • CIT
               </p>
