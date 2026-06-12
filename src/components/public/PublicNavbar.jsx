@@ -17,6 +17,7 @@ import {
   Mail,
 } from "lucide-react";
 import { useTheme } from "@/context/ThemeContext";
+import { useSiteSettings } from "@/context/SiteSettingsContext";
 import { AnimatePresence, motion } from "framer-motion";
 const links = [
   {
@@ -77,6 +78,7 @@ function isActive(to, path) {
 }
 export function PublicNavbar() {
   const { theme, toggle } = useTheme();
+  const { settings } = useSiteSettings();
   const [open, setOpen] = useState(false);
   const path = useLocation().pathname;
   return (
@@ -84,12 +86,22 @@ export function PublicNavbar() {
       <header className="sticky top-0 z-50 border-b border-border/60 backdrop-blur-xl bg-background/70">
         <div className="container-academic flex h-16 items-center justify-between">
           <Link to="/" className="flex items-center gap-2 group">
-            <span className="relative grid size-9 place-items-center rounded-lg bg-primary text-primary-foreground glow-sm">
-              <Radio className="size-4" />
+            <span className="relative grid size-9 place-items-center overflow-hidden rounded-lg bg-primary text-primary-foreground glow-sm">
+              {settings?.icon ? (
+                <img
+                  src={settings.icon}
+                  alt=""
+                  className="size-full object-cover"
+                />
+              ) : (
+                <Radio className="size-4" />
+              )}
               <span className="absolute inset-0 rounded-lg ring-1 ring-electric/40 group-hover:ring-electric transition" />
             </span>
             <div className="leading-tight">
-              <p className="font-display text-sm font-bold">Prof. K. Mansour</p>
+              <p className="font-display text-sm font-bold">
+                {settings?.doctorName ?? "Prof. K. Mansour"}
+              </p>
               <p className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">
                 ECE • CIT
               </p>

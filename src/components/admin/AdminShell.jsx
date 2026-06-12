@@ -23,6 +23,7 @@ import {
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { useTheme } from "@/context/ThemeContext";
+import { useSiteSettings } from "@/context/SiteSettingsContext";
 import { toast } from "sonner";
 
 const items = [
@@ -41,16 +42,31 @@ const items = [
 ];
 
 function SidebarContent({ path, onNavigate, onLogout }) {
+  const { settings } = useSiteSettings();
   return (
     <>
       <div className="p-5 border-b border-sidebar-border shrink-0">
-        <Link to="/admin" onClick={onNavigate} className="flex items-center gap-2">
-          <span className="grid size-9 place-items-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground glow-sm">
-            <Radio className="size-4" />
+        <Link
+          to="/admin"
+          onClick={onNavigate}
+          className="flex items-center gap-2"
+        >
+          <span className="grid size-9 place-items-center overflow-hidden rounded-lg bg-sidebar-primary text-sidebar-primary-foreground glow-sm">
+            {settings?.icon ? (
+              <img
+                src={settings.icon}
+                alt=""
+                className="size-full object-cover"
+              />
+            ) : (
+              <Radio className="size-4" />
+            )}
           </span>
           <div className="leading-tight">
             <p className="font-display text-sm font-bold">Admin Console</p>
-            <p className="text-[10px] font-mono uppercase tracking-widest opacity-60">ECE • CIT</p>
+            <p className="text-[10px] font-mono uppercase tracking-widest opacity-60">
+              ECE • CIT
+            </p>
           </div>
         </Link>
       </div>
@@ -91,6 +107,7 @@ function SidebarContent({ path, onNavigate, onLogout }) {
 export function AdminShell({ children }) {
   const { logout, user } = useAuth();
   const { theme, toggle } = useTheme();
+  const { settings } = useSiteSettings();
   const nav = useNavigate();
   const path = useLocation().pathname;
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -128,7 +145,11 @@ export function AdminShell({ children }) {
         >
           <X className="size-4" />
         </button>
-        <SidebarContent path={path} onNavigate={() => setMobileOpen(false)} onLogout={onLogout} />
+        <SidebarContent
+          path={path}
+          onNavigate={() => setMobileOpen(false)}
+          onLogout={onLogout}
+        />
       </aside>
 
       {/* Main content */}
@@ -144,7 +165,9 @@ export function AdminShell({ children }) {
 
           <p className="text-sm text-muted-foreground">
             Welcome back,{" "}
-            <span className="text-foreground font-medium">{user?.name ?? "Professor"}</span>
+            <span className="text-foreground font-medium">
+              {settings?.doctorName ?? user?.name ?? "Professor"}
+            </span>
           </p>
 
           <div className="ml-auto flex items-center gap-2">
@@ -156,7 +179,11 @@ export function AdminShell({ children }) {
               onClick={toggle}
               className="grid size-9 place-items-center rounded-md border border-border hover:border-electric/60"
             >
-              {theme === "dark" ? <Sun className="size-4" /> : <Moon className="size-4" />}
+              {theme === "dark" ? (
+                <Sun className="size-4" />
+              ) : (
+                <Moon className="size-4" />
+              )}
             </button>
             <Link
               to="/"

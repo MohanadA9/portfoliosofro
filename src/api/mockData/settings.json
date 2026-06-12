@@ -1,20 +1,5 @@
 {
-  "siteTitle": "Dr. Mohamed Sobhy Elbakry — Academic Portfolio",
-  "siteDescription": "Associate Professor and Head of the Electronics & Communications Engineering Department at IAET, EAA. Research in wireless, OFDM/FBMC, MIMO, 5G/6G.",
-  "siteKeywords": "electrical communications, OFDM, FBMC, MIMO, NOMA, VLC, RIS, 5G, 6G, DSP, professor",
-  "heroSubtitle": "Researcher · Educator · Head of ECE Department",
-  "heroTypewriter": [
-    "Electrical & Optical Communications",
-    "Multicarrier Systems (OFDM/FBMC)",
-    "Massive MIMO & RIS",
-    "5G / 6G Networks",
-    "Deep Learning for Comms"
-  ],
-  "heroCtaPrimary": "Explore Research",
-  "heroCtaSecondary": "Get in Touch",
-  "footerText": "© 2026 Dr. Mohamed Sobhy Elbakry — Electronics & Communications Engineering Dept., IAET (EAA).",
-  "contactNote": "Open to research collaborations, supervision inquiries, and speaking invitations.",
-  "showStats": true,
-  "showSkills": true,
-  "showInterests": true
+  "doctorName": "Dr. Mohamed Sobhy Elbakry",
+  "icon": "/professor.jpg",
+  "favicon": "/favicon.svg"
 }
