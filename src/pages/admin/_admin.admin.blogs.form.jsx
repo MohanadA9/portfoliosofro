@@ -1,17 +1,41 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { ArrowLeft, CloudUpload as UploadCloud, Image as ImageIcon, X, Loader as Loader2 } from "lucide-react";
+import { ArrowLeft, UploadCloud, Image as ImageIcon, X, Loader as Loader2 } from "lucide-react";
 import { api } from "@/api/client";
 
-function Dropzone({ value, onChange }) {
+const INPUT =
+  "w-full rounded-lg border border-border bg-muted/30 px-3 py-2 text-sm focus:outline-none focus:border-electric/60 focus:ring-1 focus:ring-electric/30";
+const TEXTAREA = `${INPUT} resize-none`;
+
+function Label({ children }) {
+  return (
+    <label className="text-[11px] font-mono uppercase tracking-widest text-muted-foreground">
+      {children}
+    </label>
+  );
+}
+
+function Field({ label, children }) {
+  return (
+    <div className="space-y-1.5">
+      <Label>{label}</Label>
+      {children}
+    </div>
+  );
+}
+
+function ImageUpload({ value, onChange }) {
+  const inputRef = useRef(null);
   const [drag, setDrag] = useState(false);
-  const ref = useRef(null);
-  const handle = (f) => {
-    if (!f) return;
-    const r = new FileReader();
-    r.onload = () => onChange(r.result);
-    r.readAsDataURL(f);
+
+  const handleFiles = (files) => {
+    if (files?.[0]) {
+      const r = new FileReader();
+      r.onload = () => onChange(r.result);
+      r.readAsDataURL(files[0]);
+    }
   };
+
   return (
     <div
       onDragOver={(e) => {
@@ -22,21 +46,26 @@ function Dropzone({ value, onChange }) {
       onDrop={(e) => {
         e.preventDefault();
         setDrag(false);
-        handle(e.dataTransfer.files?.[0]);
+        handleFiles(e.dataTransfer.files);
       }}
-      onClick={() => ref.current?.click()}
-      className={`cursor-pointer rounded-xl border-2 border-dashed transition overflow-hidden ${drag ? "border-electric bg-electric/5" : "border-border bg-muted/20 hover:border-electric/50"}`}
+      className={`relative rounded-lg border-2 border-dashed transition overflow-hidden cursor-pointer ${
+        drag ? "border-electric bg-electric/5" : "border-border bg-muted/20 hover:border-electric/50"
+      }`}
     >
       <input
-        ref={ref}
+        ref={inputRef}
         type="file"
         accept="image/*"
         hidden
-        onChange={(e) => handle(e.target.files?.[0])}
+        onChange={(e) => {
+          handleFiles(e.target.files);
+          e.target.value = "";
+        }}
       />
+
       {value ? (
-        <div className="relative aspect-[21/9]">
-          <img src={value} className="w-full h-full object-cover" alt="" />
+        <div className="relative aspect-video">
+          <img src={value} className="w-full h-full object-cover" alt="Cover" />
           <button
             type="button"
             onClick={(e) => {
@@ -49,7 +78,10 @@ function Dropzone({ value, onChange }) {
           </button>
         </div>
       ) : (
-        <div className="flex flex-col items-center justify-center gap-3 py-16 text-center px-4">
+        <div
+          onClick={() => inputRef.current?.click()}
+          className="flex flex-col items-center justify-center gap-3 py-16 text-center px-4"
+        >
           <div className="grid size-14 place-items-center rounded-full bg-electric/10 text-electric">
             <UploadCloud className="size-6" />
           </div>
@@ -77,13 +109,16 @@ export default function BlogForm() {
   useEffect(() => {
     if (id) {
       setLoading(true);
-      api.blogs.get(id).then((data) => {
-        setForm(data ?? EMPTY);
-        setLoading(false);
-      }).catch(() => {
-        setLoading(false);
-        navigate("/admin/blogs");
-      });
+      api.blogs
+        .get(id)
+        .then((data) => {
+          setForm(data ?? EMPTY);
+          setLoading(false);
+        })
+        .catch(() => {
+          setLoading(false);
+          navigate("/admin/blogs");
+        });
     }
   }, [id, navigate]);
 
@@ -113,124 +148,125 @@ export default function BlogForm() {
   }
 
   return (
-    <div className="max-w-5xl mx-auto space-y-6">
+    <form onSubmit={submit} className="space-y-6">
       {/* Header */}
       <div className="flex items-center gap-4">
         <button
+          type="button"
           onClick={() => navigate("/admin/blogs")}
-          className="grid size-10 place-items-center rounded-lg border border-border hover:bg-muted transition"
+          className="grid size-9 place-items-center rounded-md border border-border hover:border-electric/60 text-muted-foreground hover:text-foreground transition"
         >
-          <ArrowLeft className="size-5" />
+          <ArrowLeft className="size-4" />
         </button>
-        <div>
+        <div className="flex-1">
           <h1 className="text-3xl font-bold font-display">
             {isEdit ? "Edit Post" : "New Post"}
           </h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            {isEdit ? "Update the blog post details" : "Create a new blog post"}
+          <p className="text-sm text-muted-foreground mt-0.5">Fill in the details below</p>
+        </div>
+        <button
+          type="submit"
+          disabled={saving}
+          className="flex items-center gap-1.5 px-5 py-2 rounded-lg bg-electric text-electric-foreground text-sm font-medium hover:opacity-90 disabled:opacity-50 transition"
+        >
+          {saving && <Loader2 className="size-4 animate-spin" />}
+          {saving ? "Saving…" : isEdit ? "Save Changes" : "Create"}
+        </button>
+      </div>
+
+      {/* Cover Image */}
+      <div className="bg-card border border-border rounded-xl overflow-hidden">
+        <div className="px-6 py-3.5 border-b border-border">
+          <p className="text-[11px] font-mono uppercase tracking-widest text-muted-foreground">
+            Cover Image
           </p>
+        </div>
+        <div className="px-6 py-5">
+          <ImageUpload value={form.cover} onChange={(v) => set("cover", v ?? "")} />
         </div>
       </div>
 
-      {/* Form */}
-      <form onSubmit={submit} className="space-y-6">
-        {/* Title */}
-        <div className="bg-card border border-border rounded-xl p-6 space-y-6">
-          <div className="space-y-2">
-            <label className="text-xs font-mono uppercase tracking-widest text-muted-foreground">
-              Title
-            </label>
-            <input
-              required
-              value={form.title}
-              onChange={(e) => set("title", e.target.value)}
-              placeholder="Enter post title..."
-              className="w-full rounded-lg border border-border bg-muted/30 px-4 py-3 text-lg font-medium focus:outline-none focus:border-electric/60 focus:ring-2 focus:ring-electric/20"
-            />
+      {/* Two-column layout for Title and Excerpt */}
+      <div className="grid md:grid-cols-2 gap-6">
+        {/* Title & Excerpt */}
+        <div className="bg-card border border-border rounded-xl overflow-hidden">
+          <div className="px-6 py-3.5 border-b border-border">
+            <p className="text-[11px] font-mono uppercase tracking-widest text-muted-foreground">
+              Title & Excerpt
+            </p>
           </div>
+          <div className="px-6 py-5 space-y-4">
+            <Field label="Title">
+              <input
+                required
+                value={form.title}
+                onChange={(e) => set("title", e.target.value)}
+                placeholder="Enter post title..."
+                className={INPUT}
+              />
+            </Field>
 
-          <div className="space-y-2">
-            <label className="text-xs font-mono uppercase tracking-widest text-muted-foreground">
-              Excerpt
-            </label>
-            <textarea
-              rows={3}
-              value={form.excerpt}
-              onChange={(e) => set("excerpt", e.target.value)}
-              placeholder="Brief description for the post..."
-              className="w-full rounded-lg border border-border bg-muted/30 px-4 py-3 text-sm focus:outline-none focus:border-electric/60 focus:ring-2 focus:ring-electric/20 resize-none"
-            />
+            <Field label="Excerpt">
+              <textarea
+                rows={3}
+                value={form.excerpt}
+                onChange={(e) => set("excerpt", e.target.value)}
+                placeholder="Brief description for the post..."
+                className={TEXTAREA}
+              />
+            </Field>
           </div>
         </div>
 
-        {/* Content */}
-        <div className="bg-card border border-border rounded-xl p-6 space-y-2">
-          <label className="text-xs font-mono uppercase tracking-widest text-muted-foreground">
+        {/* Category & Date */}
+        <div className="bg-card border border-border rounded-xl overflow-hidden">
+          <div className="px-6 py-3.5 border-b border-border">
+            <p className="text-[11px] font-mono uppercase tracking-widest text-muted-foreground">
+              Metadata
+            </p>
+          </div>
+          <div className="px-6 py-5 space-y-4">
+            <Field label="Category">
+              <input
+                value={form.category}
+                onChange={(e) => set("category", e.target.value)}
+                placeholder="e.g. Technology, Research..."
+                className={INPUT}
+              />
+            </Field>
+
+            <Field label="Date">
+              <input
+                type="date"
+                value={form.date}
+                onChange={(e) => set("date", e.target.value)}
+                className={INPUT}
+              />
+            </Field>
+          </div>
+        </div>
+      </div>
+
+      {/* Content */}
+      <div className="bg-card border border-border rounded-xl overflow-hidden">
+        <div className="px-6 py-3.5 border-b border-border">
+          <p className="text-[11px] font-mono uppercase tracking-widest text-muted-foreground">
             Content (Markdown)
-          </label>
-          <textarea
-            rows={16}
-            required
-            value={form.content}
-            onChange={(e) => set("content", e.target.value)}
-            placeholder="Write your post content here using markdown..."
-            className="w-full rounded-lg border border-border bg-muted/30 px-4 py-3 text-sm focus:outline-none focus:border-electric/60 focus:ring-2 focus:ring-electric/20 resize-none font-mono leading-relaxed"
-          />
+          </p>
         </div>
-
-        {/* Meta */}
-        <div className="grid md:grid-cols-2 gap-6">
-          <div className="bg-card border border-border rounded-xl p-6 space-y-2">
-            <label className="text-xs font-mono uppercase tracking-widest text-muted-foreground">
-              Category
-            </label>
-            <input
-              value={form.category}
-              onChange={(e) => set("category", e.target.value)}
-              placeholder="e.g. Technology, Research..."
-              className="w-full rounded-lg border border-border bg-muted/30 px-4 py-3 text-sm focus:outline-none focus:border-electric/60 focus:ring-2 focus:ring-electric/20"
+        <div className="px-6 py-5">
+          <Field label="">
+            <textarea
+              rows={16}
+              required
+              value={form.content}
+              onChange={(e) => set("content", e.target.value)}
+              placeholder="Write your post content here using markdown..."
+              className={`${TEXTAREA} font-mono leading-relaxed`}
             />
-          </div>
-          <div className="bg-card border border-border rounded-xl p-6 space-y-2">
-            <label className="text-xs font-mono uppercase tracking-widest text-muted-foreground">
-              Date
-            </label>
-            <input
-              type="date"
-              value={form.date}
-              onChange={(e) => set("date", e.target.value)}
-              className="w-full rounded-lg border border-border bg-muted/30 px-4 py-3 text-sm focus:outline-none focus:border-electric/60 focus:ring-2 focus:ring-electric/20"
-            />
-          </div>
+          </Field>
         </div>
-
-        {/* Cover Image */}
-        <div className="bg-card border border-border rounded-xl p-6 space-y-3">
-          <label className="text-xs font-mono uppercase tracking-widest text-muted-foreground">
-            Cover Image
-          </label>
-          <Dropzone value={form.cover} onChange={(v) => set("cover", v ?? "")} />
-        </div>
-
-        {/* Actions */}
-        <div className="flex items-center justify-end gap-3 pt-4">
-          <button
-            type="button"
-            onClick={() => navigate("/admin/blogs")}
-            className="px-6 py-2.5 rounded-lg border border-border text-sm font-medium hover:bg-muted transition"
-          >
-            Cancel
-          </button>
-          <button
-            type="submit"
-            disabled={saving}
-            className="flex items-center gap-2 px-6 py-2.5 rounded-lg bg-electric text-electric-foreground text-sm font-medium hover:opacity-90 disabled:opacity-50 transition"
-          >
-            {saving && <Loader2 className="size-4 animate-spin" />}
-            {saving ? "Saving..." : isEdit ? "Update Post" : "Create Post"}
-          </button>
-        </div>
-      </form>
-    </div>
+      </div>
+    </form>
   );
 }
