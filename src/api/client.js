@@ -5,7 +5,8 @@
  *  MOCK_MODE = false → calls real backend via apiFetch / DASHBOARD_ENDPOINTS
  */
 import seedProfessor from "./mockData/professor.json";
-import seedEducation from "./mockData/education.json"; 
+import seedAbout from "./mockData/about.json";
+import seedEducation from "./mockData/education.json";
 import seedExperiences from "./mockData/experiences.json";
 import seedCourses from "./mockData/courses.json";
 import seedResearches from "./mockData/researches.json";
@@ -29,6 +30,7 @@ const delay = (data, ms = LATENCY) =>
 // In-memory store — only used when MOCK_MODE = true
 const store = {
   professor: structuredClone(seedProfessor),
+  about: structuredClone(seedAbout),
   settings: structuredClone(seedSettings),
   education: structuredClone(seedEducation),
   achievements: structuredClone(seedAchievements),
@@ -46,7 +48,9 @@ function paginate(items, q = {}) {
   if (q.search) {
     const s = q.search.toLowerCase();
     out = out.filter((it) =>
-      Object.values(it).some((v) => typeof v === "string" && v.toLowerCase().includes(s)),
+      Object.values(it).some(
+        (v) => typeof v === "string" && v.toLowerCase().includes(s),
+      ),
     );
   }
   if (q.filter) {
@@ -94,8 +98,18 @@ function crud(key) {
     return {
       list: async (_q) => {
         const res = await apiFetch(ep.list, "GET");
-        const data = Array.isArray(res) ? res : Array.isArray(res?.data) ? res.data : [];
-        return { data, total: data.length, page: 1, pageSize: data.length, totalPages: 1 };
+        const data = Array.isArray(res)
+          ? res
+          : Array.isArray(res?.data)
+            ? res.data
+            : [];
+        return {
+          data,
+          total: data.length,
+          page: 1,
+          pageSize: data.length,
+          totalPages: 1,
+        };
       },
       get: (id) => apiFetch(ep.show(id), "GET"),
       create: (payload) => apiFetch(ep.store, "POST", payload),
@@ -142,7 +156,10 @@ export const api = {
           await delay(null, 600);
           if (email && password.length >= 4) {
             const token = btoa(`${email}:${Date.now()}`);
-            return { token, user: { id: "u-1", name: "Karim Mansour", email, role: "admin" } };
+            return {
+              token,
+              user: { id: "u-1", name: "Karim Mansour", email, role: "admin" },
+            };
           }
           throw new Error("Invalid credentials");
         },
@@ -152,11 +169,15 @@ export const api = {
       }
     : {
         login: async (email, password) => {
-          const res = await apiFetch(EP.auth.login, "POST", { email, password });
+          const res = await apiFetch(EP.auth.login, "POST", {
+            email,
+            password,
+          });
           if (res?.token) setAuthToken(res.token);
           return res;
         },
-        forgotPassword: (email) => apiFetch(EP.auth.forgotPassword, "POST", { email }),
+        forgotPassword: (email) =>
+          apiFetch(EP.auth.forgotPassword, "POST", { email }),
         resetPassword: (token, password) =>
           apiFetch(EP.auth.resetPassword, "POST", { token, password }),
         profile: () => apiFetch(EP.user.get, "GET"),
@@ -173,6 +194,19 @@ export const api = {
     : {
         get: () => apiFetch(EP.user.get, "GET"),
         update: (payload) => apiFetch(EP.user.update, "POST", payload),
+      },
+
+  about: MOCK_MODE
+    ? {
+        get: () => delay(store.about),
+        update: async (payload) => {
+          store.about = { ...store.about, ...payload };
+          return delay(store.about);
+        },
+      }
+    : {
+        get: () => apiFetch(EP.about.get, "GET"),
+        update: (payload) => apiFetch(EP.about.update, "POST", payload),
       },
 
   settings: MOCK_MODE
@@ -208,8 +242,18 @@ export const api = {
     : {
         list: async (_q) => {
           const res = await apiFetch(EP.messages.list, "GET");
-          const data = Array.isArray(res) ? res : Array.isArray(res?.data) ? res.data : [];
-          return { data, total: data.length, page: 1, pageSize: data.length, totalPages: 1 };
+          const data = Array.isArray(res)
+            ? res
+            : Array.isArray(res?.data)
+              ? res.data
+              : [];
+          return {
+            data,
+            total: data.length,
+            page: 1,
+            pageSize: data.length,
+            totalPages: 1,
+          };
         },
         get: (id) => apiFetch(EP.messages.list + `/${id}`, "GET"),
         remove: (id) => apiFetch(EP.messages.delete(id), "DELETE"),
@@ -231,7 +275,8 @@ export const api = {
         },
       }
     : {
-        send: (payload) => apiFetch(EP.contactUs?.store ?? "/contact-us/store", "POST", payload),
+        send: (payload) =>
+          apiFetch(EP.contactUs?.store ?? "/contact-us/store", "POST", payload),
       },
 
   dashboard: MOCK_MODE
@@ -242,7 +287,10 @@ export const api = {
             totalAchievements: store.achievements.length,
             totalResearches: store.researches.length,
             totalCourses: store.courses.length,
-            totalLectures: store.courses.reduce((n, c) => n + c.lectures.length, 0),
+            totalLectures: store.courses.reduce(
+              (n, c) => n + c.lectures.length,
+              0,
+            ),
             totalBlogs: store.blogs.length,
             totalMessages: store.messages.length,
             unreadMessages: store.messages.filter((m) => !m.read).length,

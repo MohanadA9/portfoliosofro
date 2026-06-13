@@ -5,7 +5,7 @@
 
 export const BASE_URL = "https://api.example.com/api";
 
-// ========================================== 
+// ==========================================
 // Public (Portfolio) Endpoints
 // ==========================================
 export const PORTFOLIO_ENDPOINTS = {
@@ -17,10 +17,20 @@ export const PORTFOLIO_ENDPOINTS = {
   },
   contactUs: { store: `${BASE_URL}/contact-us/store` },
   profile: { get: `${BASE_URL}/user/data` },
+  about: { get: `${BASE_URL}/about` },
   settings: { get: `${BASE_URL}/setting` },
-  achievements: { list: `${BASE_URL}/achievement`, show: (id) => `${BASE_URL}/achievement/${id}` },
-  researches: { list: `${BASE_URL}/research`, show: (id) => `${BASE_URL}/research/${id}` },
-  courses: { list: `${BASE_URL}/course`, show: (id) => `${BASE_URL}/course/${id}` },
+  achievements: {
+    list: `${BASE_URL}/achievement`,
+    show: (id) => `${BASE_URL}/achievement/${id}`,
+  },
+  researches: {
+    list: `${BASE_URL}/research`,
+    show: (id) => `${BASE_URL}/research/${id}`,
+  },
+  courses: {
+    list: `${BASE_URL}/course`,
+    show: (id) => `${BASE_URL}/course/${id}`,
+  },
   experiences: { list: `${BASE_URL}/experience` },
   positions: { list: `${BASE_URL}/position` },
   blogs: { list: `${BASE_URL}/blog`, show: (id) => `${BASE_URL}/blog/${id}` },
@@ -38,7 +48,14 @@ export const DASHBOARD_ENDPOINTS = {
     verifyOtp: `${BASE_URL}/auth/verify-otp`,
     resetPassword: `${BASE_URL}/auth/reset-password`,
   },
-  user: { get: `${BASE_URL}/admin/user`, update: `${BASE_URL}/admin/user/update` },
+  user: {
+    get: `${BASE_URL}/admin/user`,
+    update: `${BASE_URL}/admin/user/update`,
+  },
+  about: {
+    get: `${BASE_URL}/admin/about`,
+    update: `${BASE_URL}/admin/about/update`,
+  },
   settings: {
     get: `${BASE_URL}/admin/setting`,
     update: `${BASE_URL}/admin/setting/update`,

@@ -2,6 +2,7 @@ import { createContext, useContext } from "react";
 
 // Load all data DIRECTLY from JSON files in the api/mockData folder
 import professorData from "@/api/mockData/professor.json";
+import aboutData from "@/api/mockData/about.json";
 import educationData from "@/api/mockData/education.json";
 import experiencesData from "@/api/mockData/experiences.json";
 import coursesData from "@/api/mockData/courses.json";
@@ -16,6 +17,7 @@ import positionsData from "@/api/mockData/positions.json";
 import dashboardChartsData from "@/api/mockData/dashboardCharts.json";
 
 const ProfessorContext = createContext(null);
+const AboutContext = createContext(null);
 const EducationContext = createContext([]);
 const ExperienceContext = createContext([]);
 const CoursesContext = createContext([]);
@@ -30,6 +32,7 @@ const PositionsContext = createContext([]);
 const DashboardChartsContext = createContext(null);
 
 export const useProfessor = () => useContext(ProfessorContext);
+export const useAbout = () => useContext(AboutContext);
 export const useEducation = () => useContext(EducationContext);
 export const useExperience = () => useContext(ExperienceContext);
 export const useCourses = () => useContext(CoursesContext);
@@ -46,31 +49,35 @@ export const useDashboardCharts = () => useContext(DashboardChartsContext);
 export const DataProvider = ({ children }) => {
   return (
     <ProfessorContext.Provider value={professorData}>
-      <EducationContext.Provider value={educationData}>
-        <ExperienceContext.Provider value={experiencesData}>
-          <CoursesContext.Provider value={coursesData}>
-            <ResearchesContext.Provider value={researchesData}>
-              <AchievementsContext.Provider value={achievementsData}>
-                <BlogsContext.Provider value={blogsData}>
-                  <MediaContext.Provider value={mediaData}>
-                    <SettingsContext.Provider value={settingsData}>
-                      <StatsContext.Provider value={statsData}>
-                        <PositionsContext.Provider value={positionsData}>
-                          <MessagesContext.Provider value={messagesData}>
-                            <DashboardChartsContext.Provider value={dashboardChartsData}>
-                              {children}
-                            </DashboardChartsContext.Provider>
-                          </MessagesContext.Provider>
-                        </PositionsContext.Provider>
-                      </StatsContext.Provider>
-                    </SettingsContext.Provider>
-                  </MediaContext.Provider>
-                </BlogsContext.Provider>
-              </AchievementsContext.Provider>
-            </ResearchesContext.Provider>
-          </CoursesContext.Provider>
-        </ExperienceContext.Provider>
-      </EducationContext.Provider>
+      <AboutContext.Provider value={aboutData}>
+        <EducationContext.Provider value={educationData}>
+          <ExperienceContext.Provider value={experiencesData}>
+            <CoursesContext.Provider value={coursesData}>
+              <ResearchesContext.Provider value={researchesData}>
+                <AchievementsContext.Provider value={achievementsData}>
+                  <BlogsContext.Provider value={blogsData}>
+                    <MediaContext.Provider value={mediaData}>
+                      <SettingsContext.Provider value={settingsData}>
+                        <StatsContext.Provider value={statsData}>
+                          <PositionsContext.Provider value={positionsData}>
+                            <MessagesContext.Provider value={messagesData}>
+                              <DashboardChartsContext.Provider
+                                value={dashboardChartsData}
+                              >
+                                {children}
+                              </DashboardChartsContext.Provider>
+                            </MessagesContext.Provider>
+                          </PositionsContext.Provider>
+                        </StatsContext.Provider>
+                      </SettingsContext.Provider>
+                    </MediaContext.Provider>
+                  </BlogsContext.Provider>
+                </AchievementsContext.Provider>
+              </ResearchesContext.Provider>
+            </CoursesContext.Provider>
+          </ExperienceContext.Provider>
+        </EducationContext.Provider>
+      </AboutContext.Provider>
     </ProfessorContext.Provider>
   );
 };

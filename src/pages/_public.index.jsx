@@ -20,6 +20,7 @@ import { CoverCard } from "@/components/common/Cards";
 import { Stat } from "@/components/common/Primitives";
 import {
   useProfessor,
+  useAbout,
   useCourses,
   useResearches,
   useAchievements,
@@ -32,7 +33,9 @@ function Typewriter({ titles }) {
   const [i, setI] = useState(0);
   const [text, setText] = useState("");
   const [del, setDel] = useState(false);
-  const list = titles?.length ? titles : ["Professor of Wireless Communications"];
+  const list = titles?.length
+    ? titles
+    : ["Professor of Wireless Communications"];
 
   useEffect(() => {
     const cur = list[i % list.length];
@@ -40,7 +43,8 @@ function Typewriter({ titles }) {
       () => {
         if (!del) {
           setText(cur.slice(0, text.length + 1));
-          if (text.length + 1 === cur.length) setTimeout(() => setDel(true), 1400);
+          if (text.length + 1 === cur.length)
+            setTimeout(() => setDel(true), 1400);
         } else {
           setText(cur.slice(0, text.length - 1));
           if (text.length - 1 === 0) {
@@ -64,6 +68,7 @@ function Typewriter({ titles }) {
 
 function HomePage() {
   const professor = useProfessor();
+  const about = useAbout();
   const courses = useCourses();
   const researches = useResearches();
   const achievements = useAchievements();
@@ -72,11 +77,16 @@ function HomePage() {
   const experience = useExperience();
 
   if (!professor || !stats) {
-    return <div className="flex min-h-screen items-center justify-center">Loading…</div>;
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        Loading…
+      </div>
+    );
   }
 
   const typewriterTitles = experience?.map((e) => e.position) ?? [];
-  const heroSubtitle = professor.title ?? `${professor.department} · ${professor.university}`;
+  const heroSubtitle =
+    professor.title ?? `${professor.department} · ${professor.university}`;
 
   const nameParts = professor.name?.split(" ") ?? [];
   const nameFirst = nameParts.slice(0, 2).join(" ");
@@ -103,11 +113,12 @@ function HomePage() {
             className="space-y-6"
           >
             <span className="inline-flex items-center gap-2 rounded-full border border-electric/30 bg-electric/5 px-3 py-1 font-mono text-[11px] uppercase tracking-[0.2em] text-electric">
-              <span className="size-1.5 rounded-full bg-electric animate-pulse" /> Available for
-              Collaborations
+              <span className="size-1.5 rounded-full bg-electric animate-pulse" />{" "}
+              Available for Collaborations
             </span>
             <h1 className="font-display text-4xl md:text-6xl font-bold tracking-tight leading-[1.05]">
-              {nameFirst} <span className="text-gradient-electric">{nameLast}</span>
+              {nameFirst}{" "}
+              <span className="text-gradient-electric">{nameLast}</span>
             </h1>
             <Typewriter titles={typewriterTitles} />
             <p className="text-muted-foreground max-w-xl">{heroSubtitle}</p>
@@ -125,12 +136,13 @@ function HomePage() {
                 <Mail className="size-4" /> Get in Touch
               </Link>
             </div>
-            {/* Interest tags from professor data */}
-            {professor.interests?.length > 0 && (
+            {/* Interest tags from about data */}
+            {about?.interests?.length > 0 && (
               <div className="flex flex-wrap items-center gap-x-4 gap-y-2 pt-4 text-xs font-mono uppercase tracking-widest text-muted-foreground">
-                {professor.interests.slice(0, 3).map((interest) => (
+                {about.interests.slice(0, 3).map((interest) => (
                   <span key={interest} className="flex items-center gap-1.5">
-                    <span className="size-1.5 rounded-full bg-electric" /> {interest}
+                    <span className="size-1.5 rounded-full bg-electric" />{" "}
+                    {interest}
                   </span>
                 ))}
               </div>
@@ -146,7 +158,11 @@ function HomePage() {
             <div className="absolute -inset-4 rounded-3xl bg-gradient-to-br from-electric/30 to-transparent blur-2xl" />
             <div className="relative aspect-square overflow-hidden rounded-3xl border border-electric/30 glow">
               <img
-                src={professor.avatar?.startsWith("data:") ? professor.avatar : professorImg}
+                src={
+                  professor.avatar?.startsWith("data:")
+                    ? professor.avatar
+                    : professorImg
+                }
                 alt={professor.name}
                 className="size-full object-cover"
               />
@@ -155,7 +171,9 @@ function HomePage() {
                 <p className="font-mono text-[10px] uppercase tracking-widest text-electric">
                   Currently
                 </p>
-                <p className="font-display text-sm font-semibold">{professor.title}</p>
+                <p className="font-display text-sm font-semibold">
+                  {professor.title}
+                </p>
               </div>
             </div>
             <div className="pointer-events-none absolute inset-0 animate-radar opacity-40">
@@ -173,8 +191,16 @@ function HomePage() {
             label="Publications"
             icon={<FileText className="size-4" />}
           />
-          <Stat value={stats.courses} label="Courses" icon={<BookOpen className="size-4" />} />
-          <Stat value={stats.awards} label="Awards" icon={<Award className="size-4" />} />
+          <Stat
+            value={stats.courses}
+            label="Courses"
+            icon={<BookOpen className="size-4" />}
+          />
+          <Stat
+            value={stats.awards}
+            label="Awards"
+            icon={<Award className="size-4" />}
+          />
           <Stat
             value={`${stats.experience} yrs`}
             label="Experience"
@@ -205,12 +231,12 @@ function HomePage() {
                 className="size-full object-cover opacity-80"
               />
             </div>
-            {professor.vision && (
+            {about?.vision && (
               <div className="absolute -bottom-6 -right-6 glass rounded-xl p-4 max-w-[260px]">
                 <Quote className="size-5 text-electric mb-2" />
                 <p className="text-sm italic text-muted-foreground">
-                  "{professor.vision.slice(0, 120)}
-                  {professor.vision.length > 120 ? "…" : ""}"
+                  "{about.vision.slice(0, 120)}
+                  {about.vision.length > 120 ? "…" : ""}"
                 </p>
               </div>
             )}
@@ -221,21 +247,24 @@ function HomePage() {
               title={
                 <>
                   A career spent at the{" "}
-                  <span className="text-gradient-electric">edge of wireless</span>
+                  <span className="text-gradient-electric">
+                    edge of wireless
+                  </span>
                 </>
               }
               subtitle={null}
               align="left"
             />
-            <p className="text-muted-foreground">{professor.bio}</p>
-            {professor.interests?.length > 0 && (
+            <p className="text-muted-foreground">{about?.bio}</p>
+            {about?.interests?.length > 0 && (
               <div className="grid grid-cols-2 gap-3">
-                {professor.interests.slice(0, 4).map((interest) => (
+                {about.interests.slice(0, 4).map((interest) => (
                   <div
                     key={interest}
                     className="flex items-center gap-2 rounded-md border border-border bg-card px-3 py-2 text-sm"
                   >
-                    <span className="size-1.5 rounded-full bg-electric" /> {interest}
+                    <span className="size-1.5 rounded-full bg-electric" />{" "}
+                    {interest}
                   </div>
                 ))}
               </div>
@@ -358,10 +387,13 @@ function HomePage() {
           <CircuitBackground />
           <div className="relative grid gap-6 md:grid-cols-[1fr_auto] items-center">
             <div>
-              <h3 className="font-display text-3xl md:text-4xl font-bold">Let's collaborate.</h3>
+              <h3 className="font-display text-3xl md:text-4xl font-bold">
+                Let's collaborate.
+              </h3>
               <p className="mt-2 text-muted-foreground max-w-xl">
-                Research partnerships, graduate supervision, invited talks, and editorial review.
-                Reach out and let's build something meaningful together.
+                Research partnerships, graduate supervision, invited talks, and
+                editorial review. Reach out and let's build something meaningful
+                together.
               </p>
             </div>
             <Link

@@ -36,6 +36,7 @@ import LecturesPage from "./pages/admin/_admin.admin.lectures";
 import MessagesPage from "./pages/admin/_admin.admin.messages";
 import AdminPositions from "./pages/admin/_admin.admin.positions";
 import ProfilePage from "./pages/admin/_admin.admin.profile";
+import AboutPageAdmin from "./pages/admin/_admin.admin.about";
 import AdminResearches from "./pages/admin/_admin.admin.researches";
 import ResearchForm from "./pages/admin/_admin.admin.researches.form";
 import SettingsPage from "./pages/admin/_admin.admin.settings";
@@ -127,6 +128,7 @@ export default function App() {
                   <Route path="admin/messages" element={<MessagesPage />} />
                   <Route path="admin/positions" element={<AdminPositions />} />
                   <Route path="admin/profile" element={<ProfilePage />} />
+                  <Route path="admin/about" element={<AboutPageAdmin />} />
                   <Route
                     path="admin/researches"
                     element={<AdminResearches />}

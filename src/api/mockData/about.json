@@ -1,0 +1,54 @@
+{
+  "bio": "Dr. Mohamed Sobhy Elbakry is an Associate Professor in the Electronics & Communications Engineering (ECE) Department at the Institute of Aviation Engineering & Technology (IAET), Egyptian Aviation Academy (EAA), and an adjunct professor at Cairo University and the Higher Technological Institute (HTI). His expertise spans electrical and optical communications, digital signal processing, and mobile communication systems. He has published numerous papers in high-impact journals and conferences on multicarrier systems, interference mitigation, and deep learning for communications, and has supervised innovative graduation projects in collaboration with top international research labs.",
+  "vision": "To advance next-generation communication technologies — 5G, 6G and beyond — through performance analysis of massive MIMO, reconfigurable intelligent surfaces (RIS), and fluid antenna systems (FAS), pushing the boundaries of global wireless communication.",
+  "skills": [
+    {
+      "name": "MATLAB",
+      "level": 95
+    },
+    {
+      "name": "Electrical & Optical Communications",
+      "level": 92
+    },
+    {
+      "name": "Digital Signal Processing (DSP)",
+      "level": 90
+    },
+    {
+      "name": "Mobile Communication Systems",
+      "level": 88
+    },
+    {
+      "name": "Multicarrier Systems (OFDM/FBMC)",
+      "level": 90
+    },
+    {
+      "name": "Python",
+      "level": 70
+    },
+    {
+      "name": "LabVIEW",
+      "level": 65
+    },
+    {
+      "name": "C/C++",
+      "level": 45
+    },
+    {
+      "name": "ROS",
+      "level": 40
+    }
+  ],
+  "interests": [
+    "Multicarrier Systems (OFDM & FBMC)",
+    "MIMO-OFDM & MIMO-FBMC Systems",
+    "Multiple Access Techniques (NOMA)",
+    "Interference Mitigation & Cancellation",
+    "Visible Light Communications (VLC)",
+    "Fluid Antenna Systems (FAS)",
+    "Reconfigurable Intelligent Surface (RIS)",
+    "Massive MIMO Systems",
+    "Rate Splitting Multiple Access (RSMA)",
+    "Deep Learning for Wireless Communications"
+  ]
+}

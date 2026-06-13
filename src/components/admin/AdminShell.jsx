@@ -11,6 +11,7 @@ import {
   Edit3,
   MessageSquare,
   User,
+  Info,
   Settings,
   LogOut,
   Radio,
@@ -38,6 +39,7 @@ const items = [
   { to: "/admin/blogs", label: "Blogs", icon: Edit3 },
   { to: "/admin/messages", label: "Messages", icon: MessageSquare },
   { to: "/admin/profile", label: "Profile", icon: User },
+  { to: "/admin/about", label: "About", icon: Info },
   { to: "/admin/settings", label: "Settings", icon: Settings },
 ];
 

@@ -23,6 +23,7 @@ import blogsJson from "@/api/mockData/blogs.json";
 import messagesJson from "@/api/mockData/messages.json";
 import educationJson from "@/api/mockData/education.json";
 import professorJson from "@/api/mockData/professor.json";
+import aboutJson from "@/api/mockData/about.json";
 import settingsJson from "@/api/mockData/settings.json";
 import statsJson from "@/api/mockData/stats.json";
 import mediaJson from "@/api/mockData/media.json";
@@ -40,7 +41,9 @@ function useAdminList(jsonData, apiUrl) {
     apiFetch(apiUrl, "GET")
       .then((res) => {
         if (!active) return;
-        setData(Array.isArray(res) ? res : Array.isArray(res?.data) ? res.data : []);
+        setData(
+          Array.isArray(res) ? res : Array.isArray(res?.data) ? res.data : [],
+        );
       })
       .catch(() => {});
     return () => {
@@ -83,6 +86,7 @@ const MessagesCtx = createContext([]);
 const EducationCtx = createContext([]);
 const MediaCtx = createContext([]);
 const ProfessorCtx = createContext(null);
+const AboutCtx = createContext(null);
 const SettingsCtx = createContext(null);
 const StatsCtx = createContext(null);
 const ChartsCtx = createContext(null);
@@ -98,6 +102,7 @@ export const useAdminMessages = () => useContext(MessagesCtx);
 export const useAdminEducation = () => useContext(EducationCtx);
 export const useAdminMedia = () => useContext(MediaCtx);
 export const useAdminProfessor = () => useContext(ProfessorCtx);
+export const useAdminAbout = () => useContext(AboutCtx);
 export const useAdminSettings = () => useContext(SettingsCtx);
 export const useAdminStats = () => useContext(StatsCtx);
 export const useAdminDashboardCharts = () => useContext(ChartsCtx);
@@ -114,6 +119,7 @@ export function AdminDataProvider({ children }) {
   const education = useAdminList(educationJson, EP.education.list);
   const media = useAdminList(mediaJson, EP.media.list);
   const professor = useAdminObject(professorJson, EP.user.get);
+  const about = useAdminObject(aboutJson, EP.about.get);
   const settings = useAdminObject(settingsJson, EP.settings.get);
   const stats = useAdminObject(statsJson, EP.dashboard.stats);
   const charts = useAdminObject(chartsJson, EP.dashboard.charts);
@@ -129,11 +135,15 @@ export function AdminDataProvider({ children }) {
                   <EducationCtx.Provider value={education}>
                     <MediaCtx.Provider value={media}>
                       <ProfessorCtx.Provider value={professor}>
-                        <SettingsCtx.Provider value={settings}>
-                          <StatsCtx.Provider value={stats}>
-                            <ChartsCtx.Provider value={charts}>{children}</ChartsCtx.Provider>
-                          </StatsCtx.Provider>
-                        </SettingsCtx.Provider>
+                        <AboutCtx.Provider value={about}>
+                          <SettingsCtx.Provider value={settings}>
+                            <StatsCtx.Provider value={stats}>
+                              <ChartsCtx.Provider value={charts}>
+                                {children}
+                              </ChartsCtx.Provider>
+                            </StatsCtx.Provider>
+                          </SettingsCtx.Provider>
+                        </AboutCtx.Provider>
                       </ProfessorCtx.Provider>
                     </MediaCtx.Provider>
                   </EducationCtx.Provider>

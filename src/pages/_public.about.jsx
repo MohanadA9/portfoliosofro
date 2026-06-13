@@ -1,15 +1,26 @@
 import { PageHeader } from "@/components/common/Headers";
-import { useProfessor, useEducation } from "@/context/DataContext";
+import { useProfessor, useEducation, useAbout } from "@/context/DataContext";
 import professorImg from "@/assets/professor.jpg";
 import { motion } from "framer-motion";
-import { GraduationCap, Target, Sparkles, BookMarked, FileDown } from "lucide-react";
+import {
+  GraduationCap,
+  Target,
+  Sparkles,
+  BookMarked,
+  FileDown,
+} from "lucide-react";
 
 function AboutPage() {
   const professor = useProfessor();
   const education = useEducation();
+  const about = useAbout();
 
   if (!professor)
-    return <div className="flex min-h-screen items-center justify-center">Loading…</div>;
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        Loading…
+      </div>
+    );
 
   return (
     <>
@@ -25,7 +36,11 @@ function AboutPage() {
           <div className="sticky top-24 space-y-4">
             <div className="aspect-square overflow-hidden rounded-2xl border border-border">
               <img
-                src={professor.avatar?.startsWith("data:") ? professor.avatar : professorImg}
+                src={
+                  professor.avatar?.startsWith("data:")
+                    ? professor.avatar
+                    : professorImg
+                }
                 alt={professor.name}
                 className="size-full object-cover"
               />
@@ -33,12 +48,22 @@ function AboutPage() {
             <div className="rounded-xl border border-border bg-card p-4 text-sm space-y-1">
               <p className="font-display font-semibold">{professor.name}</p>
               <p className="text-muted-foreground">{professor.title}</p>
-              <p className="text-xs text-muted-foreground">{professor.department}</p>
-              <p className="text-xs text-muted-foreground">{professor.university}</p>
+              <p className="text-xs text-muted-foreground">
+                {professor.department}
+              </p>
+              <p className="text-xs text-muted-foreground">
+                {professor.university}
+              </p>
               <div className="pt-2 border-t border-border mt-2 space-y-0.5">
-                <p className="text-xs text-muted-foreground">{professor.email}</p>
-                <p className="text-xs text-muted-foreground">{professor.office}</p>
-                <p className="text-xs text-muted-foreground">{professor.officeHours}</p>
+                <p className="text-xs text-muted-foreground">
+                  {professor.email}
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  {professor.office}
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  {professor.officeHours}
+                </p>
               </div>
 
               {professor.cv && (
@@ -80,7 +105,9 @@ function AboutPage() {
           {/* Bio */}
           <section>
             <h2 className="font-display text-2xl font-bold mb-3">Biography</h2>
-            <p className="text-muted-foreground leading-relaxed">{professor.bio}</p>
+            <p className="text-muted-foreground leading-relaxed">
+              {about?.bio}
+            </p>
           </section>
 
           {/* Education */}
@@ -100,11 +127,17 @@ function AboutPage() {
                   >
                     <div className="flex flex-wrap items-baseline justify-between gap-2">
                       <p className="font-display font-semibold">{e.degree}</p>
-                      <p className="font-mono text-xs text-electric">{e.year}</p>
+                      <p className="font-mono text-xs text-electric">
+                        {e.year}
+                      </p>
                     </div>
-                    <p className="text-sm text-muted-foreground">{e.school ?? e.institution}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {e.school ?? e.institution}
+                    </p>
                     {e.focus && (
-                      <p className="text-xs text-muted-foreground mt-1">Focus: {e.focus}</p>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        Focus: {e.focus}
+                      </p>
                     )}
                   </motion.div>
                 ))}
@@ -113,13 +146,13 @@ function AboutPage() {
           )}
 
           {/* Research Interests */}
-          {professor.interests?.length > 0 && (
+          {about?.interests?.length > 0 && (
             <section>
               <h2 className="font-display text-2xl font-bold mb-4 flex items-center gap-2">
                 <Target className="text-electric" /> Research Interests
               </h2>
               <div className="flex flex-wrap gap-2">
-                {professor.interests.map((i) => (
+                {about.interests.map((i) => (
                   <span
                     key={i}
                     className="rounded-full border border-electric/30 bg-electric/5 px-3 py-1.5 text-sm text-electric"
@@ -132,17 +165,19 @@ function AboutPage() {
           )}
 
           {/* Skills */}
-          {professor.skills?.length > 0 && (
+          {about?.skills?.length > 0 && (
             <section>
               <h2 className="font-display text-2xl font-bold mb-4 flex items-center gap-2">
                 <BookMarked className="text-electric" /> Technical Skills
               </h2>
               <div className="space-y-3">
-                {professor.skills.map((s) => (
+                {about.skills.map((s) => (
                   <div key={s.name}>
                     <div className="flex justify-between text-sm mb-1">
                       <span>{s.name}</span>
-                      <span className="font-mono text-electric">{s.level}%</span>
+                      <span className="font-mono text-electric">
+                        {s.level}%
+                      </span>
                     </div>
                     <div className="h-1.5 rounded-full bg-secondary overflow-hidden">
                       <motion.div
@@ -160,13 +195,13 @@ function AboutPage() {
           )}
 
           {/* Vision */}
-          {professor.vision && (
+          {about?.vision && (
             <section>
               <h2 className="font-display text-2xl font-bold mb-3 flex items-center gap-2">
                 <Sparkles className="text-electric" /> Vision
               </h2>
               <p className="text-muted-foreground leading-relaxed italic border-l-2 border-electric pl-4">
-                "{professor.vision}"
+                "{about.vision}"
               </p>
             </section>
           )}
