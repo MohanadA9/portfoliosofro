@@ -4,6 +4,7 @@ import { DataProvider } from "./context/DataContext";
 import { AdminDataProvider } from "./context/AdminDataContext";
 import { ThemeProvider } from "./context/ThemeContext";
 import { SiteSettingsProvider } from "./context/SiteSettingsContext";
+import { ScrollToTop } from "./components/common/ScrollToTop";
 
 // Public Pages
 import PublicLayout from "./pages/_public";
@@ -76,6 +77,7 @@ export default function App() {
         <SiteSettingsProvider>
           <AuthProvider>
             <ThemeProvider>
+              <ScrollToTop />
               <Routes>
                 {/* ── Public ── */}
                 <Route element={<PublicLayout />}>
