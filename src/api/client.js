@@ -14,8 +14,6 @@ import seedAchievements from "./mockData/achievements.json";
 import seedBlogs from "./mockData/blogs.json";
 import seedMessages from "./mockData/messages.json";
 import seedPositions from "./mockData/positions.json";
-import seedStats from "./mockData/stats.json";
-import seedDashboardCharts from "./mockData/dashboardCharts.json";
 import seedSettings from "./mockData/settings.json";
 
 import { MOCK_MODE, apiFetch, setAuthToken } from "@/api/request";
@@ -273,30 +271,5 @@ export const api = {
     : {
         send: (payload) =>
           apiFetch(EP.contactUs?.store ?? "/contact-us/store", "POST", payload),
-      },
-
-  dashboard: MOCK_MODE
-    ? {
-        stats: () =>
-          delay({
-            ...seedStats,
-            totalAchievements: store.achievements.length,
-            totalResearches: store.researches.length,
-            totalCourses: store.courses.length,
-            totalLectures: store.courses.reduce(
-              (n, c) => n + c.lectures.length,
-              0,
-            ),
-            totalBlogs: store.blogs.length,
-            totalMessages: store.messages.length,
-            unreadMessages: store.messages.filter((m) => !m.read).length,
-          }),
-        charts: () => delay(seedDashboardCharts),
-        recentActivities: () => delay(seedDashboardCharts.recentActivities),
-      }
-    : {
-        stats: () => apiFetch(EP.dashboard.stats, "GET"),
-        charts: () => apiFetch(EP.dashboard.charts, "GET"),
-        recentActivities: () => apiFetch(EP.dashboard.activity, "GET"),
       },
 };

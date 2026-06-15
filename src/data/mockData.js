@@ -8,9 +8,7 @@ import achievements from "../api/mockData/achievements.json";
 import blogs from "../api/mockData/blogs.json";
 import messages from "../api/mockData/messages.json";
 import settings from "../api/mockData/settings.json";
-import stats from "../api/mockData/stats.json";
 import positions from "../api/mockData/positions.json";
-import dashboardCharts from "../api/mockData/dashboardCharts.json";
 
 export {
   professor,
@@ -22,7 +20,5 @@ export {
   blogs,
   messages,
   settings,
-  stats,
   positions,
-  dashboardCharts,
 };

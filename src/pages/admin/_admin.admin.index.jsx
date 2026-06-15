@@ -5,7 +5,6 @@ import {
   useAdminCourses,
   useAdminBlogs,
   useAdminMessages,
-  useAdminDashboardCharts,
   useAdminProfessor,
 } from "@/context/AdminDataContext";
 import {
@@ -60,7 +59,6 @@ export default function DashboardHome() {
   const courses = useAdminCourses();
   const blogs = useAdminBlogs();
   const messages = useAdminMessages();
-  const charts = useAdminDashboardCharts();
 
   const lecturesCount = (courses || []).reduce((s, c) => s + (c.lectures?.length || 0), 0);
   const unread = (messages || []).filter((m) => !m.read).length;
@@ -84,8 +82,40 @@ export default function DashboardHome() {
     { name: "Blogs", value: blogs?.length ?? 0 },
     { name: "Achievements", value: achievements?.length ?? 0 },
   ];
-  const traffic = charts?.monthlyVisits ?? [];
-  const activities = charts?.recentActivities ?? [];
+
+  const pubsByYear = Object.entries(
+    (researches || []).reduce((acc, r) => {
+      if (r.year == null) return acc;
+      acc[r.year] = (acc[r.year] || 0) + 1;
+      return acc;
+    }, {}),
+  )
+    .map(([year, count]) => ({ year, count }))
+    .sort((a, b) => Number(a.year) - Number(b.year));
+
+  const activities = [
+    ...(researches || []).map((r) => ({
+      id: `r-${r.id}`,
+      action: "Research published",
+      target: r.title,
+      date: `${r.year}-01-01`,
+    })),
+    ...(blogs || []).map((b) => ({
+      id: `b-${b.id}`,
+      action: "Blog post",
+      target: b.title,
+      date: b.date,
+    })),
+    ...(achievements || []).map((a) => ({
+      id: `a-${a.id}`,
+      action: "Achievement added",
+      target: a.title,
+      date: a.date,
+    })),
+  ]
+    .filter((it) => it.date)
+    .sort((a, b) => (a.date < b.date ? 1 : -1))
+    .slice(0, 5);
 
   return (
     <div className="space-y-7">
@@ -106,25 +136,26 @@ export default function DashboardHome() {
         <div className="lg:col-span-2 bg-card border border-border rounded-lg p-5">
           <div className="flex items-start justify-between mb-4">
             <div>
-              <p className="font-semibold">Site Traffic</p>
+              <p className="font-semibold">Publications by Year</p>
               <p className="text-xs text-muted-foreground">
-                Monthly visits &amp; content downloads
+                Research output per year
               </p>
             </div>
             <span className="text-[11px] font-mono text-electric bg-electric/10 px-2 py-0.5 rounded">
-              Last 12 months
+              {researches?.length ?? 0} total
             </span>
           </div>
           <ResponsiveContainer width="100%" height={220}>
-            <LineChart data={traffic} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>
+            <LineChart data={pubsByYear} margin={{ top: 5, right: 10, left: -20, bottom: 0 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
               <XAxis
-                dataKey="month"
+                dataKey="year"
                 tick={{ fontSize: 11, fill: "var(--color-muted-foreground)" }}
                 axisLine={false}
                 tickLine={false}
               />
               <YAxis
+                allowDecimals={false}
                 tick={{ fontSize: 11, fill: "var(--color-muted-foreground)" }}
                 axisLine={false}
                 tickLine={false}
@@ -132,19 +163,11 @@ export default function DashboardHome() {
               <Tooltip content={<CustomTooltip />} />
               <Line
                 type="monotone"
-                dataKey="visits"
+                dataKey="count"
                 stroke="#3b82f6"
                 strokeWidth={2}
-                dot={false}
-                name="Visits"
-              />
-              <Line
-                type="monotone"
-                dataKey="downloads"
-                stroke="#22c55e"
-                strokeWidth={2}
-                dot={false}
-                name="Downloads"
+                dot={{ r: 3, fill: "#3b82f6" }}
+                name="Publications"
               />
             </LineChart>
           </ResponsiveContainer>
@@ -200,7 +223,7 @@ export default function DashboardHome() {
                 <p className="font-medium">{act.action}</p>
                 <p className="text-xs text-muted-foreground truncate">{act.target}</p>
               </div>
-              <span className="text-xs text-muted-foreground shrink-0 pl-4">{act.time}</span>
+              <span className="text-xs text-muted-foreground shrink-0 pl-4">{act.date}</span>
             </div>
           ))}
         </div>

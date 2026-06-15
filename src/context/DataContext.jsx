@@ -11,9 +11,7 @@ import achievementsData from "@/api/mockData/achievements.json";
 import blogsData from "@/api/mockData/blogs.json";
 import messagesData from "@/api/mockData/messages.json";
 import settingsData from "@/api/mockData/settings.json";
-import statsData from "@/api/mockData/stats.json";
 import positionsData from "@/api/mockData/positions.json";
-import dashboardChartsData from "@/api/mockData/dashboardCharts.json";
 
 const ProfessorContext = createContext(null);
 const AboutContext = createContext(null);
@@ -25,9 +23,7 @@ const AchievementsContext = createContext([]);
 const BlogsContext = createContext([]);
 const MessagesContext = createContext([]);
 const SettingsContext = createContext(null);
-const StatsContext = createContext(null);
 const PositionsContext = createContext([]);
-const DashboardChartsContext = createContext(null);
 
 export const useProfessor = () => useContext(ProfessorContext);
 export const useAbout = () => useContext(AboutContext);
@@ -39,9 +35,7 @@ export const useAchievements = () => useContext(AchievementsContext);
 export const useBlogs = () => useContext(BlogsContext);
 export const useMessages = () => useContext(MessagesContext);
 export const useSettings = () => useContext(SettingsContext);
-export const useStats = () => useContext(StatsContext);
 export const usePositions = () => useContext(PositionsContext);
-export const useDashboardCharts = () => useContext(DashboardChartsContext);
 
 export const DataProvider = ({ children }) => {
   return (
@@ -54,17 +48,11 @@ export const DataProvider = ({ children }) => {
                 <AchievementsContext.Provider value={achievementsData}>
                   <BlogsContext.Provider value={blogsData}>
                       <SettingsContext.Provider value={settingsData}>
-                        <StatsContext.Provider value={statsData}>
                           <PositionsContext.Provider value={positionsData}>
                             <MessagesContext.Provider value={messagesData}>
-                              <DashboardChartsContext.Provider
-                                value={dashboardChartsData}
-                              >
                                 {children}
-                              </DashboardChartsContext.Provider>
                             </MessagesContext.Provider>
                           </PositionsContext.Provider>
-                        </StatsContext.Provider>
                       </SettingsContext.Provider>
                   </BlogsContext.Provider>
                 </AchievementsContext.Provider>

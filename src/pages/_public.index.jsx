@@ -4,13 +4,11 @@ import { useEffect, useState } from "react";
 import {
   ArrowRight,
   BookOpen,
-  GraduationCap,
   Award,
   Briefcase,
   Quote,
   Mail,
   FileText,
-  Sparkles,
 } from "lucide-react";
 import professorImg from "@/assets/professor.jpg";
 import heroBg from "@/assets/hero-bg.jpg";
@@ -26,7 +24,6 @@ import {
   useResearches,
   useAchievements,
   useBlogs,
-  useStats,
   useExperience,
 } from "@/context/DataContext";
 
@@ -74,10 +71,16 @@ function HomePage() {
   const researches = useResearches();
   const achievements = useAchievements();
   const blogs = useBlogs();
-  const stats = useStats();
   const experience = useExperience();
 
-  if (!professor || !stats) {
+  const startYears = (experience ?? [])
+    .map((e) => parseInt(e.from, 10))
+    .filter((y) => !Number.isNaN(y));
+  const yearsExperience = startYears.length
+    ? new Date().getFullYear() - Math.min(...startYears)
+    : 0;
+
+  if (!professor) {
     return (
       <div className="flex min-h-screen items-center justify-center">
         Loading…
@@ -186,7 +189,7 @@ function HomePage() {
 
       {/* STATS */}
       <section className="container-academic py-16">
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <Stat
             value={<CountUp end={researches.length} suffix="+" />}
             label="Publications"
@@ -203,21 +206,9 @@ function HomePage() {
             icon={<Award className="size-4" />}
           />
           <Stat
-            value={<CountUp end={stats.experience} suffix=" yrs" />}
+            value={<CountUp end={yearsExperience} suffix=" yrs" />}
             label="Experience"
             icon={<Briefcase className="size-4" />}
-          />
-          <Stat
-            value={<CountUp end={stats.students} />}
-            label="Supervised"
-            icon={<GraduationCap className="size-4" />}
-          />
-          <Stat
-            value={
-              <CountUp end={stats.citations / 1000} decimals={1} suffix="K" />
-            }
-            label="Citations"
-            icon={<Sparkles className="size-4" />}
           />
         </div>
       </section>

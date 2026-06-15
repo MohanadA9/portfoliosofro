@@ -25,8 +25,6 @@ import educationJson from "@/api/mockData/education.json";
 import professorJson from "@/api/mockData/professor.json";
 import aboutJson from "@/api/mockData/about.json";
 import settingsJson from "@/api/mockData/settings.json";
-import statsJson from "@/api/mockData/stats.json";
-import chartsJson from "@/api/mockData/dashboardCharts.json";
 
 // ── Generic hooks ────────────────────────────────────────────────────────────
 
@@ -86,8 +84,6 @@ const EducationCtx = createContext([]);
 const ProfessorCtx = createContext(null);
 const AboutCtx = createContext(null);
 const SettingsCtx = createContext(null);
-const StatsCtx = createContext(null);
-const ChartsCtx = createContext(null);
 
 // ── Public hooks (consumed by admin pages) ────────────────────────────────────
 export const useAdminAchievements = () => useContext(AchievementsCtx);
@@ -101,8 +97,6 @@ export const useAdminEducation = () => useContext(EducationCtx);
 export const useAdminProfessor = () => useContext(ProfessorCtx);
 export const useAdminAbout = () => useContext(AboutCtx);
 export const useAdminSettings = () => useContext(SettingsCtx);
-export const useAdminStats = () => useContext(StatsCtx);
-export const useAdminDashboardCharts = () => useContext(ChartsCtx);
 
 // ── Provider ──────────────────────────────────────────────────────────────────
 export function AdminDataProvider({ children }) {
@@ -117,8 +111,6 @@ export function AdminDataProvider({ children }) {
   const professor = useAdminObject(professorJson, EP.user.get);
   const about = useAdminObject(aboutJson, EP.about.get);
   const settings = useAdminObject(settingsJson, EP.settings.get);
-  const stats = useAdminObject(statsJson, EP.dashboard.stats);
-  const charts = useAdminObject(chartsJson, EP.dashboard.charts);
 
   return (
     <AchievementsCtx.Provider value={achievements}>
@@ -132,11 +124,7 @@ export function AdminDataProvider({ children }) {
                     <ProfessorCtx.Provider value={professor}>
                         <AboutCtx.Provider value={about}>
                           <SettingsCtx.Provider value={settings}>
-                            <StatsCtx.Provider value={stats}>
-                              <ChartsCtx.Provider value={charts}>
                                 {children}
-                              </ChartsCtx.Provider>
-                            </StatsCtx.Provider>
                           </SettingsCtx.Provider>
                         </AboutCtx.Provider>
                       </ProfessorCtx.Provider>

@@ -11,9 +11,7 @@ import researchesData from "./mockData/researches.json";
 import achievementsData from "./mockData/achievements.json";
 import blogsData from "./mockData/blogs.json";
 import messagesData from "./mockData/messages.json";
-import statsData from "./mockData/stats.json";
 import positionsData from "./mockData/positions.json";
-import dashboardCharts from "./mockData/dashboardCharts.json";
 import siteSettings from "./mockData/settings.json";
 
 // ============================================================
@@ -43,10 +41,8 @@ const mockDataMap = {
   "/admin/messages": messagesData,
   "/settings": siteSettings,
   "/admin/settings": siteSettings,
-  "/stats": statsData,
   "/positions": positionsData,
   "/admin/positions": positionsData,
-  "/dashboard/charts": dashboardCharts,
 };
 
 const simulateDelay = () => new Promise((r) => setTimeout(r, Math.random() * 400 + 250));

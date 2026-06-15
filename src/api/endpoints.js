@@ -60,11 +60,6 @@ export const DASHBOARD_ENDPOINTS = {
     get: `${BASE_URL}/admin/setting`,
     update: `${BASE_URL}/admin/setting/update`,
   },
-  dashboard: {
-    stats: `${BASE_URL}/admin/dashboard/stats`,
-    charts: `${BASE_URL}/admin/dashboard/charts`,
-    activity: `${BASE_URL}/admin/dashboard/activity`,
-  },
   achievements: crud("achievement"),
   researches: crud("research"),
   experiences: crud("experience"),
