@@ -23,7 +23,15 @@ export const isAuthenticated = () => !!getAuthToken();
 // MAIN apiFetch
 // ============================================================
 export const apiFetch = async (endpoint, method = "GET", body = null) => {
-  const fullUrl = endpoint.startsWith("http") ? endpoint : `${BASE_URL}${endpoint}`;
+  let fullUrl = endpoint;
+  if (!endpoint.startsWith("http")) {
+    // If endpoint already starts with BASE_URL, don't prepend it
+    if (BASE_URL !== "/" && endpoint.startsWith(BASE_URL)) {
+      fullUrl = endpoint;
+    } else {
+      fullUrl = `${BASE_URL}${endpoint.startsWith("/") ? "" : "/"}${endpoint}`;
+    }
+  }
   const headers = { 
     "Accept": "application/json",
     "X-Requested-With": "XMLHttpRequest"

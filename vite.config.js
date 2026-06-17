@@ -10,6 +10,16 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
-  server: { host: true, port: 8080 },
+  server: { 
+    host: true, 
+    port: 8080,
+    proxy: {
+      '/api': {
+        target: 'https://portfolioso.test',
+        changeOrigin: true,
+        secure: false, // Bypass SSL issues
+      }
+    }
+  },
   build: { outDir: "dist", sourcemap: true },
 });
