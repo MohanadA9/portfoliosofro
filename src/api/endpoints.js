@@ -13,14 +13,14 @@ export const BASE_URL = import.meta.env.VITE_API_URL || "/api";
 // ==========================================
 // Public (Portfolio) Endpoints
 // ==========================================
-export const PORTFOLIO_ENDPOINTS = {
+export const PUBLIC_ENDPOINTS = {
   auth: {
     login: `${BASE_URL}/auth/login`,
     forgotPassword: `${BASE_URL}/auth/forgot-password`,
     verifyOtp: `${BASE_URL}/auth/verify-otp`,
     resetPassword: `${BASE_URL}/auth/reset-password`,
   },
-  contactUs: { store: `${BASE_URL}/contact-us/store` },
+  contact: `${BASE_URL}/contact-us/store`,
   profile: { get: `${BASE_URL}/user/data` },
   about: { get: `${BASE_URL}/about` },
   settings: { get: `${BASE_URL}/setting` },
