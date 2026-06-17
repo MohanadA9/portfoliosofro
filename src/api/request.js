@@ -1,13 +1,12 @@
 /* src/api/request.js
- * Central HTTP wrapper. MOCK_MODE = false — the entire app
- * hits the real backend defined in endpoints.js.
+ * Central HTTP wrapper. Handles authentication and API requests.
  */
 import { BASE_URL } from "./endpoints";
 
 // ============================================================
 // CONFIGURATION
 // ============================================================
-export const MOCK_MODE = false; // Real API mode
+export const MOCK_MODE = false;
 
 // ============================================================
 // AUTH HELPERS
@@ -24,14 +23,18 @@ export const isAuthenticated = () => !!getAuthToken();
 // ============================================================
 export const apiFetch = async (endpoint, method = "GET", body = null) => {
   let fullUrl = endpoint;
+  
+  // Construct full URL
   if (!endpoint.startsWith("http")) {
-    // If endpoint already starts with BASE_URL, don't prepend it
-    if (BASE_URL !== "/" && endpoint.startsWith(BASE_URL)) {
-      fullUrl = endpoint;
+    const cleanEndpoint = endpoint.startsWith("/") ? endpoint : `/${endpoint}`;
+    // If BASE_URL is just "/api" (for proxy), we ensure we don't double it
+    if (BASE_URL === "/api" && cleanEndpoint.startsWith("/api")) {
+      fullUrl = cleanEndpoint;
     } else {
-      fullUrl = `${BASE_URL}${endpoint.startsWith("/") ? "" : "/"}${endpoint}`;
+      fullUrl = `${BASE_URL}${cleanEndpoint}`;
     }
   }
+
   const headers = { 
     "Accept": "application/json",
     "X-Requested-With": "XMLHttpRequest"
@@ -46,55 +49,43 @@ export const apiFetch = async (endpoint, method = "GET", body = null) => {
     headers["Content-Type"] = "application/json";
   }
 
-  const res = await fetch(fullUrl, {
-    method,
-    headers,
-    credentials: "omit", // Using Bearer token, so we don't need cookies
-    body: body ? (body instanceof FormData ? body : JSON.stringify(body)) : null,
-  });
+  try {
+    const res = await fetch(fullUrl, {
+      method,
+      headers,
+      body: body ? (body instanceof FormData ? body : JSON.stringify(body)) : null,
+    });
 
-  const ct = res.headers.get("content-type") || "";
-  const data = ct.includes("application/json") ? await res.json() : await res.text();
+    const ct = res.headers.get("content-type") || "";
+    const data = ct.includes("application/json") ? await res.json() : await res.text();
 
-  if (res.status === 401) {
-    if (!endpoint.includes("/auth/login")) removeAuthToken();
-    const err = new Error(data?.message || "Unauthorized — please log in again");
-    err.status = 401;
-    err.code = "UNAUTHORIZED";
-    throw err;
+    if (res.status === 401) {
+      // ONLY remove token if we are NOT on the login page or trying to login
+      const isLoginRequest = endpoint.includes("/auth/login") || window.location.pathname.includes("/login");
+      if (!isLoginRequest) {
+        removeAuthToken();
+        // Optional: Redirect to login if not already there
+        // window.location.href = "/login";
+      }
+      
+      const err = new Error(data?.message || "Unauthorized");
+      err.status = 401;
+      err.data = data;
+      throw err;
+    }
+
+    if (!res.ok) {
+      const err = new Error(data?.message || `Request failed (${res.status})`);
+      err.status = res.status;
+      err.data = data;
+      throw err;
+    }
+
+    return data;
+  } catch (error) {
+    console.error(`[API Error] ${method} ${fullUrl}:`, error);
+    throw error;
   }
-
-  if (res.status === 403) {
-    const err = new Error(data?.message || "Forbidden — you do not have access");
-    err.status = 403;
-    err.code = "FORBIDDEN";
-    throw err;
-  }
-
-  if (res.status === 404) {
-    const err = new Error(data?.message || "Resource not found");
-    err.status = 404;
-    err.code = "NOT_FOUND";
-    throw err;
-  }
-
-  if (res.status === 422) {
-    const err = new Error(data?.message || "Validation error");
-    err.status = 422;
-    err.code = "VALIDATION_ERROR";
-    err.data = data;
-    throw err;
-  }
-
-  if (!res.ok) {
-    const err = new Error(data?.message || `Request failed (${res.status})`);
-    err.status = res.status;
-    err.code = "SERVER_ERROR";
-    err.data = data;
-    throw err;
-  }
-
-  return data;
 };
 
 export const apiGet = (e) => apiFetch(e, "GET");

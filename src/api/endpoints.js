@@ -7,7 +7,8 @@
 // For local development: http://localhost:8000/api
 // For production: https://your-domain.com/api
 // Using relative path to trigger Vite Proxy and bypass CORS
-export const BASE_URL = "/api";
+// If you are NOT using Vite Proxy, change this to your full backend URL (e.g., "http://localhost:8000/api")
+export const BASE_URL = import.meta.env.VITE_API_URL || "/api";
 
 // ==========================================
 // Public (Portfolio) Endpoints
