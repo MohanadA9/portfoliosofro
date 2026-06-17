@@ -1,9 +1,4 @@
 import { Routes, Route, Link } from "react-router-dom";
-import { AuthProvider } from "./context/AuthContext";
-import { DataProvider } from "./context/DataContext";
-import { AdminDataProvider } from "./context/AdminDataContext";
-import { ThemeProvider } from "./context/ThemeContext";
-import { SiteSettingsProvider } from "./context/SiteSettingsContext";
 import { ScrollToTop } from "./components/common/ScrollToTop";
 
 // Public Pages
@@ -71,91 +66,57 @@ function NotFound() {
 
 export default function App() {
   return (
-    /* DataProvider  → public pages always read from JSON */
-    /* AdminDataProvider → admin pages: JSON (MOCK_MODE=true) or real API (MOCK_MODE=false) */
-    <DataProvider>
-      <AdminDataProvider>
-        <SiteSettingsProvider>
-          <AuthProvider>
-            <ThemeProvider>
-              <ScrollToTop />
-              <Routes>
-                {/* ── Public ── */}
-                <Route element={<PublicLayout />}>
-                  <Route index element={<HomePage />} />
-                  <Route path="about" element={<AboutPage />} />
-                  <Route path="achievements" element={<AchievementsPage />} />
-                  <Route
-                    path="achievements/:id"
-                    element={<AchievementDetail />}
-                  />
-                  <Route path="blog" element={<BlogPage />} />
-                  <Route path="blog/:id" element={<BlogDetail />} />
-                  <Route path="contact" element={<ContactPage />} />
-                  <Route path="courses" element={<CoursesPage />} />
-                  <Route path="courses/:id" element={<CourseDetail />} />
-                  <Route path="experiences" element={<ExperiencesPage />} />
-                  <Route path="positions" element={<PositionsPage />} />
-                  <Route path="researches" element={<ResearchesPage />} />
-                  <Route path="researches/:id" element={<ResearchDetail />} />
-                </Route>
+    <>
+      <ScrollToTop />
+      <Routes>
+        {/* ── Public ── */}
+        <Route element={<PublicLayout />}>
+          <Route index element={<HomePage />} />
+          <Route path="about" element={<AboutPage />} />
+          <Route path="achievements" element={<AchievementsPage />} />
+          <Route path="achievements/:id" element={<AchievementDetail />} />
+          <Route path="blog" element={<BlogPage />} />
+          <Route path="blog/:id" element={<BlogDetail />} />
+          <Route path="contact" element={<ContactPage />} />
+          <Route path="courses" element={<CoursesPage />} />
+          <Route path="courses/:id" element={<CourseDetail />} />
+          <Route path="experiences" element={<ExperiencesPage />} />
+          <Route path="positions" element={<PositionsPage />} />
+          <Route path="researches" element={<ResearchesPage />} />
+          <Route path="researches/:id" element={<ResearchDetail />} />
+        </Route>
 
-                {/* ── Admin ── */}
-                <Route element={<AdminLayout />}>
-                  <Route path="admin" element={<DashboardHome />} />
-                  <Route
-                    path="admin/achievements"
-                    element={<AdminAchievements />}
-                  />
-                  <Route
-                    path="admin/achievements/new"
-                    element={<AchievementForm />}
-                  />
-                  <Route
-                    path="admin/achievements/:id/edit"
-                    element={<AchievementForm />}
-                  />
-                  <Route path="admin/blogs" element={<AdminBlogs />} />
-                  <Route path="admin/blogs/new" element={<BlogForm />} />
-                  <Route path="admin/blogs/:id/edit" element={<BlogForm />} />
-                  <Route path="admin/courses" element={<AdminCourses />} />
-                  <Route path="admin/education" element={<AdminEducation />} />
-                  <Route
-                    path="admin/experiences"
-                    element={<AdminExperiences />}
-                  />
-                  <Route path="admin/lectures" element={<LecturesPage />} />
-                  <Route path="admin/messages" element={<MessagesPage />} />
-                  <Route path="admin/positions" element={<AdminPositions />} />
-                  <Route path="admin/profile" element={<ProfilePage />} />
-                  <Route path="admin/about" element={<AboutPageAdmin />} />
-                  <Route
-                    path="admin/researches"
-                    element={<AdminResearches />}
-                  />
-                  <Route
-                    path="admin/researches/new"
-                    element={<ResearchForm />}
-                  />
-                  <Route
-                    path="admin/researches/:id/edit"
-                    element={<ResearchForm />}
-                  />
-                  <Route path="admin/settings" element={<SettingsPage />} />
-                </Route>
+        {/* ── Admin ── */}
+        <Route element={<AdminLayout />}>
+          <Route path="admin" element={<DashboardHome />} />
+          <Route path="admin/achievements" element={<AdminAchievements />} />
+          <Route path="admin/achievements/new" element={<AchievementForm />} />
+          <Route path="admin/achievements/:id/edit" element={<AchievementForm />} />
+          <Route path="admin/blogs" element={<AdminBlogs />} />
+          <Route path="admin/blogs/new" element={<BlogForm />} />
+          <Route path="admin/blogs/:id/edit" element={<BlogForm />} />
+          <Route path="admin/courses" element={<AdminCourses />} />
+          <Route path="admin/education" element={<AdminEducation />} />
+          <Route path="admin/experiences" element={<AdminExperiences />} />
+          <Route path="admin/lectures" element={<LecturesPage />} />
+          <Route path="admin/messages" element={<MessagesPage />} />
+          <Route path="admin/positions" element={<AdminPositions />} />
+          <Route path="admin/profile" element={<ProfilePage />} />
+          <Route path="admin/about" element={<AboutPageAdmin />} />
+          <Route path="admin/researches" element={<AdminResearches />} />
+          <Route path="admin/researches/new" element={<ResearchForm />} />
+          <Route path="admin/researches/:id/edit" element={<ResearchForm />} />
+          <Route path="admin/settings" element={<SettingsPage />} />
+        </Route>
 
-                {/* ── Auth ── */}
-                <Route path="login" element={<LoginPage />} />
-                <Route path="forgot-password" element={<ForgotPage />} />
-                <Route path="otp" element={<OtpPage />} />
-                <Route path="reset-password" element={<ResetPage />} />
+        {/* ── Auth ── */}
+        <Route path="login" element={<LoginPage />} />
+        <Route path="forgot-password" element={<ForgotPage />} />
+        <Route path="otp" element={<OtpPage />} />
+        <Route path="reset-password" element={<ResetPage />} />
 
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </ThemeProvider>
-          </AuthProvider>
-        </SiteSettingsProvider>
-      </AdminDataProvider>
-    </DataProvider>
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </>
   );
 }

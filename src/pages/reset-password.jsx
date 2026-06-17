@@ -16,7 +16,7 @@ function strengthOf(p) {
 }
 function ResetPage() {
   const nav = useNavigate();
-  const { email } = useSearchParamsObj();
+  const { email, token: resetToken } = useSearchParamsObj();
   const [pwd, setPwd] = useState("");
   const [confirm, setConfirm] = useState("");
   const [show, setShow] = useState(false);
@@ -37,7 +37,7 @@ function ResetPage() {
     setBusy(true);
     try {
       await apiPost(DASHBOARD_ENDPOINTS.auth.resetPassword, {
-        email,
+        token: resetToken,
         password: pwd,
       });
       toast.success("Password updated. Please sign in.");

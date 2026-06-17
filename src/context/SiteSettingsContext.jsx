@@ -1,5 +1,5 @@
-import { createContext, useContext, useEffect, useState } from "react";
-import seedSettings from "@/api/mockData/settings.json";
+import { createContext, useContext, useEffect, useState, useCallback } from "react";
+import { api } from "@/api/client";
 
 const SiteSettingsContext = createContext(null);
 
@@ -11,7 +11,26 @@ export const useSiteSettings = () => {
 };
 
 export function SiteSettingsProvider({ children }) {
-  const [settings, setSettings] = useState(seedSettings);
+  const [settings, setSettings] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let active = true;
+    api.settings
+      .get()
+      .then((res) => {
+        if (!active) return;
+        const data = res?.data ?? res;
+        if (data) setSettings(data);
+      })
+      .catch(() => {})
+      .finally(() => {
+        if (active) setLoading(false);
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
 
   useEffect(() => {
     const href = settings?.favicon;
@@ -25,10 +44,17 @@ export function SiteSettingsProvider({ children }) {
     link.setAttribute("href", href);
   }, [settings?.favicon]);
 
-  const updateSettings = (patch) => setSettings((s) => ({ ...s, ...patch }));
+  const updateSettings = useCallback(async (patch) => {
+    setSettings((s) => ({ ...s, ...patch }));
+    try {
+      await api.settings.update(patch);
+    } catch {
+      // Optimistic — will reconcile on next load
+    }
+  }, []);
 
   return (
-    <SiteSettingsContext.Provider value={{ settings, updateSettings }}>
+    <SiteSettingsContext.Provider value={{ settings, updateSettings, loading }}>
       {children}
     </SiteSettingsContext.Provider>
   );

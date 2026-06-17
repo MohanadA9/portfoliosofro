@@ -11,14 +11,17 @@ import {
 } from "lucide-react";
 
 function AboutPage() {
-  const professor = useProfessor();
-  const education = useEducation();
-  const about = useAbout();
+  const { data: professor, loading: profLoading } = useProfessor();
+  const { data: education } = useEducation();
+  const { data: about } = useAbout();
 
-  if (!professor)
+  if (profLoading || !professor)
     return (
       <div className="flex min-h-screen items-center justify-center">
-        Loading…
+        <div className="text-center">
+          <div className="size-8 mx-auto mb-3 rounded-full border-2 border-electric border-t-transparent animate-spin" />
+          <p className="text-sm text-muted-foreground">Loading…</p>
+        </div>
       </div>
     );
 

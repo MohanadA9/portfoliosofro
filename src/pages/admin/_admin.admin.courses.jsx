@@ -1,5 +1,6 @@
 import { useState, useRef } from "react";
-import { Plus, Search, Pencil, Trash2, X, UploadCloud, ImageIcon } from "lucide-react";
+import { Plus, Search, Pencil, Trash2, X, CloudUpload as UploadCloud, Image as ImageIcon } from "lucide-react";
+import { toast } from "sonner";
 import { useAdminCourses } from "@/context/AdminDataContext";
 import { api } from "@/api/client";
 import { useResourceList } from "@/lib/useResourceList";
@@ -91,6 +92,8 @@ function CourseModal({ initial, onClose, onSaved }) {
       };
       initial?.id ? await api.courses.update(initial.id, p) : await api.courses.create(p);
       onSaved();
+    } catch (err) {
+      toast.error(err?.message || "Operation failed");
     } finally {
       setSaving(false);
     }
@@ -170,8 +173,8 @@ function CourseModal({ initial, onClose, onSaved }) {
 }
 
 export default function AdminCourses() {
-  const fallback = useAdminCourses() ?? [];
-  const [items, setItems] = useResourceList(api.courses, fallback);
+  const { data: coursesFallback } = useAdminCourses();
+  const [items, setItems] = useResourceList(api.courses, coursesFallback ?? []);
   const [search, setSearch] = useState("");
   const [modal, setModal] = useState(null);
 
@@ -186,8 +189,12 @@ export default function AdminCourses() {
   };
   const del = async (id) => {
     if (!(await confirmDelete("This course and its lectures will be permanently deleted."))) return;
-    await api.courses.remove(id);
-    setItems((p) => p.filter((c) => c.id !== id));
+    try {
+      await api.courses.remove(id);
+      setItems((p) => p.filter((c) => c.id !== id));
+    } catch (err) {
+      toast.error(err?.message || "Failed to delete course");
+    }
   };
 
   return (

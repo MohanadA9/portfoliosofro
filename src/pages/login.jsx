@@ -7,8 +7,8 @@ import { CircuitBackground } from "@/components/effects/CircuitBackground";
 function LoginPage() {
   const { login } = useAuth();
   const nav = useNavigate();
-  const [email, setEmail] = useState("admin@cit.edu.eg");
-  const [pwd, setPwd] = useState("admin123");
+  const [email, setEmail] = useState("admin@portfolio.com");
+  const [pwd, setPwd] = useState("password");
   const [busy, setBusy] = useState(false);
   const submit = async (e) => {
     e.preventDefault();
@@ -78,7 +78,7 @@ function LoginPage() {
           </Link>
         </div>
         <p className="mt-6 text-center text-[11px] font-mono text-muted-foreground">
-          DEMO • any email + 4+ char password
+          DEMO • admin@portfolio.com / password
         </p>
       </div>
     </div>

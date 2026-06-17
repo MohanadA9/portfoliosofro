@@ -1,7 +1,9 @@
 import { useState, useEffect, useRef } from "react";
-import { KeyRound, Eye, EyeOff, Save, ImageIcon, Upload } from "lucide-react";
+import { KeyRound, Eye, EyeOff, Save, Image as ImageIcon, Upload } from "lucide-react";
 import { useSiteSettings } from "@/context/SiteSettingsContext";
+import { useAuth } from "@/context/AuthContext";
 import { api } from "@/api/client";
+import { toast } from "sonner";
 
 const INPUT =
   "w-full rounded-lg border border-border bg-muted/30 px-3 py-2 text-sm focus:outline-none focus:border-electric/60 focus:ring-1 focus:ring-electric/30";
@@ -94,6 +96,8 @@ function SiteIdentityCard() {
       await api.settings.update(form);
       setSaved(true);
       setTimeout(() => setSaved(false), 2500);
+    } catch (err) {
+      toast.error(err?.message || "Operation failed");
     } finally {
       setSaving(false);
     }
@@ -175,6 +179,7 @@ function PasswordField({ label, value, onChange, placeholder }) {
 }
 
 export default function AdminSettings() {
+  const { user } = useAuth();
   const [current, setCurrent] = useState("");
   const [next, setNext] = useState("");
   const [confirm, setConfirm] = useState("");
@@ -197,12 +202,19 @@ export default function AdminSettings() {
     setSaving(true);
     setStatus(null);
     try {
-      await new Promise((r) => setTimeout(r, 600));
+      // Verify current password by attempting login
+      await api.auth.login(user?.email || "", current);
+      // If login succeeds, update the password in settings table
+      await api.settings.update({ password: next });
       setStatus("success");
       setMsg("Password changed successfully.");
       setCurrent("");
       setNext("");
       setConfirm("");
+      toast.success("Password updated");
+    } catch {
+      setStatus("error");
+      setMsg("Current password is incorrect.");
     } finally {
       setSaving(false);
     }

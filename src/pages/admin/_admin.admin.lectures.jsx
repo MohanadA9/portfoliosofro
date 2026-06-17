@@ -121,7 +121,8 @@ function LectureModal({ initial, courses, onClose, onSaved }) {
 }
 
 export default function AdminLectures() {
-  const [coursesRaw] = useResourceList(api.courses, useAdminCourses() ?? []);
+  const { data: coursesFallback } = useAdminCourses();
+  const [coursesRaw] = useResourceList(api.courses, coursesFallback ?? []);
   const [search, setSearch] = useState("");
   const [modal, setModal] = useState(null);
 

@@ -5,7 +5,7 @@ import { PageHeader } from "@/components/common/Headers";
 import { useProfessor } from "@/context/DataContext";
 import { api } from "@/api/client";
 function ContactPage() {
-  const professor = useProfessor();
+  const { data: professor, loading: profLoading } = useProfessor();
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -13,6 +13,17 @@ function ContactPage() {
     body: "",
   });
   const [busy, setBusy] = useState(false);
+
+  if (profLoading || !professor) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <div className="text-center">
+          <div className="size-8 mx-auto mb-3 rounded-full border-2 border-electric border-t-transparent animate-spin" />
+          <p className="text-sm text-muted-foreground">Loading…</p>
+        </div>
+      </div>
+    );
+  }
   const submit = async (e) => {
     e.preventDefault();
     setBusy(true);

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Plus, Search, Pencil, Trash2, X, Briefcase } from "lucide-react";
+import { toast } from "sonner";
 import { useAdminExperiences } from "@/context/AdminDataContext";
 import { useResourceList } from "@/lib/useResourceList";
 import { api } from "@/api/client";
@@ -28,6 +29,8 @@ function ExpModal({ initial, onClose, onSaved }) {
         ? await api.experiences.update(initial.id, form)
         : await api.experiences.create(form);
       onSaved();
+    } catch (err) {
+      toast.error(err?.message || "Operation failed");
     } finally {
       setSaving(false);
     }
@@ -125,8 +128,8 @@ function ExpModal({ initial, onClose, onSaved }) {
 }
 
 export default function AdminExperiences() {
-  const fallback = useAdminExperiences() ?? [];
-  const [items, setItems] = useResourceList(api.experiences, fallback);
+  const { data: experiencesFallback } = useAdminExperiences();
+  const [items, setItems] = useResourceList(api.experiences, experiencesFallback ?? []);
   const [search, setSearch] = useState("");
   const [modal, setModal] = useState(null);
 
@@ -144,8 +147,12 @@ export default function AdminExperiences() {
   };
   const del = async (id) => {
     if (!(await confirmDelete("This experience entry will be permanently deleted."))) return;
-    await api.experiences.remove(id);
-    setItems((p) => p.filter((e) => e.id !== id));
+    try {
+      await api.experiences.remove(id);
+      setItems((p) => p.filter((e) => e.id !== id));
+    } catch (err) {
+      toast.error(err?.message || "Failed to delete experience entry");
+    }
   };
 
   return (

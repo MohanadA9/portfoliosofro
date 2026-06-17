@@ -21,12 +21,13 @@ function OtpPage() {
   const verify = async (otp) => {
     setBusy(true);
     try {
-      await apiPost(DASHBOARD_ENDPOINTS.auth.verifyOtp, {
+      const res = await apiPost(DASHBOARD_ENDPOINTS.auth.verifyOtp, {
         email,
         otp,
       });
       toast.success("Code verified");
-      nav("/reset-password" + "?email=" + encodeURIComponent(email));
+      const token = res?.token || "";
+      nav("/reset-password" + "?email=" + encodeURIComponent(email) + "&token=" + encodeURIComponent(token));
     } catch (e) {
       toast.error(e?.message || "Invalid code");
       setCode("");
@@ -63,7 +64,7 @@ function OtpPage() {
             We sent a 6-digit code to{" "}
             <span className="text-foreground font-medium">{email || "your email"}</span>.
           </p>
-          <p className="text-[11px] text-muted-foreground mt-1 font-mono">Hint: 123456</p>
+          <p className="text-[11px] text-muted-foreground mt-1 font-mono">Check the API response for the OTP code</p>
         </div>
 
         <form onSubmit={submit} className="space-y-6">

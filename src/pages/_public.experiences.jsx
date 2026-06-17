@@ -3,7 +3,7 @@ import { useExperience } from "@/context/DataContext";
 import { motion } from "framer-motion";
 import { Briefcase } from "lucide-react";
 function ExperiencesPage() {
-  const experiences = useExperience();
+  const { data: experiences, loading } = useExperience();
   return (
     <>
       <PageHeader
@@ -14,7 +14,7 @@ function ExperiencesPage() {
       <section className="container-academic py-16">
         <div className="relative mx-auto max-w-3xl">
           <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-electric via-border to-transparent md:-translate-x-1/2" />
-          {experiences.map((e, i) => (
+          {(experiences ?? []).map((e, i) => (
             <motion.div
               key={e.id}
               initial={{

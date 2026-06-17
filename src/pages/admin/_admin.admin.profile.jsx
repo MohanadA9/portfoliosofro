@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Save, Camera, User, Trash2, FileText } from "lucide-react";
+import { toast } from "sonner";
 import { useAdminProfessor } from "@/context/AdminDataContext";
 import { api } from "@/api/client";
 
@@ -40,7 +41,7 @@ const SOCIAL_KEYS = [
 ];
 
 export default function AdminProfile() {
-  const professor = useAdminProfessor();
+  const { data: professor } = useAdminProfessor();
   const [form, setForm] = useState({});
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -76,6 +77,8 @@ export default function AdminProfile() {
       await api.professor.update(form);
       setSaved(true);
       setTimeout(() => setSaved(false), 2500);
+    } catch (err) {
+      toast.error(err?.message || "Operation failed");
     } finally {
       setSaving(false);
     }

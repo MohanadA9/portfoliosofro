@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Plus, Search, Pencil, Trash2, ImageIcon } from "lucide-react";
+import { Plus, Search, Pencil, Trash2, Image as ImageIcon } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAdminResearches } from "@/context/AdminDataContext";
 import { api } from "@/api/client";
@@ -14,8 +14,8 @@ const STATUS_CHIP = {
 };
 
 export default function AdminResearches() {
-  const fallback = useAdminResearches() ?? [];
-  const [items, setItems] = useResourceList(api.researches, fallback);
+  const { data: researchesFallback } = useAdminResearches();
+  const [items, setItems] = useResourceList(api.researches, researchesFallback ?? []);
   const [search, setSearch] = useState("");
   const nav = useNavigate();
 

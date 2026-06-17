@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { ArrowLeft, UploadCloud, Image as ImageIcon, X, Loader as Loader2 } from "lucide-react";
+import { ArrowLeft, CloudUpload as UploadCloud, Image as ImageIcon, X, Loader as Loader2 } from "lucide-react";
+import { toast } from "sonner";
 import { api } from "@/api/client";
 
 const INPUT =
@@ -134,6 +135,8 @@ export default function BlogForm() {
         await api.blogs.create(form);
       }
       navigate("/admin/blogs");
+    } catch (err) {
+      toast.error(err?.message || "Operation failed");
     } finally {
       setSaving(false);
     }

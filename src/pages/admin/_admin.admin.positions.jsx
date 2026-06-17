@@ -1,29 +1,6 @@
 import { useState } from "react";
-import {
-  Plus,
-  Search,
-  Pencil,
-  Trash2,
-  X,
-  Crown,
-  GraduationCap,
-  Radio,
-  FileEdit,
-  Mic,
-  Users,
-  Shield,
-  Scroll,
-  Calendar,
-  Building,
-  Briefcase,
-  Award,
-  BookOpen,
-  Globe,
-  Star,
-  Lightbulb,
-  Target,
-  Layers,
-} from "lucide-react";
+import { Plus, Search, Pencil, Trash2, X, Crown, GraduationCap, Radio, File as FileEdit, Mic, Users, Shield, Scroll, Calendar, Building, Briefcase, Award, BookOpen, Globe, Star, Lightbulb, Target, Layers } from "lucide-react";
+import { toast } from "sonner";
 import { useAdminPositions } from "@/context/AdminDataContext";
 import { useResourceList } from "@/lib/useResourceList";
 import { api } from "@/api/client";
@@ -65,6 +42,8 @@ function PositionModal({ initial, onClose, onSaved }) {
         ? await api.positions.update(initial.id, form)
         : await api.positions.create(form);
       onSaved();
+    } catch (err) {
+      toast.error(err?.message || "Operation failed");
     } finally {
       setSaving(false);
     }
@@ -156,8 +135,8 @@ function PositionModal({ initial, onClose, onSaved }) {
 }
 
 export default function AdminPositions() {
-  const fallback = useAdminPositions() ?? [];
-  const [items, setItems] = useResourceList(api.positions, fallback);
+  const { data: positionsFallback } = useAdminPositions();
+  const [items, setItems] = useResourceList(api.positions, positionsFallback ?? []);
   const [search, setSearch] = useState("");
   const [modal, setModal] = useState(null);
 
@@ -179,8 +158,12 @@ export default function AdminPositions() {
   const del = async (id) => {
     if (!(await confirmDelete("This position will be permanently deleted.")))
       return;
-    await api.positions.remove(id);
-    setItems((p) => p.filter((x) => x.id !== id));
+    try {
+      await api.positions.remove(id);
+      setItems((p) => p.filter((x) => x.id !== id));
+    } catch (err) {
+      toast.error(err?.message || "Failed to delete position");
+    }
   };
 
   return (

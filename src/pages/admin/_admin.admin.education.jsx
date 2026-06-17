@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Plus, Search, Pencil, Trash2, X, GraduationCap } from "lucide-react";
+import { toast } from "sonner";
 import { useAdminEducation } from "@/context/AdminDataContext";
 import { api } from "@/api/client";
 import { useResourceList } from "@/lib/useResourceList";
@@ -22,6 +23,8 @@ function EduModal({ initial, onClose, onSaved }) {
     try {
       initial?.id ? await api.education.update(initial.id, form) : await api.education.create(form);
       onSaved();
+    } catch (err) {
+      toast.error(err?.message || "Operation failed");
     } finally {
       setSaving(false);
     }
@@ -110,8 +113,8 @@ function EduModal({ initial, onClose, onSaved }) {
 }
 
 export default function AdminEducation() {
-  const fallback = useAdminEducation() ?? [];
-  const [items, setItems] = useResourceList(api.education, fallback);
+  const { data: educationFallback } = useAdminEducation();
+  const [items, setItems] = useResourceList(api.education, educationFallback ?? []);
   const [search, setSearch] = useState("");
   const [modal, setModal] = useState(null);
 
@@ -129,8 +132,12 @@ export default function AdminEducation() {
   };
   const del = async (id) => {
     if (!(await confirmDelete("This education entry will be permanently deleted."))) return;
-    await api.education.remove(id);
-    setItems((p) => p.filter((e) => e.id !== id));
+    try {
+      await api.education.remove(id);
+      setItems((p) => p.filter((e) => e.id !== id));
+    } catch (err) {
+      toast.error(err?.message || "Failed to delete education entry");
+    }
   };
 
   return (

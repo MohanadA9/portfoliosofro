@@ -2,88 +2,79 @@
  * AdminDataContext.jsx
  *
  * Data layer for the admin dashboard.
- *
- *  MOCK_MODE = true  (request.js)  →  data loaded directly from local JSON files
- *  MOCK_MODE = false               →  data fetched from real API (DASHBOARD_ENDPOINTS)
- *
- * Public pages always use DataContext (JSON only).
- * Admin pages always use AdminDataContext.
+ * All data fetched from real API via Supabase Edge Functions.
  */
-import { createContext, useContext, useState, useEffect } from "react";
-import { MOCK_MODE, apiFetch } from "@/api/request";
+import { createContext, useContext, useState, useEffect, useCallback } from "react";
+import { apiFetch } from "@/api/request";
 import { DASHBOARD_ENDPOINTS as EP } from "@/api/endpoints";
 
-// ── JSON seed data (imported at build time; used when MOCK_MODE = true) ──────
-import achievementsJson from "@/api/mockData/achievements.json";
-import researchesJson from "@/api/mockData/researches.json";
-import experiencesJson from "@/api/mockData/experiences.json";
-import positionsJson from "@/api/mockData/positions.json";
-import coursesJson from "@/api/mockData/courses.json";
-import blogsJson from "@/api/mockData/blogs.json";
-import messagesJson from "@/api/mockData/messages.json";
-import educationJson from "@/api/mockData/education.json";
-import professorJson from "@/api/mockData/professor.json";
-import aboutJson from "@/api/mockData/about.json";
-import settingsJson from "@/api/mockData/settings.json";
+function useApiList(apiUrl) {
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-// ── Generic hooks ────────────────────────────────────────────────────────────
-
-/** Hook for a list resource (returns array). */
-function useAdminList(jsonData, apiUrl) {
-  const [data, setData] = useState(MOCK_MODE ? jsonData : []);
+  const load = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await apiFetch(apiUrl, "GET");
+      const items = Array.isArray(res)
+        ? res
+        : Array.isArray(res?.data)
+          ? res.data
+          : [];
+      setData(items);
+    } catch (e) {
+      setError(e.message || "Failed to load data");
+    } finally {
+      setLoading(false);
+    }
+  }, [apiUrl]);
 
   useEffect(() => {
-    if (MOCK_MODE) return;
-    let active = true;
-    apiFetch(apiUrl, "GET")
-      .then((res) => {
-        if (!active) return;
-        setData(
-          Array.isArray(res) ? res : Array.isArray(res?.data) ? res.data : [],
-        );
-      })
-      .catch(() => {});
-    return () => {
-      active = false;
-    };
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    load();
+  }, [load]);
 
-  return data;
+  return { data, loading, error, reload: load };
 }
 
-/** Hook for a single-object resource (returns object or null). */
-function useAdminObject(jsonData, apiUrl) {
-  const [data, setData] = useState(MOCK_MODE ? jsonData : null);
+function useApiObject(apiUrl) {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const load = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await apiFetch(apiUrl, "GET");
+      setData(res?.data ?? res ?? null);
+    } catch (e) {
+      setError(e.message || "Failed to load data");
+    } finally {
+      setLoading(false);
+    }
+  }, [apiUrl]);
 
   useEffect(() => {
-    if (MOCK_MODE) return;
-    let active = true;
-    apiFetch(apiUrl, "GET")
-      .then((res) => {
-        if (!active) return;
-        setData(res?.data ?? res ?? null);
-      })
-      .catch(() => {});
-    return () => {
-      active = false;
-    };
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    load();
+  }, [load]);
 
-  return data;
+  return { data, loading, error, reload: load };
 }
 
 // ── Contexts ─────────────────────────────────────────────────────────────────
-const AchievementsCtx = createContext([]);
-const ResearchesCtx = createContext([]);
-const ExperiencesCtx = createContext([]);
-const PositionsCtx = createContext([]);
-const CoursesCtx = createContext([]);
-const BlogsCtx = createContext([]);
-const MessagesCtx = createContext([]);
-const EducationCtx = createContext([]);
-const ProfessorCtx = createContext(null);
-const AboutCtx = createContext(null);
-const SettingsCtx = createContext(null);
+const AchievementsCtx = createContext({ data: [], loading: true, error: null, reload: () => {} });
+const ResearchesCtx = createContext({ data: [], loading: true, error: null, reload: () => {} });
+const ExperiencesCtx = createContext({ data: [], loading: true, error: null, reload: () => {} });
+const PositionsCtx = createContext({ data: [], loading: true, error: null, reload: () => {} });
+const CoursesCtx = createContext({ data: [], loading: true, error: null, reload: () => {} });
+const BlogsCtx = createContext({ data: [], loading: true, error: null, reload: () => {} });
+const MessagesCtx = createContext({ data: [], loading: true, error: null, reload: () => {} });
+const EducationCtx = createContext({ data: [], loading: true, error: null, reload: () => {} });
+const ProfessorCtx = createContext({ data: null, loading: true, error: null, reload: () => {} });
+const AboutCtx = createContext({ data: null, loading: true, error: null, reload: () => {} });
+const SettingsCtx = createContext({ data: null, loading: true, error: null, reload: () => {} });
 
 // ── Public hooks (consumed by admin pages) ────────────────────────────────────
 export const useAdminAchievements = () => useContext(AchievementsCtx);
@@ -100,17 +91,17 @@ export const useAdminSettings = () => useContext(SettingsCtx);
 
 // ── Provider ──────────────────────────────────────────────────────────────────
 export function AdminDataProvider({ children }) {
-  const achievements = useAdminList(achievementsJson, EP.achievements.list);
-  const researches = useAdminList(researchesJson, EP.researches.list);
-  const experiences = useAdminList(experiencesJson, EP.experiences.list);
-  const positions = useAdminList(positionsJson, EP.positions.list);
-  const courses = useAdminList(coursesJson, EP.courses.list);
-  const blogs = useAdminList(blogsJson, EP.blogs.list);
-  const messages = useAdminList(messagesJson, EP.messages.list);
-  const education = useAdminList(educationJson, EP.education.list);
-  const professor = useAdminObject(professorJson, EP.user.get);
-  const about = useAdminObject(aboutJson, EP.about.get);
-  const settings = useAdminObject(settingsJson, EP.settings.get);
+  const achievements = useApiList(EP.achievements.list);
+  const researches = useApiList(EP.researches.list);
+  const experiences = useApiList(EP.experiences.list);
+  const positions = useApiList(EP.positions.list);
+  const courses = useApiList(EP.courses.list);
+  const blogs = useApiList(EP.blogs.list);
+  const messages = useApiList(EP.messages.list);
+  const education = useApiList(EP.education.list);
+  const professor = useApiObject(EP.user.get);
+  const about = useApiObject(EP.about.get);
+  const settings = useApiObject(EP.settings.get);
 
   return (
     <AchievementsCtx.Provider value={achievements}>
@@ -127,7 +118,7 @@ export function AdminDataProvider({ children }) {
                                 {children}
                           </SettingsCtx.Provider>
                         </AboutCtx.Provider>
-                      </ProfessorCtx.Provider>
+                    </ProfessorCtx.Provider>
                   </EducationCtx.Provider>
                 </MessagesCtx.Provider>
               </BlogsCtx.Provider>

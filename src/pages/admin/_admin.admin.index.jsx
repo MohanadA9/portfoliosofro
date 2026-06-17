@@ -1,4 +1,4 @@
-import { Award, BookOpen, Edit3, MessageSquare, Video, FileText, Activity } from "lucide-react";
+import { Award, BookOpen, CreditCard as Edit3, MessageSquare, Video, FileText, Activity } from "lucide-react";
 import {
   useAdminAchievements,
   useAdminResearches,
@@ -53,12 +53,12 @@ const CustomTooltip = ({ active, payload, label }) => {
 };
 
 export default function DashboardHome() {
-  const professor = useAdminProfessor();
-  const achievements = useAdminAchievements();
-  const researches = useAdminResearches();
-  const courses = useAdminCourses();
-  const blogs = useAdminBlogs();
-  const messages = useAdminMessages();
+  const { data: professor } = useAdminProfessor();
+  const { data: achievements } = useAdminAchievements();
+  const { data: researches } = useAdminResearches();
+  const { data: courses } = useAdminCourses();
+  const { data: blogs } = useAdminBlogs();
+  const { data: messages } = useAdminMessages();
 
   const lecturesCount = (courses || []).reduce((s, c) => s + (c.lectures?.length || 0), 0);
   const unread = (messages || []).filter((m) => !m.read).length;

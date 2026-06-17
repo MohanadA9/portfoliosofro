@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Save, Plus, Trash2 } from "lucide-react";
+import { toast } from "sonner";
 import { useAdminAbout } from "@/context/AdminDataContext";
 import { api } from "@/api/client";
 
@@ -32,7 +33,7 @@ const INPUT =
 const TEXTAREA = `${INPUT} resize-none`;
 
 export default function AdminAbout() {
-  const about = useAdminAbout();
+  const { data: about } = useAdminAbout();
   const [form, setForm] = useState({});
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -88,6 +89,8 @@ export default function AdminAbout() {
       await api.about.update(form);
       setSaved(true);
       setTimeout(() => setSaved(false), 2500);
+    } catch (err) {
+      toast.error(err?.message || "Operation failed");
     } finally {
       setSaving(false);
     }

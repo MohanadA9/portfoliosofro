@@ -1,8 +1,9 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { ArrowLeft, UploadCloud, X, ImageIcon, GripVertical } from "lucide-react";
+import { ArrowLeft, CloudUpload as UploadCloud, X, Image as ImageIcon, GripVertical } from "lucide-react";
 import { useAdminAchievements } from "@/context/AdminDataContext";
 import { api } from "@/api/client";
+import { toast } from "sonner";
 
 const INPUT =
   "w-full rounded-lg border border-border bg-muted/30 px-3 py-2 text-sm focus:outline-none focus:border-electric/60 focus:ring-1 focus:ring-electric/30";
@@ -104,7 +105,7 @@ const EMPTY = {
 export default function AchievementForm() {
   const { id } = useParams();
   const nav = useNavigate();
-  const allItems = useAdminAchievements() ?? [];
+  const { data: allItems } = useAdminAchievements();
   const isEdit = Boolean(id);
 
   const [form, setForm] = useState(EMPTY);
@@ -116,7 +117,7 @@ export default function AchievementForm() {
       setLoaded(true);
       return;
     }
-    const item = allItems.find((a) => a.id === id);
+    const item = (allItems ?? []).find((a) => a.id === id);
     if (item) {
       const images = item.gallery?.length ? item.gallery : item.cover ? [item.cover] : [];
       setForm({
@@ -151,6 +152,8 @@ export default function AchievementForm() {
         await api.achievements.create(payload);
       }
       nav("/admin/achievements");
+    } catch (err) {
+      toast.error(err?.message || "Failed to save achievement");
     } finally {
       setSaving(false);
     }

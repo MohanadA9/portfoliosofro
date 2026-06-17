@@ -1,18 +1,7 @@
 import { PageHeader } from "@/components/common/Headers";
 import { Card } from "@/components/common/Cards";
 import { usePositions } from "@/context/DataContext";
-import {
-  Crown,
-  GraduationCap,
-  Radio,
-  FileEdit,
-  Mic,
-  Users,
-  Shield,
-  Scroll,
-  Calendar,
-  Building,
-} from "lucide-react";
+import { Crown, GraduationCap, Radio, File as FileEdit, Mic, Users, Shield, Scroll, Calendar, Building } from "lucide-react";
 const ICONS = {
   crown: Crown,
   academic: GraduationCap,
@@ -26,7 +15,7 @@ const ICONS = {
   building: Building,
 };
 function PositionsPage() {
-  const positions = usePositions();
+  const { data: positions, loading } = usePositions();
   return (
     <>
       <PageHeader
@@ -36,7 +25,7 @@ function PositionsPage() {
       />
       <section className="container-academic py-12">
         <div className="grid gap-5 md:grid-cols-2">
-          {positions.map((p) => {
+          {(positions ?? []).map((p) => {
             const Icon = ICONS[p.icon] ?? GraduationCap;
             return (
               <Card key={p.id} className="p-6 flex gap-4">

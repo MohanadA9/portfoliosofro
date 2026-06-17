@@ -65,13 +65,13 @@ function Typewriter({ titles }) {
 }
 
 function HomePage() {
-  const professor = useProfessor();
-  const about = useAbout();
-  const courses = useCourses();
-  const researches = useResearches();
-  const achievements = useAchievements();
-  const blogs = useBlogs();
-  const experience = useExperience();
+  const { data: professor, loading: profLoading } = useProfessor();
+  const { data: about } = useAbout();
+  const { data: courses } = useCourses();
+  const { data: researches } = useResearches();
+  const { data: achievements } = useAchievements();
+  const { data: blogs } = useBlogs();
+  const { data: experience } = useExperience();
 
   const startYears = (experience ?? [])
     .map((e) => parseInt(e.from, 10))
@@ -80,10 +80,13 @@ function HomePage() {
     ? new Date().getFullYear() - Math.min(...startYears)
     : 0;
 
-  if (!professor) {
+  if (profLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        Loading…
+        <div className="text-center">
+          <div className="size-8 mx-auto mb-3 rounded-full border-2 border-electric border-t-transparent animate-spin" />
+          <p className="text-sm text-muted-foreground">Loading…</p>
+        </div>
       </div>
     );
   }

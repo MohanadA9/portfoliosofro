@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { ArrowLeft, UploadCloud, X, ImageIcon } from "lucide-react";
+import { ArrowLeft, CloudUpload as UploadCloud, X, Image as ImageIcon } from "lucide-react";
+import { toast } from "sonner";
 import { useAdminResearches } from "@/context/AdminDataContext";
 import { api } from "@/api/client";
 
@@ -97,7 +98,7 @@ const EMPTY = {
 export default function ResearchForm() {
   const { id } = useParams();
   const nav = useNavigate();
-  const allItems = useAdminResearches() ?? [];
+  const { data: allItems } = useAdminResearches();
   const isEdit = Boolean(id);
 
   const [form, setForm] = useState(EMPTY);
@@ -109,7 +110,7 @@ export default function ResearchForm() {
       setLoaded(true);
       return;
     }
-    const item = allItems.find((r) => r.id === id);
+    const item = (allItems ?? []).find((r) => r.id === id);
     if (item) {
       setForm({
         ...EMPTY,
@@ -144,6 +145,8 @@ export default function ResearchForm() {
         await api.researches.create(payload);
       }
       nav("/admin/researches");
+    } catch (err) {
+      toast.error(err?.message || "Operation failed");
     } finally {
       setSaving(false);
     }

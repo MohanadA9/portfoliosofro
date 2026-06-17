@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Plus, Search, Pencil, Trash2, ImageIcon } from "lucide-react";
+import { Plus, Search, Pencil, Trash2, Image as ImageIcon } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAdminAchievements } from "@/context/AdminDataContext";
 import { api } from "@/api/client";
@@ -8,8 +8,8 @@ import { confirmDelete } from "@/lib/confirm";
 import { Pagination, usePagination } from "@/components/admin/Pagination";
 
 export default function AdminAchievements() {
-  const fallback = useAdminAchievements() ?? [];
-  const [items, setItems] = useResourceList(api.achievements, fallback);
+  const { data: achievementsFallback } = useAdminAchievements();
+  const [items, setItems] = useResourceList(api.achievements, achievementsFallback ?? []);
   const [search, setSearch] = useState("");
   const nav = useNavigate();
 

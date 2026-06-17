@@ -3,7 +3,7 @@
  * app talks to the real backend (when MOCK_MODE in request.js is `false`).
  */
 
-export const BASE_URL = "https://api.example.com/api";
+export const BASE_URL = "https://klhspfdjrwbfpwfiqryg.supabase.co/functions/v1/api";
 
 // ==========================================
 // Public (Portfolio) Endpoints

@@ -73,8 +73,8 @@ function MessagePanel({ msg, onClose }) {
 }
 
 export default function AdminMessages() {
-  const fallback = useAdminMessages() ?? [];
-  const [items, setItems] = useResourceList(api.messages, fallback);
+  const { data: messagesFallback } = useAdminMessages();
+  const [items, setItems] = useResourceList(api.messages, messagesFallback ?? []);
   const [search, setSearch] = useState("");
   const [selected, setSelected] = useState(null);
 

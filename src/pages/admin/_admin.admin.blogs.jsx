@@ -9,8 +9,8 @@ import { Pagination, usePagination } from "@/components/admin/Pagination";
 
 export default function AdminBlogs() {
   const navigate = useNavigate();
-  const fallback = useAdminBlogs() ?? [];
-  const [items, setItems] = useResourceList(api.blogs, fallback);
+  const { data: blogsFallback } = useAdminBlogs();
+  const [items, setItems] = useResourceList(api.blogs, blogsFallback ?? []);
   const [search, setSearch] = useState("");
 
   const filtered = items.filter(
