@@ -25,27 +25,28 @@ function crud(key) {
     list: async (_q) => {
       const res = await apiFetch(ep.list, "GET");
       
-      // Laravel Resource Collections often wrap data in a key named after the resource
-      // or simply in a 'data' key. We'll check for both.
       let data = [];
       if (Array.isArray(res)) {
         data = res;
       } else if (res && typeof res === 'object') {
-        // Check for 'data' key first (standard Laravel Resource)
-        if (Array.isArray(res.data)) {
-          data = res.data;
+        // Handle nested 'data' from apiResponce helper and Resource Collections
+        const rawData = res.data;
+        if (Array.isArray(rawData)) {
+          data = rawData;
+        } else if (rawData && typeof rawData === 'object') {
+          // Check for keys like 'achievements' inside 'data'
+          const possibleKey = Object.keys(rawData).find(k => Array.isArray(rawData[k]));
+          data = possibleKey ? rawData[possibleKey] : [];
         } else {
-          // Check for specific keys like 'achievements', 'blogs', etc.
-          const possibleKey = Object.keys(res).find(k => Array.isArray(res[k]) && k !== 'links' && k !== 'meta');
-          if (possibleKey) {
-            data = res[possibleKey];
-          }
+          // Fallback to top-level keys
+          const possibleKey = Object.keys(res).find(k => Array.isArray(res[k]) && !['links', 'meta'].includes(k));
+          if (possibleKey) data = res[possibleKey];
         }
       }
 
       return {
         data,
-        total: res?.count ?? data.length,
+        total: res?.data?.count ?? res?.count ?? data.length,
         page: 1,
         pageSize: data.length,
         totalPages: 1,
@@ -75,8 +76,10 @@ export const api = {
   auth: {
     login: async (email, password) => {
       const res = await apiFetch(EP.auth.login, "POST", { email, password });
-      if (res?.token) setAuthToken(res.token);
-      return res;
+      // Laravel often returns token in 'token', 'access_token', or 'data.token'
+      const token = res?.token || res?.access_token || res?.data?.token || res?.data?.access_token;
+      if (token) setAuthToken(token);
+      return { ...res, token }; // Ensure token is at top level for AuthContext
     },
     forgotPassword: (email) =>
       apiFetch(EP.auth.forgotPassword, "POST", { email }),

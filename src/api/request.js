@@ -24,14 +24,24 @@ export const isAuthenticated = () => !!getAuthToken();
 // ============================================================
 export const apiFetch = async (endpoint, method = "GET", body = null) => {
   const fullUrl = endpoint.startsWith("http") ? endpoint : `${BASE_URL}${endpoint}`;
-  const headers = { Accept: "application/json" };
+  const headers = { 
+    "Accept": "application/json",
+    "X-Requested-With": "XMLHttpRequest"
+  };
+  
   const token = getAuthToken();
-  if (token) headers["Authorization"] = `Bearer ${token}`;
-  if (body && !(body instanceof FormData)) headers["Content-Type"] = "application/json";
+  if (token) {
+    headers["Authorization"] = `Bearer ${token}`;
+  }
+  
+  if (body && !(body instanceof FormData)) {
+    headers["Content-Type"] = "application/json";
+  }
 
   const res = await fetch(fullUrl, {
     method,
     headers,
+    credentials: "omit", // Using Bearer token, so we don't need cookies
     body: body ? (body instanceof FormData ? body : JSON.stringify(body)) : null,
   });
 
