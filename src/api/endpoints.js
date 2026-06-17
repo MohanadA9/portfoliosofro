@@ -3,7 +3,10 @@
  * app talks to the real backend (when MOCK_MODE in request.js is `false`).
  */
 
-export const BASE_URL = "https://klhspfdjrwbfpwfiqryg.supabase.co/functions/v1/api";
+// Update this to your actual Laravel backend URL
+// For local development: http://localhost:8000/api
+// For production: https://your-domain.com/api
+export const BASE_URL = process.env.VITE_API_URL || "http://localhost:8000/api";
 
 // ==========================================
 // Public (Portfolio) Endpoints

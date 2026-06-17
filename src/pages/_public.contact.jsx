@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
-import { Mail, Phone, MapPin, Clock, Send, Linkedin, Github, Twitter } from "lucide-react";
+import { Mail, Phone, MapPin, Clock, Send, Linkedin, Github, Twitter, Wifi, WifiOff } from "lucide-react";
 import { PageHeader } from "@/components/common/Headers";
 import { useProfessor } from "@/context/DataContext";
 import { api } from "@/api/client";
+import { useReverb } from "@/hooks/useReverb";
 function ContactPage() {
   const { data: professor, loading: profLoading } = useProfessor();
+  const { connected, subscribe } = useReverb();
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -13,6 +15,25 @@ function ContactPage() {
     body: "",
   });
   const [busy, setBusy] = useState(false);
+  const [notificationStatus, setNotificationStatus] = useState(null);
+
+  // Subscribe to contact notifications
+  useEffect(() => {
+    if (connected) {
+      const unsubscribe = subscribe("contact-notifications", (data) => {
+        console.log("[Contact] Received notification:", data);
+        setNotificationStatus({
+          type: "success",
+          message: data.message || "Your message has been received!",
+          timestamp: new Date().toLocaleTimeString(),
+        });
+        // Auto-clear notification after 5 seconds
+        setTimeout(() => setNotificationStatus(null), 5000);
+      });
+
+      return () => unsubscribe();
+    }
+  }, [connected, subscribe]);
 
   if (profLoading || !professor) {
     return (
@@ -36,8 +57,20 @@ function ContactPage() {
         subject: "",
         body: "",
       });
-    } catch {
+      // Show real-time notification status
+      setNotificationStatus({
+        type: "pending",
+        message: "Waiting for confirmation...",
+        timestamp: new Date().toLocaleTimeString(),
+      });
+    } catch (error) {
       toast.error("Failed to send. Try again.");
+      setNotificationStatus({
+        type: "error",
+        message: error.message || "Failed to send message",
+        timestamp: new Date().toLocaleTimeString(),
+      });
+      setTimeout(() => setNotificationStatus(null), 5000);
     } finally {
       setBusy(false);
     }
@@ -51,6 +84,22 @@ function ContactPage() {
         title="Get in touch"
         subtitle="Open for research collaborations, supervision inquiries, invited talks, and editorial review."
       />
+      {/* Real-time Connection Status */}
+      <div className="bg-card border border-border">
+        <div className="container-academic py-3 flex items-center gap-2 text-xs">
+          {connected ? (
+            <>
+              <Wifi className="size-3 text-green-500" />
+              <span className="text-muted-foreground">Real-time notifications <span className="text-green-500 font-medium">connected</span></span>
+            </>
+          ) : (
+            <>
+              <WifiOff className="size-3 text-amber-500" />
+              <span className="text-muted-foreground">Real-time notifications <span className="text-amber-500 font-medium">connecting</span>...</span>
+            </>
+          )}
+        </div>
+      </div>
       <section className="container-academic py-12 grid gap-10 lg:grid-cols-[1fr_1.2fr]">
         <div className="space-y-4">
           {[
@@ -130,6 +179,21 @@ function ContactPage() {
         </div>
 
         <form onSubmit={submit} className="rounded-2xl border border-border bg-card p-6 space-y-4">
+          {/* Notification Status */}
+          {notificationStatus && (
+            <div className={`p-3 rounded-lg text-sm flex items-start gap-2 ${
+              notificationStatus.type === "success"
+                ? "bg-green-500/10 border border-green-500/30 text-green-600"
+                : notificationStatus.type === "error"
+                ? "bg-red-500/10 border border-red-500/30 text-red-600"
+                : "bg-blue-500/10 border border-blue-500/30 text-blue-600"
+            }`}>
+              <div className="flex-1">
+                <p className="font-medium">{notificationStatus.message}</p>
+                <p className="text-xs opacity-75 mt-1">{notificationStatus.timestamp}</p>
+              </div>
+            </div>
+          )}
           <div className="grid gap-4 sm:grid-cols-2">
             <label className="block">
               <span className="text-xs font-mono uppercase tracking-widest text-muted-foreground">
@@ -199,8 +263,9 @@ function ContactPage() {
             />
           </label>
           <button
-            disabled={busy}
+            disabled={busy || !connected}
             className="inline-flex h-11 items-center gap-2 rounded-md bg-electric px-5 text-sm font-medium text-electric-foreground hover:opacity-90 disabled:opacity-60 glow-sm"
+            title={!connected ? "Waiting for real-time connection..." : ""}
           >
             <Send className="size-4" /> {busy ? "Sending…" : "Send message"}
           </button>

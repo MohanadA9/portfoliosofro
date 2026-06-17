@@ -20,7 +20,7 @@ function LectureModal({ initial, courses, onClose, onSaved }) {
     }
     setSaving(true);
     try {
-      initial?.id ? await api.courses.update(initial.id, form) : await api.courses.create(form);
+      initial?.id ? await api.lectures.update(initial.id, form) : await api.lectures.create(form);
       onSaved();
     } finally {
       setSaving(false);
@@ -122,14 +122,12 @@ function LectureModal({ initial, courses, onClose, onSaved }) {
 
 export default function AdminLectures() {
   const { data: coursesFallback } = useAdminCourses();
+  const [lecturesRaw, setLectures] = useResourceList(api.lectures, []);
   const [coursesRaw] = useResourceList(api.courses, coursesFallback ?? []);
   const [search, setSearch] = useState("");
   const [modal, setModal] = useState(null);
 
-  const allLectures = coursesRaw.flatMap((c) =>
-    (c.lectures ?? []).map((l) => ({ ...l, courseTitle: c.title, courseId: c.id })),
-  );
-  const filtered = allLectures.filter(
+  const filtered = lecturesRaw.filter(
     (l) =>
       !search ||
       l.title?.toLowerCase().includes(search.toLowerCase()) ||
@@ -139,6 +137,8 @@ export default function AdminLectures() {
 
   const del = async (id) => {
     if (!(await confirmDelete("This lecture will be permanently deleted."))) return;
+    await api.lectures.remove(id);
+    setLectures((prev) => prev.filter((l) => l.id !== id));
   };
 
   return (

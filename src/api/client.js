@@ -13,6 +13,7 @@ const EP_MAP = {
   experiences: EP.experiences,
   positions: EP.positions,
   courses: EP.courses,
+  lectures: EP.lectures,
   blogs: EP.blogs,
   education: EP.education,
 };
@@ -111,6 +112,7 @@ export const api = {
   researches: crud("researches"),
   positions: crud("positions"),
   courses: crud("courses"),
+  lectures: crud("lectures"),
   blogs: crud("blogs"),
 
   messages: {
@@ -134,7 +136,7 @@ export const api = {
       return res?.data ?? res;
     },
     remove: (id) => apiFetch(EP.messages.delete(id), "DELETE"),
-    markRead: (id) => apiFetch(EP.messages.read(id), "POST"),
+    markRead: (id) => apiFetch(EP.messages.read(id), "PATCH"),
   },
 
   contact: {
