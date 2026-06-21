@@ -68,6 +68,12 @@ const BlogsContext = createContext({ data: [], loading: true, error: null, reloa
 const MessagesContext = createContext({ data: [], loading: true, error: null, reload: () => {} });
 const SettingsContext = createContext({ data: null, loading: true, error: null, reload: () => {} });
 const PositionsContext = createContext({ data: [], loading: true, error: null, reload: () => {} });
+const LoadingProgressContext = createContext({
+  loading: true,
+  progress: 0,
+  completedCount: 0,
+  totalCount: 0,
+});
 
 export const useProfessor = () => useContext(ProfessorContext);
 export const useAbout = () => useContext(AboutContext);
@@ -80,6 +86,7 @@ export const useBlogs = () => useContext(BlogsContext);
 export const useMessages = () => useContext(MessagesContext);
 export const useSettings = () => useContext(SettingsContext);
 export const usePositions = () => useContext(PositionsContext);
+export const useDataLoading = () => useContext(LoadingProgressContext);
 
 export const DataProvider = ({ children }) => {
   const professor = useApiData(() => apiFetch(PUB.profile.get, "GET"), null);
@@ -94,29 +101,50 @@ export const DataProvider = ({ children }) => {
   const positions = useApiData(() => apiFetch(PUB.positions.list, "GET"), []);
   const messages = useApiData(() => apiFetch(PUB.blogs.list, "GET"), []);
 
+  const apiStates = [
+    professor,
+    about,
+    settings,
+    education,
+    experiences,
+    courses,
+    researches,
+    achievements,
+    blogs,
+    positions,
+    messages,
+  ];
+
+  const totalCount = apiStates.length;
+  const completedCount = apiStates.filter((s) => !s.loading).length;
+  const progress = totalCount > 0 ? (completedCount / totalCount) * 100 : 100;
+  const loading = completedCount < totalCount;
+
   return (
-    <ProfessorContext.Provider value={professor}>
-      <AboutContext.Provider value={about}>
-        <EducationContext.Provider value={education}>
-          <ExperienceContext.Provider value={experiences}>
-            <CoursesContext.Provider value={courses}>
-              <ResearchesContext.Provider value={researches}>
-                <AchievementsContext.Provider value={achievements}>
-                  <BlogsContext.Provider value={blogs}>
-                    <SettingsContext.Provider value={settings}>
-                      <PositionsContext.Provider value={positions}>
-                        <MessagesContext.Provider value={messages}>
-                          {children}
-                        </MessagesContext.Provider>
-                      </PositionsContext.Provider>
-                    </SettingsContext.Provider>
-                  </BlogsContext.Provider>
-                </AchievementsContext.Provider>
-              </ResearchesContext.Provider>
-            </CoursesContext.Provider>
-          </ExperienceContext.Provider>
-        </EducationContext.Provider>
-      </AboutContext.Provider>
-    </ProfessorContext.Provider>
+    <LoadingProgressContext.Provider value={{ loading, progress, completedCount, totalCount }}>
+      <ProfessorContext.Provider value={professor}>
+        <AboutContext.Provider value={about}>
+          <EducationContext.Provider value={education}>
+            <ExperienceContext.Provider value={experiences}>
+              <CoursesContext.Provider value={courses}>
+                <ResearchesContext.Provider value={researches}>
+                  <AchievementsContext.Provider value={achievements}>
+                    <BlogsContext.Provider value={blogs}>
+                      <SettingsContext.Provider value={settings}>
+                        <PositionsContext.Provider value={positions}>
+                          <MessagesContext.Provider value={messages}>
+                            {children}
+                          </MessagesContext.Provider>
+                        </PositionsContext.Provider>
+                      </SettingsContext.Provider>
+                    </BlogsContext.Provider>
+                  </AchievementsContext.Provider>
+                </ResearchesContext.Provider>
+              </CoursesContext.Provider>
+            </ExperienceContext.Provider>
+          </EducationContext.Provider>
+        </AboutContext.Provider>
+      </ProfessorContext.Provider>
+    </LoadingProgressContext.Provider>
   );
 };

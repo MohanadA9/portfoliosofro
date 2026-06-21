@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft, UploadCloud, Image as ImageIcon, X, Loader as Loader2 } from "lucide-react";
 import { api } from "@/api/client";
+import { useAdminBlogs } from "@/context/AdminDataContext";
 
 const INPUT =
   "w-full rounded-lg border border-border bg-muted/30 px-3 py-2 text-sm focus:outline-none focus:border-electric/60 focus:ring-1 focus:ring-electric/30";
@@ -108,6 +109,7 @@ const EMPTY = { title: "", excerpt: "", content: "", cover: "", date: "", catego
 export default function BlogForm() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { reload } = useAdminBlogs();
   const [form, setForm] = useState(EMPTY);
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -161,6 +163,9 @@ export default function BlogForm() {
         await api.blogs.update(id, fd);
       } else {
         await api.blogs.create(fd);
+      }
+      if (typeof reload === "function") {
+        await reload();
       }
       navigate("/admin/blogs");
     } catch (err) {

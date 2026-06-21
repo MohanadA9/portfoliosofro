@@ -1,19 +1,36 @@
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { PageHeader } from "@/components/common/Headers";
 import { CoverCard } from "@/components/common/Cards";
 import { SearchInput, Spinner, Empty } from "@/components/common/Primitives";
 import { api } from "@/api/client";
 function CoursesPage() {
   const [search, setSearch] = useState("");
-  const { data, isLoading } = useQuery({
-    queryKey: ["pub-courses", search],
-    queryFn: () =>
-      api.public.courses.list({
-        search,
-        pageSize: 50,
-      }),
+  const { data: rawData, isLoading } = useQuery({
+    queryKey: ["pub-courses"],
+    queryFn: () => api.public.courses.list({ pageSize: 1000 }),
   });
+
+  const processedData = useMemo(() => {
+    if (!rawData?.data) return { data: [], total: 0 };
+
+    let items = [...rawData.data];
+    if (search.trim()) {
+      const q = search.toLowerCase();
+      items = items.filter(
+        (c) =>
+          c.title?.toLowerCase().includes(q) ||
+          c.description?.toLowerCase().includes(q)
+      );
+    }
+
+    return {
+      data: items,
+      total: items.length,
+    };
+  }, [rawData, search]);
+
+  const data = processedData;
   return (
     <>
       <PageHeader

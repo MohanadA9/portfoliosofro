@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import {
   LayoutDashboard,
@@ -26,6 +26,9 @@ import { useAuth } from "@/context/AuthContext";
 import { useTheme } from "@/context/ThemeContext";
 import { useSiteSettings } from "@/context/SiteSettingsContext";
 import { toast } from "sonner";
+import { useAdminMessages } from "@/context/AdminDataContext";
+import { useReverb } from "@/hooks/useReverb";
+import { api } from "@/api/client";
 
 const items = [
   { to: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
@@ -113,6 +116,30 @@ export function AdminShell({ children }) {
   const nav = useNavigate();
   const path = useLocation().pathname;
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [bellOpen, setBellOpen] = useState(false);
+
+  const { reload: reloadMessages, data: messages } = useAdminMessages();
+  const { connected, subscribe } = useReverb();
+
+  // Listen to real-time contact notifications
+  useEffect(() => {
+    if (connected) {
+      const unsubscribe = subscribe("contact-notifications", (data) => {
+        toast.info(`New Message from ${data.data?.name || "Visitor"}: "${data.data?.subject || ""}"`, {
+          action: {
+            label: "View",
+            onClick: () => nav("/admin/messages"),
+          },
+        });
+        if (typeof reloadMessages === "function") {
+          reloadMessages();
+        }
+      });
+      return () => unsubscribe();
+    }
+  }, [connected, subscribe, reloadMessages, nav]);
+
+  const unreadMessagesCount = (messages ?? []).filter((m) => !m.read).length;
 
   const onLogout = () => {
     logout();
@@ -168,15 +195,87 @@ export function AdminShell({ children }) {
           <p className="text-sm text-muted-foreground">
             Welcome back,{" "}
             <span className="text-foreground font-medium">
-              {settings?.doctorName ?? user?.name ?? "Professor"}
+              {settings?.doctor_name ?? settings?.doctorName ?? user?.name ?? "Professor"}
             </span>
           </p>
 
           <div className="ml-auto flex items-center gap-2">
-            <button className="grid size-9 place-items-center rounded-md border border-border hover:border-electric/60 relative">
-              <Bell className="size-4" />
-              <span className="absolute top-1 right-1 size-1.5 rounded-full bg-electric" />
-            </button>
+            <div className="relative">
+              <button 
+                onClick={async () => {
+                  const nextOpen = !bellOpen;
+                  setBellOpen(nextOpen);
+                  if (nextOpen && unreadMessagesCount > 0) {
+                    try {
+                      await api.messages.markAllRead();
+                      if (typeof reloadMessages === "function") {
+                        await reloadMessages();
+                      }
+                    } catch (err) {
+                      console.error("Failed to mark all messages as read:", err);
+                    }
+                  }
+                }}
+                className="grid size-9 place-items-center rounded-md border border-border hover:border-electric/60 relative"
+                title={`${unreadMessagesCount} unread messages`}
+              >
+                <Bell className="size-4" />
+                {unreadMessagesCount > 0 && (
+                  <span className="absolute -top-1 -right-1 min-w-4.5 h-4.5 px-1 rounded-full bg-electric text-[9px] font-bold text-electric-foreground flex items-center justify-center border border-background animate-pulse">
+                    {unreadMessagesCount}
+                  </span>
+                )}
+              </button>
+              {bellOpen && (
+                <>
+                  <div className="fixed inset-0 z-40" onClick={() => setBellOpen(false)} />
+                  <div className="absolute right-0 top-full mt-2 w-80 bg-card border border-border rounded-xl shadow-xl overflow-hidden z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+                    <div className="px-4 py-3 border-b border-border flex items-center justify-between">
+                      <span className="text-xs font-semibold">Notifications</span>
+                      {unreadMessagesCount > 0 && (
+                        <span className="text-[10px] font-mono bg-electric/15 text-electric px-1.5 py-0.5 rounded-full">
+                          {unreadMessagesCount} new
+                        </span>
+                      )}
+                    </div>
+                    <div className="divide-y divide-border/60 max-h-64 overflow-y-auto">
+                      {(messages ?? []).length === 0 ? (
+                        <div className="p-4 text-center text-xs text-muted-foreground">
+                          No messages
+                        </div>
+                      ) : (
+                        (messages ?? []).slice(0, 5).map((msg) => (
+                          <div
+                            key={msg.id}
+                            onClick={() => {
+                              setBellOpen(false);
+                              nav(`/admin/messages`);
+                            }}
+                            className={`p-3 text-left hover:bg-muted/40 cursor-pointer transition ${!msg.read ? "bg-electric/5" : ""}`}
+                          >
+                            <div className="flex items-start justify-between gap-2">
+                              <p className="text-xs font-semibold truncate">{msg.name}</p>
+                              <span className="text-[9px] text-muted-foreground whitespace-nowrap">
+                                {msg.created_at ? msg.created_at.split(" ")[0] : ""}
+                              </span>
+                            </div>
+                            <p className="text-[11px] text-foreground/80 mt-0.5 truncate">{msg.subject}</p>
+                            <p className="text-[10px] text-muted-foreground mt-1 truncate">{msg.body ?? msg.message}</p>
+                          </div>
+                        ))
+                      )}
+                    </div>
+                    <Link
+                      to="/admin/messages"
+                      onClick={() => setBellOpen(false)}
+                      className="block text-center py-2.5 text-xs text-electric hover:bg-muted/30 font-medium border-t border-border"
+                    >
+                      View all messages
+                    </Link>
+                  </div>
+                </>
+              )}
+            </div>
             <button
               onClick={toggle}
               className="grid size-9 place-items-center rounded-md border border-border hover:border-electric/60"

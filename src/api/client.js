@@ -226,16 +226,19 @@ const adminApi = {
   positions: adminResource("positions"),
   courses: adminResource("courses"),
   lectures: adminResource("lectures"),
-  blogs: adminResource("blogs"),
+  blogs: {
+    ...adminResource("blogs"),
+    get: async (id) => {
+      const res = await apiFetch(PUB_EP.blogs.show(id), "GET");
+      return res?.data ?? res;
+    },
+  },
 
   messages: {
     list: async (_q) => {
       const res = await apiFetch(ADMIN_EP.messages.list, "GET");
-      const data = Array.isArray(res)
-        ? res
-        : Array.isArray(res?.data)
-          ? res.data
-          : [];
+      const rawData = res?.data?.messages ?? res?.data ?? res ?? [];
+      const data = Array.isArray(rawData) ? rawData : [];
       return {
         data,
         total: data.length,
@@ -250,6 +253,7 @@ const adminApi = {
     },
     remove: (id) => apiFetch(ADMIN_EP.messages.delete(id), "DELETE"),
     markRead: (id) => apiFetch(ADMIN_EP.messages.read(id), "PATCH"),
+    markAllRead: () => apiFetch(ADMIN_EP.messages.readAll, "PATCH"),
   },
 };
 

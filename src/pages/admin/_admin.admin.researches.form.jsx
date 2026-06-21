@@ -81,7 +81,6 @@ function CoverDropzone({ value, onChange }) {
   );
 }
 
-const STATUSES = ["published", "in-review", "draft"];
 
 const EMPTY = {
   title: "",
@@ -89,17 +88,18 @@ const EMPTY = {
   authors: "",
   keywords: "",
   year: new Date().getFullYear(),
-  status: "published",
   cover: "",
   doi: "",
-  pdfUrl: "",
+  link: "",
+  pdf: "",
   journal: "",
+  conference: "",
 };
 
 export default function ResearchForm() {
   const { id } = useParams();
   const nav = useNavigate();
-  const { data: allItems } = useAdminResearches();
+  const { reload } = useAdminResearches();
   const isEdit = Boolean(id);
 
   const [form, setForm] = useState(EMPTY);
@@ -111,17 +111,30 @@ export default function ResearchForm() {
       setLoaded(true);
       return;
     }
-    const item = (allItems ?? []).find((r) => r.id === id);
-    if (item) {
-      setForm({
-        ...EMPTY,
-        ...item,
-        authors: Array.isArray(item.authors) ? item.authors.join(", ") : (item.authors ?? ""),
-        keywords: Array.isArray(item.keywords) ? item.keywords.join(", ") : (item.keywords ?? ""),
+    let active = true;
+    api.researches
+      .get(id)
+      .then((item) => {
+        if (active && item) {
+          setForm({
+            ...EMPTY,
+            ...item,
+            authors: Array.isArray(item.authors) ? item.authors.join(", ") : (item.authors ?? ""),
+            keywords: Array.isArray(item.keywords) ? item.keywords.join(", ") : (item.keywords ?? ""),
+            link: item.link ?? "",
+            pdf: item.pdf ?? "",
+            conference: item.conference ?? "",
+          });
+          setLoaded(true);
+        }
+      })
+      .catch((err) => {
+        toast.error(err?.message || "Failed to load research data");
       });
-      setLoaded(true);
-    }
-  }, [allItems, id, isEdit]);
+    return () => {
+      active = false;
+    };
+  }, [id, isEdit]);
 
   const set = (k, v) => setForm((f) => ({ ...f, [k]: v }));
 
@@ -133,10 +146,11 @@ export default function ResearchForm() {
       fd.append("title", form.title);
       fd.append("abstract", form.abstract);
       fd.append("year", form.year);
-      fd.append("status", form.status);
       fd.append("doi", form.doi || "");
-      fd.append("pdf_url", form.pdfUrl || "");
+      fd.append("link", form.link || "");
+      fd.append("pdf", form.pdf || "");
       fd.append("journal", form.journal || "");
+      fd.append("conference", form.conference || "");
 
       const authors = form.authors.split(",").map(s => s.trim()).filter(Boolean);
       authors.forEach((a, i) => fd.append(`authors[${i}]`, a));
@@ -153,6 +167,9 @@ export default function ResearchForm() {
         await apiFetch(EP_MAP.researches.update(id), "POST", fd);
       } else {
         await apiFetch(EP_MAP.researches.store, "POST", fd);
+      }
+      if (typeof reload === "function") {
+        await reload();
       }
       nav("/admin/researches");
     } catch (err) {
@@ -227,40 +244,34 @@ export default function ResearchForm() {
             />
           </Field>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-3 gap-4">
             <Field label="Year">
               <input
                 type="number"
-                min="1990"
-                max="2099"
+                min="1900"
+                max="2100"
                 value={form.year}
                 onChange={(e) => set("year", e.target.value)}
                 className={INPUT}
               />
             </Field>
-            <Field label="Status">
-              <select
-                value={form.status}
-                onChange={(e) => set("status", e.target.value)}
+            <Field label="Journal">
+              <input
+                value={form.journal ?? ""}
+                onChange={(e) => set("journal", e.target.value)}
+                placeholder="IEEE Transactions on Wireless…"
                 className={INPUT}
-              >
-                {STATUSES.map((s) => (
-                  <option key={s} value={s}>
-                    {s}
-                  </option>
-                ))}
-              </select>
+              />
+            </Field>
+            <Field label="Conference">
+              <input
+                value={form.conference ?? ""}
+                onChange={(e) => set("conference", e.target.value)}
+                placeholder="ICC 2026…"
+                className={INPUT}
+              />
             </Field>
           </div>
-
-          <Field label="Journal / Conference">
-            <input
-              value={form.journal ?? ""}
-              onChange={(e) => set("journal", e.target.value)}
-              placeholder="IEEE Transactions on Wireless…"
-              className={INPUT}
-            />
-          </Field>
 
           <Field label="Abstract">
             <textarea
@@ -289,8 +300,8 @@ export default function ResearchForm() {
             />
           </Field>
 
-          <div className="grid grid-cols-2 gap-4">
-            <Field label="DOI / Link">
+          <div className="grid grid-cols-3 gap-4">
+            <Field label="DOI">
               <input
                 value={form.doi ?? ""}
                 onChange={(e) => set("doi", e.target.value)}
@@ -298,10 +309,18 @@ export default function ResearchForm() {
                 className={INPUT}
               />
             </Field>
-            <Field label="PDF URL">
+            <Field label="Publication Link">
               <input
-                value={form.pdfUrl ?? ""}
-                onChange={(e) => set("pdfUrl", e.target.value)}
+                value={form.link ?? ""}
+                onChange={(e) => set("link", e.target.value)}
+                placeholder="https://scholar.google.com…"
+                className={INPUT}
+              />
+            </Field>
+            <Field label="PDF Link">
+              <input
+                value={form.pdf ?? ""}
+                onChange={(e) => set("pdf", e.target.value)}
                 placeholder="https://…"
                 className={INPUT}
               />

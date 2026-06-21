@@ -39,7 +39,6 @@ const SOCIAL_KEYS = [
   "scholar",
   "orcid",
   "researchgate",
-  "twitter",
 ];
 
 export default function AdminProfile() {
@@ -56,10 +55,14 @@ export default function AdminProfile() {
 
   const set = (k, v) => setForm((f) => ({ ...f, [k]: v }));
   const setSocial = (k, v) =>
-    setForm((f) => ({ ...f, socials: { ...(f.socials ?? {}), [k]: v } }));
+    setForm((f) => ({ ...f, social_links: { ...(f.social_links ?? {}), [k]: v } }));
 
   const handleAvatar = (file) => {
     if (!file) return;
+    if (file.size > 2 * 1024 * 1024) {
+      toast.error("The profile photo size must not exceed 2MB.");
+      return;
+    }
     const r = new FileReader();
     r.onload = () => setForm(f => ({ ...f, avatar: r.result, avatarFile: file }));
     r.readAsDataURL(file);
@@ -67,6 +70,10 @@ export default function AdminProfile() {
 
   const handleCV = (file) => {
     if (!file) return;
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("The CV file size must not exceed 5MB.");
+      return;
+    }
     const r = new FileReader();
     r.onload = () => setForm(f => ({ ...f, cv: r.result, cvFile: file }));
     r.readAsDataURL(file);
@@ -79,11 +86,11 @@ export default function AdminProfile() {
       const fd = new FormData();
       // Laravel update for profile often expects POST with _method=PUT
       fd.append("_method", "PUT");
-      
+
       Object.keys(form).forEach(key => {
-        if (key === 'socials') {
-          Object.keys(form.socials || {}).forEach(sk => {
-            fd.append(`socials[${sk}]`, form.socials[sk] || "");
+        if (key === 'social_links') {
+          Object.keys(form.social_links || {}).forEach(sk => {
+            fd.append(`social_links[${sk}]`, form.social_links[sk] || "");
           });
         } else if (key === 'avatarFile') {
           fd.append('avatar', form.avatarFile);
@@ -97,8 +104,8 @@ export default function AdminProfile() {
       });
 
       // Use raw fetch for FormData profile update
-      await apiFetch(EP.admin.user, "POST", fd);
-      
+      await apiFetch(EP.user.update, "POST", fd);
+
       setSaved(true);
       setTimeout(() => setSaved(false), 2500);
     } catch (err) {
@@ -244,7 +251,7 @@ export default function AdminProfile() {
       {/* Contact */}
       <Section title="Contact">
         <div className="grid grid-cols-2 gap-4">
-          <Field label="Email">
+          <Field label="Login Email">
             <input
               type="email"
               value={form.email ?? ""}
@@ -252,6 +259,16 @@ export default function AdminProfile() {
               className={INPUT}
             />
           </Field>
+          <Field label="Contact Email">
+            <input
+              type="email"
+              value={form.contact_email ?? ""}
+              onChange={(e) => set("contact_email", e.target.value)}
+              className={INPUT}
+            />
+          </Field>
+        </div>
+        <div className="grid grid-cols-2 gap-4">
           <Field label="Phone">
             <input
               type="tel"
@@ -260,8 +277,6 @@ export default function AdminProfile() {
               className={INPUT}
             />
           </Field>
-        </div>
-        <div className="grid grid-cols-2 gap-4">
           <Field label="Office">
             <input
               value={form.office ?? ""}
@@ -269,21 +284,23 @@ export default function AdminProfile() {
               className={INPUT}
             />
           </Field>
+        </div>
+        <div className="grid grid-cols-2 gap-4">
           <Field label="Office Hours">
             <input
-              value={form.officeHours ?? ""}
-              onChange={(e) => set("officeHours", e.target.value)}
+              value={form.office_hours ?? ""}
+              onChange={(e) => set("office_hours", e.target.value)}
+              className={INPUT}
+            />
+          </Field>
+          <Field label="Address">
+            <input
+              value={form.address ?? ""}
+              onChange={(e) => set("address", e.target.value)}
               className={INPUT}
             />
           </Field>
         </div>
-        <Field label="Address">
-          <input
-            value={form.address ?? ""}
-            onChange={(e) => set("address", e.target.value)}
-            className={INPUT}
-          />
-        </Field>
       </Section>
 
       {/* Socials */}
@@ -292,7 +309,7 @@ export default function AdminProfile() {
           {SOCIAL_KEYS.map((k) => (
             <Field key={k} label={k}>
               <input
-                value={form.socials?.[k] ?? ""}
+                value={form.social_links?.[k] ?? ""}
                 onChange={(e) => setSocial(k, e.target.value)}
                 placeholder="https://…"
                 className={INPUT}

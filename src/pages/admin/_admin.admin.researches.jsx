@@ -72,10 +72,10 @@ export default function AdminResearches() {
                 Year
               </th>
               <th className="px-4 py-3 text-left text-[11px] font-mono uppercase tracking-widest text-muted-foreground">
-                Status
+                Journal / Conference
               </th>
               <th className="px-4 py-3 text-left text-[11px] font-mono uppercase tracking-widest text-muted-foreground">
-                Stats
+                Links
               </th>
               <th className="px-4 py-3 text-right text-[11px] font-mono uppercase tracking-widest text-muted-foreground">
                 Actions
@@ -103,17 +103,41 @@ export default function AdminResearches() {
                 </td>
                 <td className="px-4 py-3 font-medium max-w-[280px] truncate">{item.title}</td>
                 <td className="px-4 py-3 text-muted-foreground">{item.year}</td>
-                <td className="px-4 py-3">
-                  <span
-                    className={`text-[11px] font-mono px-2 py-0.5 rounded capitalize ${STATUS_CHIP[item.status] ?? STATUS_CHIP.draft}`}
-                  >
-                    {item.status}
-                  </span>
+                <td className="px-4 py-3 text-muted-foreground max-w-[200px] truncate">
+                  {item.journal || item.conference || "—"}
                 </td>
                 <td className="px-4 py-3">
-                  <div className="flex flex-col gap-0.5 text-[10px] font-mono text-muted-foreground">
-                    <span>{item.citations ?? 0} Citations</span>
-                    <span>{item.reads ?? 0} Reads</span>
+                  <div className="flex items-center gap-2">
+                    {item.doi && (
+                      <a
+                        href={item.doi}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-xs text-electric hover:underline font-mono"
+                      >
+                        DOI
+                      </a>
+                    )}
+                    {item.link && (
+                      <a
+                        href={item.link}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-xs text-electric hover:underline font-mono"
+                      >
+                        Link
+                      </a>
+                    )}
+                    {item.pdf && item.pdf !== "#" && (
+                      <a
+                        href={item.pdf}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-xs text-electric hover:underline font-mono"
+                      >
+                        PDF
+                      </a>
+                    )}
                   </div>
                 </td>
                 <td className="px-4 py-3">
@@ -136,7 +160,7 @@ export default function AdminResearches() {
             ))}
             {filtered.length === 0 && (
               <tr>
-                <td colSpan={5} className="text-center py-12 text-muted-foreground text-sm">
+                <td colSpan={6} className="text-center py-12 text-muted-foreground text-sm">
                   No research papers found
                 </td>
               </tr>

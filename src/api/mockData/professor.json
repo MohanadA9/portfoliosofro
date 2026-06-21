@@ -5,18 +5,18 @@
   "department": "Electronics & Communications Engineering (ECE)",
   "university": "Institute of Aviation Engineering & Technology (IAET) — Egyptian Aviation Academy (EAA)",
   "email": "m_sobhy_elbakry@yahoo.com",
+  "contact_email": "m_sobhy_elbakry@yahoo.com",
   "phone": "(+2) 010-63-73-5417",
   "office": "Advanced Communication LAB — ECE Department, IAET",
-  "officeHours": "Sun & Tue, 10:00 — 13:00",
+  "office_hours": "Sun & Tue, 10:00 — 13:00",
   "address": "Bahteem, Shubra Elkhema, Al-Qalyubia, Egypt",
   "cv": "./cv.pdf",
   "avatar": "/professor.jpg",
-  "socials": {
+  "social_links": {
     "linkedin": "https://linkedin.com",
     "github": "https://github.com",
     "scholar": "https://scholar.google.com",
     "orcid": "https://orcid.org",
-    "researchgate": "https://researchgate.net",
-    "twitter": "https://twitter.com"
+    "researchgate": "https://researchgate.net"
   }
 }

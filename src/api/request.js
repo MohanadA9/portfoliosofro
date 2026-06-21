@@ -64,8 +64,12 @@ export const apiFetch = async (endpoint, method = "GET", body = null) => {
       const isLoginRequest = endpoint.includes("/auth/login") || window.location.pathname.includes("/login");
       if (!isLoginRequest) {
         removeAuthToken();
-        // Optional: Redirect to login if not already there
-        // window.location.href = "/login";
+        localStorage.removeItem("auth");
+        
+        // Force redirect to login if we are inside the admin panel
+        if (window.location.pathname.startsWith("/admin")) {
+          window.location.href = "/login";
+        }
       }
       
       const err = new Error(data?.message || "Unauthorized");

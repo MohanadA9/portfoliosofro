@@ -366,9 +366,9 @@ function HomePage() {
             {blogs.slice(0, 3).map((b) => (
               <CoverCard
                 key={b.id}
-                to={`/blog/${b.id}`}
+                to={`/blog/${b.slug}`}
                 cover={b.cover}
-                eyebrow="Article"
+                eyebrow={b.category || "Article"}
                 title={b.title}
                 meta={b.excerpt}
                 footer={new Date(b.date).toLocaleDateString()}

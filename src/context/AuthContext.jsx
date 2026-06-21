@@ -3,20 +3,27 @@ import { api } from "@/api/client";
 const AuthContext = createContext(null);
 const KEY = "auth";
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);
-  const [token, setToken] = useState(null);
-  const [loading, setLoading] = useState(true);
-  useEffect(() => {
+  const [user, setUser] = useState(() => {
     try {
       const raw = localStorage.getItem(KEY);
       if (raw) {
         const parsed = JSON.parse(raw);
-        setUser(parsed.user);
-        setToken(parsed.token);
+        return parsed.user || null;
       }
     } catch {}
-    setLoading(false);
-  }, []);
+    return null;
+  });
+  const [token, setToken] = useState(() => {
+    try {
+      const raw = localStorage.getItem(KEY);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        return parsed.token || null;
+      }
+    } catch {}
+    return null;
+  });
+  const [loading, setLoading] = useState(false);
   const login = async (email, password) => {
     const res = await api.auth.login(email, password);
     // Extract token and user from Laravel's response structure

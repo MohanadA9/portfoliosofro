@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Linkedin, Github, Twitter, Mail, Radio } from "lucide-react";
+import { Linkedin, Github, Mail, Radio } from "lucide-react";
 import { useProfessor } from "@/context/DataContext";
 export function PublicFooter() {
   const { data: professor } = useProfessor();
@@ -62,10 +62,7 @@ export function PublicFooter() {
                 Icon: Github,
                 href: professor.social_links?.github,
               },
-              {
-                Icon: Twitter,
-                href: professor.social_links?.twitter,
-              },
+
               {
                 Icon: Mail,
                 href: professor.contact_email ? `mailto:${professor.contact_email}` : undefined,

@@ -1,15 +1,25 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { Radio, ArrowRight, Lock } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { CircuitBackground } from "@/components/effects/CircuitBackground";
 function LoginPage() {
-  const { login } = useAuth();
+  const { login, user, loading } = useAuth();
   const nav = useNavigate();
   const [email, setEmail] = useState("admin@portfolio.com");
   const [pwd, setPwd] = useState("password");
   const [busy, setBusy] = useState(false);
+
+  useEffect(() => {
+    if (!loading && user) {
+      nav("/admin", { replace: true });
+    }
+  }, [user, loading, nav]);
+
+  if (loading || user) {
+    return null;
+  }
   const submit = async (e) => {
     e.preventDefault();
     setBusy(true);

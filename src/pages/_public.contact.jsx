@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
-import { Mail, Phone, MapPin, Clock, Send, Linkedin, Github, Twitter, Wifi, WifiOff } from "lucide-react";
+import { Mail, Phone, MapPin, Clock, Send, Linkedin, Github, Wifi, WifiOff } from "lucide-react";
 import { PageHeader } from "@/components/common/Headers";
 import { useProfessor } from "@/context/DataContext";
 import { api } from "@/api/client";
@@ -51,8 +51,13 @@ function ContactPage() {
     e.preventDefault();
     setBusy(true);
     try {
-      // Use raw fetch for public contact POST
-      await apiFetch(EP.public.contact, "POST", form);
+      const payload = {
+        name: form.name,
+        email: form.email,
+        subject: form.subject,
+        message: form.body,
+      };
+      await apiFetch(EP.contactUs.store, "POST", payload);
       toast.success("Message sent. I'll get back to you soon.");
       setForm({
         name: "",
@@ -87,22 +92,7 @@ function ContactPage() {
         title="Get in touch"
         subtitle="Open for research collaborations, supervision inquiries, invited talks, and editorial review."
       />
-      {/* Real-time Connection Status */}
-      <div className="bg-card border border-border">
-        <div className="container-academic py-3 flex items-center gap-2 text-xs">
-          {connected ? (
-            <>
-              <Wifi className="size-3 text-green-500" />
-              <span className="text-muted-foreground">Real-time notifications <span className="text-green-500 font-medium">connected</span></span>
-            </>
-          ) : (
-            <>
-              <WifiOff className="size-3 text-amber-500" />
-              <span className="text-muted-foreground">Real-time notifications <span className="text-amber-500 font-medium">connecting</span>...</span>
-            </>
-          )}
-        </div>
-      </div>
+
       <section className="container-academic py-12 grid gap-10 lg:grid-cols-[1fr_1.2fr]">
         <div className="space-y-4">
           {[
@@ -170,14 +160,7 @@ function ContactPage() {
             >
               <Github className="size-4" />
             </a>
-            <a
-              href={professor.social_links.twitter}
-              target="_blank"
-              rel="noreferrer"
-              className="grid size-10 place-items-center rounded-md border border-border hover:border-electric/60"
-            >
-              <Twitter className="size-4" />
-            </a>
+
           </div>
         </div>
 
@@ -265,9 +248,8 @@ function ContactPage() {
             />
           </label>
           <button
-            disabled={busy || !connected}
+            disabled={busy}
             className="inline-flex h-11 items-center gap-2 rounded-md bg-electric px-5 text-sm font-medium text-electric-foreground hover:opacity-90 disabled:opacity-60 glow-sm"
-            title={!connected ? "Waiting for real-time connection..." : ""}
           >
             <Send className="size-4" /> {busy ? "Sending…" : "Send message"}
           </button>

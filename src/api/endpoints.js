@@ -90,6 +90,7 @@ export const DASHBOARD_ENDPOINTS = {
   education: crudNoShow("education"),
   messages: {
     list: `${BASE_URL}/admin/contact-us`,
+    readAll: `${BASE_URL}/admin/contact-us/read-all`,
     read: (id) => `${BASE_URL}/admin/contact-us/read/${id}`,
     delete: (id) => `${BASE_URL}/admin/contact-us/delete/${id}`,
   },

@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { PageHeader } from "@/components/common/Headers";
 import { CoverCard } from "@/components/common/Cards";
 import { SearchInput, Pagination, Spinner, Empty } from "@/components/common/Primitives";
@@ -7,17 +7,41 @@ import { api } from "@/api/client";
 function AchievementsPage() {
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
-  const { data, isLoading } = useQuery({
-    queryKey: ["achievements", search, page],
-    queryFn: () =>
-      api.public.achievements.list({
-        search,
-        sortBy: "date",
-        sortDir: "desc",
-        page,
-        pageSize: 9,
-      }),
+  const { data: rawData, isLoading } = useQuery({
+    queryKey: ["achievements"],
+    queryFn: () => api.public.achievements.list({ pageSize: 1000 }),
   });
+
+  const processedData = useMemo(() => {
+    if (!rawData?.data) return { data: [], total: 0, totalPages: 1 };
+
+    let items = [...rawData.data];
+    if (search.trim()) {
+      const q = search.toLowerCase();
+      items = items.filter(
+        (a) =>
+          a.title?.toLowerCase().includes(q) ||
+          a.description?.toLowerCase().includes(q) ||
+          a.category?.toLowerCase().includes(q)
+      );
+    }
+
+    items.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+    const pageSize = 9;
+    const total = items.length;
+    const totalPages = Math.max(1, Math.ceil(total / pageSize));
+    const start = (page - 1) * pageSize;
+    const paginated = items.slice(start, start + pageSize);
+
+    return {
+      data: paginated,
+      total,
+      totalPages,
+    };
+  }, [rawData, search, page]);
+
+  const data = processedData;
   return (
     <>
       <PageHeader

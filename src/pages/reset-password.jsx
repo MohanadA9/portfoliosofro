@@ -37,8 +37,10 @@ function ResetPage() {
     setBusy(true);
     try {
       await apiPost(DASHBOARD_ENDPOINTS.auth.resetPassword, {
+        email,
         token: resetToken,
         password: pwd,
+        password_confirmation: confirm,
       });
       toast.success("Password updated. Please sign in.");
       nav("/login");

@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { PageHeader } from "@/components/common/Headers";
 import { CoverCard } from "@/components/common/Cards";
 import { SearchInput, Spinner, Empty, Pagination } from "@/components/common/Primitives";
@@ -7,15 +7,41 @@ import { api } from "@/api/client";
 function BlogPage() {
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
-  const { data, isLoading } = useQuery({
-    queryKey: ["pub-blog", search, page],
-    queryFn: () =>
-      api.public.blogs.list({
-        search,
-        page,
-        pageSize: 9,
-      }),
+  const { data: rawData, isLoading } = useQuery({
+    queryKey: ["pub-blog"],
+    queryFn: () => api.public.blogs.list({ pageSize: 1000 }),
   });
+
+  const processedData = useMemo(() => {
+    if (!rawData?.data) return { data: [], total: 0, totalPages: 1 };
+
+    let items = [...rawData.data];
+    if (search.trim()) {
+      const q = search.toLowerCase();
+      items = items.filter(
+        (b) =>
+          b.title?.toLowerCase().includes(q) ||
+          b.excerpt?.toLowerCase().includes(q) ||
+          b.category?.toLowerCase().includes(q)
+      );
+    }
+
+    items.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+    const pageSize = 9;
+    const total = items.length;
+    const totalPages = Math.max(1, Math.ceil(total / pageSize));
+    const start = (page - 1) * pageSize;
+    const paginated = items.slice(start, start + pageSize);
+
+    return {
+      data: paginated,
+      total,
+      totalPages,
+    };
+  }, [rawData, search, page]);
+
+  const data = processedData;
   return (
     <>
       <PageHeader
@@ -43,7 +69,7 @@ function BlogPage() {
             {data.data.map((b) => (
               <CoverCard
                 key={b.id}
-                to={`/blog/${b.id}`}
+                to={`/blog/${b.slug}`}
                 cover={b.cover}
                 eyebrow={new Date(b.date).toLocaleDateString()}
                 title={b.title}

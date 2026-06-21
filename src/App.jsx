@@ -76,7 +76,7 @@ export default function App() {
           <Route path="achievements" element={<AchievementsPage />} />
           <Route path="achievements/:id" element={<AchievementDetail />} />
           <Route path="blog" element={<BlogPage />} />
-          <Route path="blog/:id" element={<BlogDetail />} />
+          <Route path="blog/:slug" element={<BlogDetail />} />
           <Route path="contact" element={<ContactPage />} />
           <Route path="courses" element={<CoursesPage />} />
           <Route path="courses/:id" element={<CourseDetail />} />

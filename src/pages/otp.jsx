@@ -25,8 +25,10 @@ function OtpPage() {
         email,
         otp,
       });
+      console.log("Verify OTP response:", res);
+      toast.info("DEBUG response: " + JSON.stringify(res));
       toast.success("Code verified");
-      const token = res?.token || "";
+      const token = res?.data?.reset_token || res?.reset_token || res?.token || "";
       nav("/reset-password" + "?email=" + encodeURIComponent(email) + "&token=" + encodeURIComponent(token));
     } catch (e) {
       toast.error(e?.message || "Invalid code");

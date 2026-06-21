@@ -18,6 +18,11 @@ export default defineConfig({
         target: 'https://portfolioso.test',
         changeOrigin: true,
         secure: false, // Bypass SSL issues
+      },
+      '/uploads': {
+        target: 'https://portfolioso.test',
+        changeOrigin: true,
+        secure: false, // Bypass SSL issues
       }
     }
   },

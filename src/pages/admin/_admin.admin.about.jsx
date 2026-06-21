@@ -102,7 +102,7 @@ export default function AdminAbout() {
         fd.append(`interests[${i}]`, interest);
       });
 
-      await apiFetch(EP.admin.about, "POST", fd);
+      await apiFetch(EP.about.update, "POST", fd);
       setSaved(true);
       setTimeout(() => setSaved(false), 2500);
     } catch (err) {

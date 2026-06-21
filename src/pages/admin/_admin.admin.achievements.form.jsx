@@ -106,7 +106,7 @@ const EMPTY = {
 export default function AchievementForm() {
   const { id } = useParams();
   const nav = useNavigate();
-  const { data: allItems } = useAdminAchievements();
+  const { reload } = useAdminAchievements();
   const isEdit = Boolean(id);
 
   const [form, setForm] = useState(EMPTY);
@@ -118,21 +118,31 @@ export default function AchievementForm() {
       setLoaded(true);
       return;
     }
-    const item = (allItems ?? []).find((a) => String(a.id) === String(id));
-    if (item) {
-      const images = item.gallery?.length ? item.gallery : item.cover ? [item.cover] : [];
-      setForm({
-        title: item.title ?? "",
-        description: item.description ?? item.shortDescription ?? "",
-        full_description: item.full_description ?? "",
-        date: item.date ?? "",
-        category: item.category ?? "",
-        live_link: item.live_link ?? "",
-        images,
+    let active = true;
+    api.achievements
+      .get(id)
+      .then((item) => {
+        if (active && item) {
+          const images = item.gallery?.length ? item.gallery : item.cover ? [item.cover] : [];
+          setForm({
+            title: item.title ?? "",
+            description: item.description ?? item.shortDescription ?? "",
+            full_description: item.full_description ?? "",
+            date: item.date ?? "",
+            category: item.category ?? "",
+            live_link: item.live_link ?? "",
+            images,
+          });
+          setLoaded(true);
+        }
+      })
+      .catch((err) => {
+        toast.error(err?.message || "Failed to load achievement data");
       });
-      setLoaded(true);
-    }
-  }, [allItems, id, isEdit]);
+    return () => {
+      active = false;
+    };
+  }, [id, isEdit]);
 
   const set = (k, v) => setForm((f) => ({ ...f, [k]: v }));
 
@@ -176,6 +186,9 @@ export default function AchievementForm() {
         await apiFetch(EP_MAP.achievements.update(id), "POST", fd);
       } else {
         await apiFetch(EP_MAP.achievements.store, "POST", fd);
+      }
+      if (typeof reload === "function") {
+        await reload();
       }
       nav("/admin/achievements");
     } catch (err) {

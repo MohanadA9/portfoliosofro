@@ -1,5 +1,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useEffect, useState } from "react";
+import { useDataLoading } from "@/context/DataContext";
+
 const STEPS = [
   "Initializing radio frontend…",
   "Calibrating antenna array…",
@@ -7,21 +9,43 @@ const STEPS = [
   "Decoding signal…",
   "System online.",
 ];
+
 export function LoadingScreen({ onDone }) {
+  const { loading: dataLoading, progress } = useDataLoading();
   const [visible, setVisible] = useState(true);
-  const [step, setStep] = useState(0);
+  const [minTimeElapsed, setMinTimeElapsed] = useState(false);
+
   useEffect(() => {
-    const iv = setInterval(() => setStep((s) => (s < STEPS.length - 1 ? s + 1 : s)), 420);
-    const to = setTimeout(() => {
-      setVisible(false);
-      onDone?.();
-      clearInterval(iv);
-    }, 2400);
-    return () => {
-      clearInterval(iv);
-      clearTimeout(to);
-    };
-  }, [onDone]);
+    const timer = setTimeout(() => {
+      setMinTimeElapsed(true);
+    }, 1200);
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    if (!dataLoading && minTimeElapsed) {
+      const timer = setTimeout(() => {
+        setVisible(false);
+        onDone?.();
+      }, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [dataLoading, minTimeElapsed, onDone]);
+
+  // Compute step based on progress dynamically
+  let step = 0;
+  if (progress >= 100) {
+    step = 4;
+  } else if (progress >= 75) {
+    step = 3;
+  } else if (progress >= 50) {
+    step = 2;
+  } else if (progress >= 25) {
+    step = 1;
+  } else {
+    step = 0;
+  }
+
   return (
     <AnimatePresence>
       {visible && (
@@ -91,11 +115,11 @@ export function LoadingScreen({ onDone }) {
                   width: 0,
                 }}
                 animate={{
-                  width: "100%",
+                  width: `${progress}%`,
                 }}
                 transition={{
-                  duration: 2.2,
-                  ease: "easeInOut",
+                  duration: 0.4,
+                  ease: "easeOut",
                 }}
                 className="h-full bg-electric glow-sm"
               />

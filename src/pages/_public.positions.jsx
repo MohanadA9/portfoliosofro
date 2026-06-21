@@ -1,7 +1,7 @@
 import { PageHeader } from "@/components/common/Headers";
 import { Card } from "@/components/common/Cards";
 import { usePositions } from "@/context/DataContext";
-import { Crown, GraduationCap, Radio, File as FileEdit, Mic, Users, Shield, Scroll, Calendar, Building } from "lucide-react";
+import { Crown, GraduationCap, Radio, File as FileEdit, Mic, Users, Shield, Scroll, Calendar, Building, Briefcase, Award, BookOpen, Globe, Star, Lightbulb, Target, Layers } from "lucide-react";
 const ICONS = {
   crown: Crown,
   academic: GraduationCap,
@@ -13,6 +13,14 @@ const ICONS = {
   scroll: Scroll,
   calendar: Calendar,
   building: Building,
+  briefcase: Briefcase,
+  award: Award,
+  book: BookOpen,
+  globe: Globe,
+  star: Star,
+  lightbulb: Lightbulb,
+  target: Target,
+  layers: Layers,
 };
 function PositionsPage() {
   const { data: positions, loading } = usePositions();

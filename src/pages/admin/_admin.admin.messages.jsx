@@ -31,7 +31,7 @@ function MessagePanel({ msg, onClose }) {
               <p className="text-[11px] font-mono uppercase tracking-widest text-muted-foreground mb-1">
                 Date
               </p>
-              <p className="text-sm text-muted-foreground">{msg.date}</p>
+              <p className="text-sm text-muted-foreground">{msg.created_at || msg.date}</p>
             </div>
           </div>
           <div>
@@ -173,7 +173,7 @@ export default function AdminMessages() {
                 <td className="px-4 py-3 max-w-[200px] truncate text-muted-foreground font-normal">
                   {msg.subject}
                 </td>
-                <td className="px-4 py-3 text-muted-foreground font-normal">{msg.date}</td>
+                <td className="px-4 py-3 text-muted-foreground font-normal">{msg.created_at || msg.date}</td>
                 <td className="px-4 py-3">
                   <div className="flex items-center justify-end gap-1">
                     <button

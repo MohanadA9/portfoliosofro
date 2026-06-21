@@ -65,14 +65,14 @@ function AboutPage() {
                   {professor.office}
                 </p>
                 <p className="text-xs text-muted-foreground">
-                  {professor.officeHours}
+                  {professor.office_hours}
                 </p>
               </div>
 
               {professor.cv && (
                 <div className="pt-3">
                   <a
-                    href={professor.cv}
+                    href={professor.cv.replace(/^https?:\/\/[^\/]+/, "")}
                     download="Dr_Mohamed_Sobhy_CV.pdf"
                     className="flex items-center justify-center gap-2 w-full py-2 rounded-lg bg-electric text-electric-foreground text-xs font-medium hover:opacity-90 transition shadow-lg shadow-electric/20"
                   >
@@ -83,9 +83,9 @@ function AboutPage() {
               )}
             </div>
             {/* Socials */}
-            {professor.socials && (
+            {professor.social_links && (
               <div className="flex flex-wrap gap-2">
-                {Object.entries(professor.socials)
+                {Object.entries(professor.social_links)
                   .filter(([, v]) => v)
                   .map(([k, v]) => (
                     <a
