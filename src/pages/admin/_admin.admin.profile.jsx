@@ -59,8 +59,8 @@ export default function AdminProfile() {
 
   const handleAvatar = (file) => {
     if (!file) return;
-    if (file.size > 2 * 1024 * 1024) {
-      toast.error("The profile photo size must not exceed 2MB.");
+    if (file.size > 10 * 1024 * 1024) {
+      toast.error("The profile photo size must not exceed 10MB.");
       return;
     }
     const r = new FileReader();
@@ -70,8 +70,8 @@ export default function AdminProfile() {
 
   const handleCV = (file) => {
     if (!file) return;
-    if (file.size > 5 * 1024 * 1024) {
-      toast.error("The CV file size must not exceed 5MB.");
+    if (file.size > 20 * 1024 * 1024) {
+      toast.error("The CV file size must not exceed 20MB.");
       return;
     }
     const r = new FileReader();
