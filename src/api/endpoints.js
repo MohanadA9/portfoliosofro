@@ -8,7 +8,7 @@
 // For production: https://your-domain.com/api
 // Using relative path to trigger Vite Proxy and bypass CORS
 // If you are NOT using Vite Proxy, change this to your full backend URL (e.g., "http://localhost:8000/api")
-export const BASE_URL = "https://portfolioso.test/api";
+export const BASE_URL = "https://so.mohanadahmed.me/api";
 
 // ==========================================
 // Public (Portfolio) Endpoints

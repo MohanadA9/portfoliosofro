@@ -45,13 +45,19 @@ export const apiFetch = async (endpoint, method = "GET", body = null) => {
     headers["Authorization"] = `Bearer ${token}`;
   }
   
+  let actualMethod = method;
+  if (body instanceof FormData && (method === "PUT" || method === "PATCH")) {
+    body.append("_method", method);
+    actualMethod = "POST";
+  }
+
   if (body && !(body instanceof FormData)) {
     headers["Content-Type"] = "application/json";
   }
 
   try {
     const res = await fetch(fullUrl, {
-      method,
+      method: actualMethod,
       headers,
       body: body ? (body instanceof FormData ? body : JSON.stringify(body)) : null,
     });
