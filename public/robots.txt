@@ -1,2 +1,4 @@
 User-agent: *
 Allow: /
+
+Sitemap: https://so.mohanadahmed.me/sitemap.xml

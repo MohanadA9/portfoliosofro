@@ -1,14 +1,60 @@
+import { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/api/client";
 import { ArrowLeft, ExternalLink, Download, Users, BookOpen, Hash } from "lucide-react";
 import { Spinner } from "@/components/common/Primitives";
+import { useProfessor } from "@/context/DataContext";
+
 function ResearchDetail() {
   const { id } = useParams();
+  const { data: professor } = useProfessor();
   const { data: r, isLoading } = useQuery({
     queryKey: ["research", id],
     queryFn: () => api.public.researches.get(id),
   });
+
+  useEffect(() => {
+    if (r && professor) {
+      const prevTitle = document.title;
+      const prevDesc = document.querySelector('meta[name="description"]')?.getAttribute('content') || '';
+      const prevKeywords = document.querySelector('meta[name="keywords"]')?.getAttribute('content') || '';
+
+      document.title = `${r.title} | ${professor.name}`;
+
+      let metaDesc = document.querySelector('meta[name="description"]');
+      if (!metaDesc) {
+        metaDesc = document.createElement('meta');
+        metaDesc.setAttribute('name', 'description');
+        document.head.appendChild(metaDesc);
+      }
+      metaDesc.setAttribute('content', `${professor.name} - Research: ${r.abstract || ""}`.substring(0, 160));
+
+      let metaKeywords = document.querySelector('meta[name="keywords"]');
+      if (!metaKeywords) {
+        metaKeywords = document.createElement('meta');
+        metaKeywords.setAttribute('name', 'keywords');
+        document.head.appendChild(metaKeywords);
+      }
+      const kwList = Array.isArray(r.keywords) ? r.keywords.join(", ") : "";
+      metaKeywords.setAttribute('content', `${kwList}, ${professor.name}, ${professor.department}, research`);
+
+      return () => {
+        document.title = prevTitle;
+        const currentMetaDesc = document.querySelector('meta[name="description"]');
+        if (currentMetaDesc) {
+          if (prevDesc) currentMetaDesc.setAttribute('content', prevDesc);
+          else currentMetaDesc.remove();
+        }
+        const currentMetaKeywords = document.querySelector('meta[name="keywords"]');
+        if (currentMetaKeywords) {
+          if (prevKeywords) currentMetaKeywords.setAttribute('content', prevKeywords);
+          else currentMetaKeywords.remove();
+        }
+      };
+    }
+  }, [r, professor]);
+
   if (isLoading || !r) return <Spinner />;
   return (
     <article className="container-academic py-12">
