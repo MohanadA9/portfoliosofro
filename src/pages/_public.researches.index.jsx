@@ -4,6 +4,7 @@ import { PageHeader } from "@/components/common/Headers";
 import { CoverCard } from "@/components/common/Cards";
 import { SearchInput, Pagination, Select, Spinner, Empty } from "@/components/common/Primitives";
 import { api } from "@/api/client";
+import { slugify } from "@/lib/utils";
 function ResearchesPage() {
   const [search, setSearch] = useState("");
   const [sortBy, setSortBy] = useState("year");
@@ -97,7 +98,7 @@ function ResearchesPage() {
             {data.data.map((r) => (
               <CoverCard
                 key={r.id}
-                to={`/researches/${r.id}`}
+                to={`/researches/${slugify(r.title)}`}
                 cover={r.cover}
                 eyebrow={String(r.year)}
                 title={r.title}

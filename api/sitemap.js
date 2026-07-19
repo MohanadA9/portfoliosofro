@@ -16,6 +16,19 @@ const escapeXml = (value) =>
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&apos;");
 
+const slugify = (text) => {
+  if (!text) return "";
+  return text
+    .toString()
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, "-")
+    .replace(/[^\w\u0621-\u064A\u0660-\u0669\-]+/g, "")
+    .replace(/\-\-+/g, "-")
+    .replace(/^-+/, "")
+    .replace(/-+$/, "");
+};
+
 const getResearchesArray = (jsonData) => {
   if (Array.isArray(jsonData)) return jsonData;
   if (!jsonData || typeof jsonData !== "object") return [];
@@ -167,10 +180,11 @@ export default async function handler(req, res) {
     if (Array.isArray(researches)) {
       researches.forEach((research) => {
         const id = research.id;
-        if (id) {
-          const encodedId = encodeURIComponent(String(id));
+        const title = research.title;
+        if (id && title) {
+          const slug = slugify(title);
           sitemap += `  <url>
-    <loc>${escapeXml(`${BASE_URL}/researches/${encodedId}`)}</loc>
+    <loc>${escapeXml(`${BASE_URL}/researches/${slug}`)}</loc>
     <lastmod>${today}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>

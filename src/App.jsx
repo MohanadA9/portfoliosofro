@@ -83,7 +83,7 @@ export default function App() {
           <Route path="experiences" element={<ExperiencesPage />} />
           <Route path="positions" element={<PositionsPage />} />
           <Route path="researches" element={<ResearchesPage />} />
-          <Route path="researches/:id" element={<ResearchDetail />} />
+          <Route path="researches/:slug" element={<ResearchDetail />} />
         </Route>
 
         {/* ── Admin ── */}

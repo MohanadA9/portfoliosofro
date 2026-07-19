@@ -17,6 +17,7 @@ import { SectionHeader } from "@/components/common/Headers";
 import { CoverCard } from "@/components/common/Cards";
 import { Stat } from "@/components/common/Primitives";
 import { CountUp } from "@/components/common/CountUp";
+import { slugify } from "@/lib/utils";
 import {
   useProfessor,
   useAbout,
@@ -288,7 +289,7 @@ function HomePage() {
             {researches.slice(0, 3).map((r) => (
               <CoverCard
                 key={r.id}
-                to={`/researches/${r.id}`}
+                to={`/researches/${slugify(r.title)}`}
                 cover={r.cover}
                 eyebrow={String(r.year)}
                 title={r.title}

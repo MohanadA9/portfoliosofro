@@ -5,14 +5,30 @@ import { api } from "@/api/client";
 import { ArrowLeft, ExternalLink, Download, Users, BookOpen, Hash } from "lucide-react";
 import { Spinner } from "@/components/common/Primitives";
 import { useProfessor } from "@/context/DataContext";
+import { slugify } from "@/lib/utils";
 
 function ResearchDetail() {
-  const { id } = useParams();
+  const { slug } = useParams();
   const { data: professor } = useProfessor();
-  const { data: r, isLoading } = useQuery({
-    queryKey: ["research", id],
-    queryFn: () => api.public.researches.get(id),
+
+  // 1. Fetch the list of researches to find the one matching this slug
+  const { data: listData, isLoading: listLoading } = useQuery({
+    queryKey: ["pub-researches-list-for-slug"],
+    queryFn: () => api.public.researches.list({ pageSize: 1000 }),
   });
+
+  const matchedResearch = listData?.data?.find(
+    (item) => slugify(item.title) === slug || String(item.id) === slug
+  );
+
+  // 2. Fetch the full detail of the matched research by its ID
+  const { data: r, isLoading: detailLoading } = useQuery({
+    queryKey: ["research", matchedResearch?.id],
+    queryFn: () => api.public.researches.get(matchedResearch.id),
+    enabled: !!matchedResearch?.id,
+  });
+
+  const isLoading = listLoading || (!!matchedResearch && detailLoading);
 
   useEffect(() => {
     if (r && professor) {
@@ -55,7 +71,21 @@ function ResearchDetail() {
     }
   }, [r, professor]);
 
-  if (isLoading || !r) return <Spinner />;
+  if (isLoading) return <Spinner />;
+
+  if (!listLoading && !matchedResearch) {
+    return (
+      <div className="container-academic py-20 text-center">
+        <h2 className="text-2xl font-bold">Research not found</h2>
+        <p className="text-muted-foreground mt-2">We couldn't find a research with that slug.</p>
+        <Link to="/researches" className="mt-4 inline-flex items-center gap-1 text-electric hover:underline">
+          <ArrowLeft className="size-4" /> Back to research
+        </Link>
+      </div>
+    );
+  }
+
+  if (!r) return <Spinner />;
   return (
     <article className="container-academic py-12">
       <Link
