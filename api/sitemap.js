@@ -72,7 +72,7 @@ const fetchResearchesFromAPI = async () => {
       method: "GET",
       headers: {
         Accept: "application/json",
-        "User-Agent": "mohanadahmed.me sitemap generator",
+        "User-Agent": "mohammedsobhy.vercel.app sitemap generator",
       },
       signal: controller.signal,
     });
