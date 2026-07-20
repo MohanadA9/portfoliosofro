@@ -1,4 +1,7 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://so.mohanadahmed.me/sitemap.xml
+Disallow: /admin/
+Disallow: /api/
+
+Sitemap: http://mohammedsobhy.vercel.app/sitemap.xml
