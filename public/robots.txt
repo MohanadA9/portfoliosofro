@@ -4,4 +4,4 @@ Allow: /
 Disallow: /admin/
 Disallow: /api/
 
-Sitemap: http://mohammedsobhy.vercel.app/sitemap.xml
+Sitemap: https://mohammedsobhy.vercel.app/sitemap.xml
