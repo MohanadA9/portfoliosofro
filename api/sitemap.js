@@ -2,11 +2,20 @@ import fs from "fs";
 import path from "path";
 
 // ============================================================
-// CONFIGURATION - Toggle between mock and real API
+// CONFIGURATION
 // ============================================================
-const USE_MOCK_DATA = false; // Set to false to try the real API first
-
+const USE_MOCK_DATA = false;
 const API_URL = "https://so.mohanadahmed.me/api/research";
+
+// Keep this well below Vercel's function execution limit (10s on Hobby)
+// so the outer try/catch always has time to fall back cleanly.
+const FETCH_TIMEOUT_MS = 4000;
+
+// Simple in-memory cache. Persists only while the same serverless
+// instance stays warm, but that's often enough to absorb repeated
+// crawler hits and avoid hammering the external API every time.
+const CACHE_TTL_MS = 60 * 60 * 1000; // 1 hour
+let cache = { data: null, expiresAt: 0 };
 
 const escapeXml = (value) =>
   String(value)
@@ -37,7 +46,6 @@ const getResearchesArray = (jsonData) => {
   if (Array.isArray(jsonData.researches)) return jsonData.researches;
   if (jsonData.data && Array.isArray(jsonData.data.researches)) return jsonData.data.researches;
 
-  // Recursively search for any array
   for (const key in jsonData) {
     if (["links", "meta"].includes(key)) continue;
     const val = jsonData[key];
@@ -65,7 +73,7 @@ const fetchResearchesFromMock = async () => {
 
 const fetchResearchesFromAPI = async () => {
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 10000);
+  const timeout = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
 
   try {
     const response = await fetch(API_URL, {
@@ -89,16 +97,28 @@ const fetchResearchesFromAPI = async () => {
 };
 
 const fetchResearches = async () => {
+  // Serve from cache if still fresh — avoids a live external call
+  // (and its failure modes) on every single sitemap request.
+  if (cache.data && cache.expiresAt > Date.now()) {
+    return cache.data;
+  }
+
+  let researches = [];
   if (USE_MOCK_DATA) {
-    return await fetchResearchesFromMock();
+    researches = await fetchResearchesFromMock();
   } else {
     try {
-      return await fetchResearchesFromAPI();
+      researches = await fetchResearchesFromAPI();
     } catch (e) {
       console.warn("Real API failed, falling back to mock researches:", e);
-      return await fetchResearchesFromMock();
+      // If we have stale cached data, prefer that over the mock file.
+      if (cache.data) return cache.data;
+      researches = await fetchResearchesFromMock();
     }
   }
+
+  cache = { data: researches, expiresAt: Date.now() + CACHE_TTL_MS };
+  return researches;
 };
 
 export default async function handler(req, res) {
@@ -111,7 +131,6 @@ export default async function handler(req, res) {
     console.error("Sitemap researches fetch error:", error);
   }
 
-  // Determine BASE_URL dynamically from headers
   const protocol = req.headers["x-forwarded-proto"] || "https";
   const host = req.headers.host || "so.mohanadahmed.me";
   const BASE_URL = `${protocol}://${host}`;
@@ -195,7 +214,7 @@ export default async function handler(req, res) {
 
     sitemap += `</urlset>`;
 
-    res.setHeader("Content-Type", "text/xml");
+    res.setHeader("Content-Type", "application/xml; charset=UTF-8");
     res.setHeader("Cache-Control", "s-maxage=86400, stale-while-revalidate");
     res.status(200).send(sitemap);
   } catch (error) {
