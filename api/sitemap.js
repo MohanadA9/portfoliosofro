@@ -5,7 +5,7 @@ import path from "path";
 // CONFIGURATION
 // ============================================================
 const USE_MOCK_DATA = false;
-const API_URL = "https://so.mohanadahmed.me/api/research";
+const API_URL = "https://portfolioso.wasmer.app/api/research";
 
 // Keep this well below Vercel's function execution limit (10s on Hobby)
 // so the outer try/catch always has time to fall back cleanly.
