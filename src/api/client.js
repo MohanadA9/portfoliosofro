@@ -255,6 +255,49 @@ const adminApi = {
     markRead: (id) => apiFetch(ADMIN_EP.messages.read(id), "PATCH"),
     markAllRead: () => apiFetch(ADMIN_EP.messages.readAll, "PATCH"),
   },
+
+  storage: {
+    requestUploadUrl: async ({ fileName, fileType, folder = "general", expiresIn = 900 }) => {
+      const res = await apiFetch(ADMIN_EP.storage.uploadUrl, "POST", {
+        file_name: fileName,
+        file_type: fileType,
+        folder,
+        expires_in: expiresIn,
+      });
+      return res?.data ?? res;
+    },
+
+    uploadDirect: async (file, folder = "general") => {
+      const presign = await adminApi.storage.requestUploadUrl({
+        fileName: file.name,
+        fileType: file.type || "application/octet-stream",
+        folder,
+      });
+
+      const { upload_url, file_path, file_url, headers, expires_at } = presign;
+
+      const uploadHeaders = {
+        ...(headers || {}),
+        "Content-Type": file.type || "application/octet-stream",
+      };
+
+      const res = await fetch(upload_url, {
+        method: "PUT",
+        headers: uploadHeaders,
+        body: file,
+      });
+
+      if (!res.ok) {
+        throw new Error(`Direct storage upload failed with status ${res.status}`);
+      }
+
+      return {
+        filePath: file_path,
+        fileUrl: file_url,
+        expiresAt: expires_at,
+      };
+    },
+  },
 };
 
 // ── Public API object ────────────────────────────────────────────────────────
@@ -279,5 +322,6 @@ export const api = {
   lectures: adminApi.lectures,
   blogs: adminApi.blogs,
   messages: adminApi.messages,
+  storage: adminApi.storage,
   contact: publicApi.contact,
 };

@@ -159,7 +159,12 @@ export default function ResearchForm() {
       keywords.forEach((k, i) => fd.append(`keywords[${i}]`, k));
 
       if (form.coverFile) {
-        fd.append("cover", form.coverFile);
+        if (form.coverFile instanceof File) {
+          const res = await api.storage.uploadDirect(form.coverFile, "researches");
+          fd.append("cover", res.filePath);
+        } else {
+          fd.append("cover", form.coverFile);
+        }
       }
 
       if (isEdit) {

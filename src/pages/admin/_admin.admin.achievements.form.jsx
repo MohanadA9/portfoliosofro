@@ -171,13 +171,21 @@ export default function AchievementForm() {
       fd.append("category", form.category);
       fd.append("live_link", form.live_link);
 
-      // Handle images
+      // Direct file upload to storage via presigned URL
       if (form.imageFiles && form.imageFiles.length > 0) {
-        // First image is cover
-        fd.append("cover", form.imageFiles[0]);
-        // All images in gallery
-        form.imageFiles.forEach((file, i) => {
-          fd.append(`gallery[${i}]`, file);
+        const uploadPromises = form.imageFiles.map(async (file) => {
+          if (file instanceof File) {
+            const res = await api.storage.uploadDirect(file, "achievements");
+            return res.filePath;
+          }
+          return file;
+        });
+        const paths = await Promise.all(uploadPromises);
+        if (paths[0]) {
+          fd.append("cover", paths[0]);
+        }
+        paths.forEach((p, i) => {
+          fd.append(`gallery[${i}]`, p);
         });
       }
 

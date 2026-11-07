@@ -152,11 +152,10 @@ export default function BlogForm() {
       fd.append("category", form.category ?? "");
       if (form.date) fd.append("date", form.date);
 
-      // Only attach cover if the user picked a NEW file. If it's still a
-      // string (existing URL) or empty, don't send it — the backend keeps
-      // whatever cover is already saved.
+      // Direct file upload to storage via presigned URL
       if (form.cover instanceof File) {
-        fd.append("cover", form.cover);
+        const uploadRes = await api.storage.uploadDirect(form.cover, "blogs");
+        fd.append("cover", uploadRes.filePath);
       }
 
       if (isEdit) {

@@ -80,6 +80,9 @@ export const DASHBOARD_ENDPOINTS = {
     get: `${BASE_URL}/admin/setting`,
     update: `${BASE_URL}/admin/setting/update`,
   },
+  storage: {
+    uploadUrl: `${BASE_URL}/admin/storage/upload-url`,
+  },
   achievements: crud("achievement"),
   researches: crud("research"),
   experiences: crudNoShow("experience"),
