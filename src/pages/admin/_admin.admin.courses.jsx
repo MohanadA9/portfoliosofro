@@ -100,12 +100,12 @@ function CourseModal({ initial, onClose, onSaved }) {
         fd.append(`objectives[${i}]`, obj);
       });
 
-      // Handle the cover image
-      if (form.coverFile) {
+      // Handle the cover image via direct storage upload
+      if (form.coverFile instanceof File) {
+        const res = await api.storage.uploadDirect(form.coverFile, "courses");
+        fd.append("cover", res.filePath);
+      } else if (form.coverFile) {
         fd.append("cover", form.coverFile);
-      } else if (form.cover && !form.cover.startsWith("http")) {
-        // If it's a base64 (fallback), it's already in form.cover
-        // but our new Dropzone will provide coverFile
       }
 
       // For Laravel PUT/PATCH requests with FormData, we MUST use POST and append _method

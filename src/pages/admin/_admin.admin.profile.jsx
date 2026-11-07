@@ -87,15 +87,27 @@ export default function AdminProfile() {
       // Laravel update for profile often expects POST with _method=PUT
       fd.append("_method", "PUT");
 
+      let avatarPath = null;
+      if (form.avatarFile instanceof File) {
+        const res = await api.storage.uploadDirect(form.avatarFile, "users");
+        avatarPath = res.filePath;
+      }
+
+      let cvPath = null;
+      if (form.cvFile instanceof File) {
+        const res = await api.storage.uploadDirect(form.cvFile, "users");
+        cvPath = res.filePath;
+      }
+
       Object.keys(form).forEach(key => {
         if (key === 'social_links') {
           Object.keys(form.social_links || {}).forEach(sk => {
             fd.append(`social_links[${sk}]`, form.social_links[sk] || "");
           });
         } else if (key === 'avatarFile') {
-          fd.append('avatar', form.avatarFile);
+          if (avatarPath) fd.append('avatar', avatarPath);
         } else if (key === 'cvFile') {
-          fd.append('cv', form.cvFile);
+          if (cvPath) fd.append('cv', cvPath);
         } else if (['avatar', 'cv'].includes(key)) {
           // Skip the base64 previews
         } else {

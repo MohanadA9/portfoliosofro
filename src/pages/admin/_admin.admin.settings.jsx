@@ -96,8 +96,18 @@ function SiteIdentityCard() {
       const fd = new FormData();
       fd.append("_method", "PUT");
       fd.append("doctor_name", form.doctor_name);
-      if (form.iconFile) fd.append("icon", form.iconFile);
-      if (form.faviconFile) fd.append("favicon", form.faviconFile);
+      if (form.iconFile instanceof File) {
+        const res = await api.storage.uploadDirect(form.iconFile, "settings");
+        fd.append("icon", res.filePath);
+      } else if (form.iconFile) {
+        fd.append("icon", form.iconFile);
+      }
+      if (form.faviconFile instanceof File) {
+        const res = await api.storage.uploadDirect(form.faviconFile, "settings");
+        fd.append("favicon", res.filePath);
+      } else if (form.faviconFile) {
+        fd.append("favicon", form.faviconFile);
+      }
 
       await apiFetch(EP.settings.update, "POST", fd);
       updateSettings(form);
