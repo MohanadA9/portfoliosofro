@@ -274,18 +274,43 @@ const adminApi = {
         folder,
       });
 
-      const { upload_url, file_path, file_url, headers, expires_at } = presign;
+      const {
+        upload_url,
+        method = "POST",
+        fields,
+        file_path,
+        file_url,
+        headers,
+        expires_at,
+      } = presign;
 
-      const uploadHeaders = {
-        ...(headers || {}),
-        "Content-Type": file.type || "application/octet-stream",
-      };
+      let res;
+      if (method === "POST" && fields) {
+        const formData = new FormData();
+        Object.entries(fields).forEach(([k, v]) => {
+          formData.append(k, v);
+        });
+        // S3 PostObjectV4 requires 'file' to be the last field in FormData
+        formData.append("file", file);
 
-      const res = await fetch(upload_url, {
-        method: "PUT",
-        headers: uploadHeaders,
-        body: file,
-      });
+        res = await fetch(upload_url, {
+          method: "POST",
+          body: formData,
+        });
+      } else {
+        const uploadHeaders = {
+          ...(headers || {}),
+          "Content-Type": file.type || "application/octet-stream",
+        };
+        delete uploadHeaders.Host;
+        delete uploadHeaders.host;
+
+        res = await fetch(upload_url, {
+          method: "PUT",
+          headers: uploadHeaders,
+          body: file,
+        });
+      }
 
       if (!res.ok) {
         throw new Error(`Direct storage upload failed with status ${res.status}`);
